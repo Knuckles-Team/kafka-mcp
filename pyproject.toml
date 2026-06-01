@@ -1,0 +1,4 @@
+[project]
+name = "kafka-mcp"
+version = "0.1.0"
+dependencies = ["agent-utilities", "fastmcp", "pydantic"]
