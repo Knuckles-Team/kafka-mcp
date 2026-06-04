@@ -1,2 +1,4 @@
-if __name__ == '__main__':
-    print('Running')
+from kafka_mcp.agent_server import agent_server
+
+if __name__ == "__main__":
+    agent_server()

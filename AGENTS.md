@@ -10,8 +10,10 @@
 
 ## Tech Stack
 - Python 3.12+
-- agent-utilities >= 0.16.0
+- agent-utilities >= 0.41.0
 - Model Context Protocol (MCP)
+- Apache Kafka via the Confluent REST Proxy v3 (requests)
+- Optional native client via `confluent-kafka` (`kafka-mcp[native]`)
 
 ## Commands
 - `pytest`: Run tests

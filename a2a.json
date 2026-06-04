@@ -2,8 +2,8 @@
   "name": "kafka-mcp-agent",
   "type": "agent",
   "version": "0.2.0",
-  "description": "Agent package for kafka-mcp",
-  "url": "https://github.com/user/kafka-mcp/tree/main",
+  "description": "Apache Kafka agent: topics, records, consumer groups, brokers, and ACLs.",
+  "url": "https://github.com/Knuckles-Team/kafka-mcp/tree/main",
   "license": "MIT",
   "capabilities": [
     {
