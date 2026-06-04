@@ -1,0 +1,51 @@
+# Tasks: Code Enhancement: kafka-mcp
+
+Generated: 2026-06-02T02:26:47.350532+00:00
+Skipped informational: 4
+
+- [ ] [P] **T001** [Dependency Audit] Minor update: agent-utilities 0.2.40 (installed) -> 0.16.0
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T002** [Codebase Optimization] Moderate avg cyclomatic complexity: 7.1
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T003** [Test Coverage] Low test-to-source ratio: 0.15
+  - Priority: P1-High | Effort: Medium
+- [ ] [P] **T004** [Test Coverage] Test suite lacks intent diversity (only one type)
+  - Priority: P1-High | Effort: Medium
+- [ ] [P] **T005** [Test Coverage] 10 potential doc-test drift items
+  - Priority: P1-High | Effort: Medium
+- [ ] [P] **T006** [Documentation & Governance] README.md is short (52 lines) — consider expanding
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T007** [Documentation & Governance] README missing: References /docs directory material
+  - Priority: P4-Enhancement | Effort: Small
+- [ ] [P] **T008** [Documentation & Governance] README missing: Has CLI parameters or API endpoints details
+  - Priority: P4-Enhancement | Effort: Small
+- [ ] [P] **T009** [Architecture & Design Patterns] No discernible layer architecture (no domain/service/adapter separation)
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T010** [Concept Traceability] Low traceability ratio: 0% concepts fully traced
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T011** [Concept Traceability] 3 test functions missing concept markers
+  - Priority: P4-Enhancement | Effort: Small
+- [ ] [P] **T012** [Linting & Formatting] Total lint findings: 0 (high/error: 0, medium/warning: 0, low: 0)
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T013** [Directory Organization] 2 rogue/throwaway scripts detected (fix_*, validate_*, patch_*, etc.): scripts/v
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T014** [Version Sync Analysis] No files are tracked in .bumpversion.cfg
+  - Priority: P1-High | Effort: Small
+- [ ] [P] **T015** [Changelog Audit] CHANGELOG.md exists but could not be parsed — check format compliance
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T016** [Changelog Audit] No changelog entries within the last 30 days
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T017** [Changelog Audit] keepachangelog not installed — pip install 'universal-skills[code-enhancer]'
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T018** [Pytest Quality] Only 0% of tests have descriptive names (>15 chars)
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T019** [Pytest Quality] 3 tests have no assertions
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T020** [Environment Variables] Only 25% of env vars documented in README.md
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T021** [Environment Variables] Undocumented env vars: KAFKA_TOKEN, KAFKA_URL, LLM_API_KEY, LLM_BASE_URL, MCP_UR
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T022** [Environment Variables] 4 Python env vars not in .env.example: LLM_API_KEY, LLM_BASE_URL, MCP_URL, MODEL
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T023** [XDG Compliance (KG)] Check skipped: required agent-utilities/networkx dependencies not found.
+  - Priority: P2-Medium | Effort: Medium

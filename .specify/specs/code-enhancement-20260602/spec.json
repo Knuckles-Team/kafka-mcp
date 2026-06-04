@@ -1,0 +1,177 @@
+{
+  "feature_id": "code-enhancement-20260602",
+  "title": "Code Enhancement: kafka-mcp",
+  "created": "2026-06-02T02:26:47.350532+00:00",
+  "overview": "Automated code enhancement review for kafka-mcp. Covers 17 analysis domains.",
+  "user_stories": [
+    {
+      "role": "developer",
+      "action": "address Project Analysis findings (grade: C, score: 74)",
+      "value": "improve project project analysis from C to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Test Coverage findings (grade: F, score: 55)",
+      "value": "improve project test coverage from F to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Concept Traceability findings (grade: D, score: 62)",
+      "value": "improve project concept traceability from D to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Version Sync Analysis findings (grade: F, score: 40)",
+      "value": "improve project version sync analysis from F to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Changelog Audit findings (grade: C, score: 75)",
+      "value": "improve project changelog audit from C to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address Environment Variables findings (grade: D, score: 62)",
+      "value": "improve project environment variables from D to at least B (80+)"
+    },
+    {
+      "role": "developer",
+      "action": "address XDG Compliance (KG) findings (grade: N/A, score: 100)",
+      "value": "improve project xdg compliance (kg) from N/A to at least B (80+)"
+    }
+  ],
+  "functional_requirements": [
+    {
+      "id": "FR-001",
+      "description": "Minor update: agent-utilities 0.2.40 (installed) -> 0.16.0",
+      "testable": true
+    },
+    {
+      "id": "FR-002",
+      "description": "Moderate avg cyclomatic complexity: 7.1",
+      "testable": true
+    },
+    {
+      "id": "FR-003",
+      "description": "Low test-to-source ratio: 0.15",
+      "testable": true
+    },
+    {
+      "id": "FR-004",
+      "description": "Test suite lacks intent diversity (only one type)",
+      "testable": true
+    },
+    {
+      "id": "FR-005",
+      "description": "10 potential doc-test drift items",
+      "testable": true
+    },
+    {
+      "id": "FR-006",
+      "description": "README.md is short (52 lines) \u2014 consider expanding",
+      "testable": true
+    },
+    {
+      "id": "FR-007",
+      "description": "README missing: References /docs directory material",
+      "testable": true
+    },
+    {
+      "id": "FR-008",
+      "description": "README missing: Has CLI parameters or API endpoints details",
+      "testable": true
+    },
+    {
+      "id": "FR-009",
+      "description": "No discernible layer architecture (no domain/service/adapter separation)",
+      "testable": true
+    },
+    {
+      "id": "FR-010",
+      "description": "Low traceability ratio: 0% concepts fully traced",
+      "testable": true
+    },
+    {
+      "id": "FR-011",
+      "description": "3 test functions missing concept markers",
+      "testable": true
+    },
+    {
+      "id": "FR-012",
+      "description": "Total lint findings: 0 (high/error: 0, medium/warning: 0, low: 0)",
+      "testable": true
+    },
+    {
+      "id": "FR-013",
+      "description": "2 rogue/throwaway scripts detected (fix_*, validate_*, patch_*, etc.): scripts/validate_agent.py, scripts/validate_a2a_agent.py",
+      "testable": true
+    },
+    {
+      "id": "FR-014",
+      "description": "No files are tracked in .bumpversion.cfg",
+      "testable": true
+    },
+    {
+      "id": "FR-015",
+      "description": "CHANGELOG.md exists but could not be parsed \u2014 check format compliance",
+      "testable": true
+    },
+    {
+      "id": "FR-016",
+      "description": "No changelog entries within the last 30 days",
+      "testable": true
+    },
+    {
+      "id": "FR-017",
+      "description": "keepachangelog not installed \u2014 pip install 'universal-skills[code-enhancer]'",
+      "testable": true
+    },
+    {
+      "id": "FR-018",
+      "description": "Only 0% of tests have descriptive names (>15 chars)",
+      "testable": true
+    },
+    {
+      "id": "FR-019",
+      "description": "3 tests have no assertions",
+      "testable": true
+    },
+    {
+      "id": "FR-020",
+      "description": "Only 25% of env vars documented in README.md",
+      "testable": true
+    },
+    {
+      "id": "FR-021",
+      "description": "Undocumented env vars: KAFKA_TOKEN, KAFKA_URL, LLM_API_KEY, LLM_BASE_URL, MCP_URL, MODEL_ID",
+      "testable": true
+    },
+    {
+      "id": "FR-022",
+      "description": "4 Python env vars not in .env.example: LLM_API_KEY, LLM_BASE_URL, MCP_URL, MODEL_ID",
+      "testable": true
+    },
+    {
+      "id": "FR-023",
+      "description": "Check skipped: required agent-utilities/networkx dependencies not found.",
+      "testable": true
+    }
+  ],
+  "success_criteria": [
+    {
+      "metric": "Overall GPA",
+      "current": 2.53,
+      "target": 3.0
+    },
+    {
+      "metric": "Domains at B or above",
+      "current": 10,
+      "target": 17
+    },
+    {
+      "metric": "Actionable findings",
+      "current": 23,
+      "target": 0
+    }
+  ]
+}
