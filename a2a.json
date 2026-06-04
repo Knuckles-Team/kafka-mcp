@@ -1,7 +1,7 @@
 {
   "name": "kafka-mcp-agent",
   "type": "agent",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Agent package for kafka-mcp",
   "url": "https://github.com/user/kafka-mcp/tree/main",
   "license": "MIT",
