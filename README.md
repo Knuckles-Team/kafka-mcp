@@ -1,52 +1,100 @@
-# kafka-mcp
+# Kafka Mcp
+## API | MCP Server | A2A Agent
 
-A Model Context Protocol (MCP) server for Kafka integration.
+![PyPI - Version](https://img.shields.io/pypi/v/kafka-mcp)
+![MCP Server](https://badge.mcpx.dev?type=server 'MCP Server')
+![PyPI - Downloads](https://img.shields.io/pypi/dd/kafka-mcp)
+![GitHub Repo stars](https://img.shields.io/github/stars/Knuckles-Team/kafka-mcp)
+![GitHub forks](https://img.shields.io/github/forks/Knuckles-Team/kafka-mcp)
+![GitHub contributors](https://img.shields.io/github/contributors/Knuckles-Team/kafka-mcp)
+![PyPI - License](https://img.shields.io/pypi/l/kafka-mcp)
+![GitHub](https://img.shields.io/github/license/Knuckles-Team/kafka-mcp)
+![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/Knuckles-Team/kafka-mcp)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/Knuckles-Team/kafka-mcp)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Knuckles-Team/kafka-mcp)
+![GitHub issues](https://img.shields.io/github/issues/Knuckles-Team/kafka-mcp)
+![GitHub top language](https://img.shields.io/github/languages/top/Knuckles-Team/kafka-mcp)
+![GitHub language count](https://img.shields.io/github/languages/count/Knuckles-Team/kafka-mcp)
+![GitHub repo size](https://img.shields.io/github/repo-size/Knuckles-Team/kafka-mcp)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/kafka-mcp)
+![PyPI - Implementation](https://img.shields.io/pypi/implementation/kafka-mcp)
 
-## Table of Contents
-- [Overview](#overview)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Architecture](#architecture)
-- [Deployment](#deployment)
-- [Environment Variables](#environment-variables)
-- [MCP Tools](#mcp-tools)
+Apache Kafka **API + MCP Server + A2A Agent** for the agent-utilities ecosystem.
 
-## Overview
-kafka-mcp exposes a standardized interface to interact with Kafka using the Model Context Protocol.
+*Version: 0.5.0*
 
-## Installation
+> **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
+> interfaces, and guidance for provisioning the Apache Kafka platform are maintained
+> in the [official documentation](https://knuckles-team.github.io/kafka-mcp/).
+
+`kafka-mcp` wraps the Apache Kafka administration and data-plane surface with typed,
+deterministic tools an agent or policy router calls. It speaks to the Confluent REST
+Proxy by default and ships an optional native (direct-to-broker) client and a
+Pydantic-AI agent server.
+
+## What it provides
+
+- **`KafkaApi`** (`kafka_mcp.api.api_client_kafka`) — a `requests`-based REST facade
+  over the Confluent REST Proxy v3 (with v2 consumer helpers), organized by Kafka
+  resource: clusters, topics, partitions, records, consumer groups, brokers, and
+  ACLs. The active cluster id resolves lazily unless `KAFKA_CLUSTER_ID` pins it.
+- **Six MCP tools** (`kafka-mcp` console script): `kafka_topics`,
+  `kafka_partitions`, `kafka_records`, `kafka_groups`, `kafka_cluster`, and the
+  optional native `kafka_native`. See
+  [`docs/overview.md`](docs/overview.md) for the full action surface.
+- **An A2A agent server** (`kafka-agent` console script) — a Pydantic-AI graph agent
+  wired to the MCP server via `MCP_URL`.
+
+## Configuration (environment)
+
+| Var | Default | Meaning |
+|---|---|---|
+| `KAFKA_REST_URL` | `http://localhost:8082` | Confluent REST Proxy base URL |
+| `KAFKA_CLUSTER_ID` | _(auto)_ | Pin the cluster id (else the first cluster is cached) |
+| `KAFKA_TOKEN` | _(empty)_ | Bearer token for the REST Proxy |
+| `KAFKA_USERNAME` | _(empty)_ | Basic-auth user (optional) |
+| `KAFKA_PASSWORD` | _(empty)_ | Basic-auth password (optional) |
+| `KAFKA_SSL_VERIFY` | `True` | Verify TLS (set `False` for self-signed homelab) |
+| `KAFKATOOL` | `True` | Register the Kafka tool set |
+
+The optional native client reads `KAFKA_BOOTSTRAP_SERVERS` (default
+`localhost:9092`) and requires the `kafka-mcp[native]` extra. Copy
+[`.env.example`](.env.example) to `.env` and populate only what you use; blank
+connector credentials leave the corresponding surface inactive.
+
+## Install & run
+
 ```bash
 pip install -e .
+kafka-mcp                        # stdio MCP server (default transport)
+kafka-mcp --transport streamable-http --host 0.0.0.0 --port 8000
 ```
 
-## Usage
-Run the MCP server directly:
+Run the agent server against a live MCP server:
+
 ```bash
-python -m kafka_mcp
+kafka-agent --mcp-url http://localhost:8000/mcp --host 0.0.0.0 --port 8080
 ```
 
-## Architecture
-See `/docs` for architectural diagrams and further documentation.
+## MCP config
 
-## Deployment
-### Bare-metal
-```bash
-python -m kafka_mcp.agent_server
-```
+Register in your client's `mcp_config.json` (tools surface as `kafka_topics`,
+`kafka_records`, `kafka_groups`, …). See `kafka_mcp/mcp_config.json`.
 
-### Docker
-```bash
-docker compose -f docker/agent.compose.yml up -d
-```
+## Documentation
 
-## Environment Variables
-| Variable | Description |
-|----------|-------------|
-| `KAFKA_BOOTSTRAP_SERVERS` | Kafka brokers |
-| `KAFKA_SCHEMA_REGISTRY_URL` | Schema registry |
+The complete documentation is published as the
+[official documentation site](https://knuckles-team.github.io/kafka-mcp/) and is the
+recommended reference for installation, deployment, and day-to-day operation.
 
-## MCP Tools
-| Tool | Description |
-|------|-------------|
-| `get_kafka_info` | Retrieve basic information from Kafka |
-| `query_kafka` | Run a query against the Kafka instance |
+| Page | Contents |
+|---|---|
+| [Installation](https://knuckles-team.github.io/kafka-mcp/installation/) | pip, source, extras, prebuilt Docker image |
+| [Deployment](https://knuckles-team.github.io/kafka-mcp/deployment/) | run the MCP and agent servers, Compose, Caddy + Technitium, env config |
+| [Usage](https://knuckles-team.github.io/kafka-mcp/usage/) | the MCP tools, the `KafkaApi` client, the CLI |
+| [Backing Platform](https://knuckles-team.github.io/kafka-mcp/platform/) | deploy Apache Kafka with Docker |
+| [Overview](https://knuckles-team.github.io/kafka-mcp/overview/) | tools, REST contract, native client |
+| [Architecture](https://knuckles-team.github.io/kafka-mcp/architecture/) | the layered REST client and tool surface |
+| [Concepts](https://knuckles-team.github.io/kafka-mcp/concepts/) | concept registry (`CONCEPT:KAFKA-*`) |
+
+`AGENTS.md` is the canonical contributor/agent guidance.
