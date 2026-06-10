@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://knuckles-team.github.io/kafka-mcp/overview/">
+        <link rel="canonical" href="https://knuckles-team.github.io/kafka-mcp/usage/">
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../deployment/">
       
       
-        <link rel="next" href="../installation/">
+        <link rel="next" href="../platform/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Overview - kafka-mcp</title>
+        <title>Usage (API / CLI / MCP) - kafka-mcp</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#overview" class="md-skip">
+        <a href="#usage-api-cli-mcp" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Overview
+              Usage (API / CLI / MCP)
             
           </span>
         </div>
@@ -253,11 +253,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../overview/" class="md-tabs__link">
         
   
   
@@ -312,9 +310,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../usage/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -466,37 +466,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
         
   
   
@@ -512,59 +485,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#the-tool-surface" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The tool surface
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-rest-contract" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The REST contract
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-to-go-next" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where to go next
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -627,10 +547,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../usage/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage (API / CLI / MCP)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -646,6 +593,87 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#as-an-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        As an MCP server
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#as-a-python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        As a Python API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="As a Python API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#writes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#native-direct-to-broker-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native (direct-to-broker) client
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#as-a-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        As a CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -758,10 +786,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-tool-surface" class="md-nav__link">
+  <a href="#as-an-mcp-server" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The tool surface
+        As an MCP server
       
     </span>
   </a>
@@ -769,21 +797,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-rest-contract" class="md-nav__link">
+  <a href="#as-a-python-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The REST contract
+        As a Python API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="As a Python API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#writes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writes
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#where-to-go-next" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#native-direct-to-broker-client" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where to go next
+        Native (direct-to-broker) client
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#as-a-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        As a CLI
       
     </span>
   </a>
@@ -810,75 +866,113 @@
   
 
 
-<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
-<p><code>kafka-mcp</code> is the <strong>API + MCP server + A2A agent</strong> for Apache Kafka in the
-agent-utilities ecosystem. It wraps the Confluent REST Proxy (and, optionally, the
-native broker protocol) in typed, deterministic tools that an agent or policy router
-can call.</p>
-<h2 id="the-tool-surface">The tool surface<a class="headerlink" href="#the-tool-surface" title="Permanent link">&para;</a></h2>
-<p>Six action-dispatch MCP tools cover the full Kafka surface. Each accepts an <code>action</code>
-plus a JSON <code>params_json</code> payload:</p>
+<h1 id="usage-api-cli-mcp">Usage — API / CLI / MCP<a class="headerlink" href="#usage-api-cli-mcp" title="Permanent link">&para;</a></h1>
+<p><code>kafka-mcp</code> exposes the same capability three ways: as <strong>MCP tools</strong> an agent calls,
+as a <strong>Python API</strong> (<code>KafkaApi</code>) you import, and as <strong>command-line servers</strong>. The
+complete tool surface is summarized in <a href="../overview/">Overview</a>.</p>
+<h2 id="as-an-mcp-server">As an MCP server<a class="headerlink" href="#as-an-mcp-server" title="Permanent link">&para;</a></h2>
+<p>Once <a href="../deployment/">deployed</a>, the server registers six action-dispatch tools. Each
+takes an <code>action</code> and a JSON <code>params_json</code> payload, so a single tool covers a whole
+Kafka resource family:</p>
 <table>
 <thead>
 <tr>
 <th>Tool</th>
-<th>Resource</th>
-<th>Representative actions</th>
+<th>Actions</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>kafka_topics</code></td>
-<td>Topics &amp; configs</td>
 <td><code>list</code>, <code>create</code>, <code>describe</code>, <code>delete</code>, <code>configs</code>, <code>update_config</code></td>
 </tr>
 <tr>
 <td><code>kafka_partitions</code></td>
-<td>Partitions</td>
 <td><code>list</code>, <code>get</code></td>
 </tr>
 <tr>
 <td><code>kafka_records</code></td>
-<td>Produce / consume</td>
 <td><code>produce</code>, <code>create_consumer</code>, <code>subscribe</code>, <code>consume</code>, <code>commit</code>, <code>delete_consumer</code></td>
 </tr>
 <tr>
 <td><code>kafka_groups</code></td>
-<td>Consumer groups</td>
 <td><code>list</code>, <code>describe</code>, <code>consumers</code>, <code>lag_summary</code>, <code>lags</code></td>
 </tr>
 <tr>
 <td><code>kafka_cluster</code></td>
-<td>Clusters, brokers, ACLs</td>
 <td><code>list_clusters</code>, <code>get_cluster</code>, <code>list_brokers</code>, <code>get_broker</code>, <code>broker_configs</code>, <code>list_acls</code>, <code>create_acl</code>, <code>delete_acls</code></td>
 </tr>
 <tr>
 <td><code>kafka_native</code></td>
-<td>Direct-to-broker</td>
-<td><code>produce</code>, <code>consume</code>, <code>create_topic</code>, <code>delete_topic</code>, <code>list_topics</code>, <code>list_groups</code></td>
+<td><code>produce</code>, <code>consume</code>, <code>create_topic</code>, <code>delete_topic</code>, <code>list_topics</code>, <code>list_groups</code> (requires <code>kafka-mcp[native]</code>)</td>
 </tr>
 </tbody>
 </table>
-<h2 id="the-rest-contract">The REST contract<a class="headerlink" href="#the-rest-contract" title="Permanent link">&para;</a></h2>
-<p><code>KafkaApi</code> targets the <strong>Confluent REST Proxy v3</strong> for administration and v3 produce,
-with <strong>v2</strong> helpers for the consumer-instance lifecycle:</p>
+<p>Example agent prompts that map onto these tools:</p>
 <ul>
-<li><strong>Clusters / topics / partitions / brokers / ACLs</strong> — <code>GET|POST|DELETE
-  v3/clusters/{cluster}/…</code>.</li>
-<li><strong>Produce</strong> — <code>POST v3/clusters/{cluster}/topics/{topic}/records</code> with a typed
-  <code>value</code>/<code>key</code> (<code>STRING</code>, <code>JSON</code>, <code>BINARY</code>, <code>AVRO</code>, <code>JSONSCHEMA</code>, <code>PROTOBUF</code>).</li>
-<li><strong>Consume</strong> — the v2 instance lifecycle: <code>create_consumer</code> → <code>subscribe</code> →
-  <code>consume</code> (poll) → <code>commit</code> → <code>delete_consumer</code>.</li>
+<li><em>"List the topics in the cluster"</em> → <code>kafka_topics</code> (<code>list</code>)</li>
+<li><em>"Create a topic <code>events</code> with 3 partitions"</em> → <code>kafka_topics</code> (<code>create</code>)</li>
+<li><em>"What is the consumer lag for group <code>billing</code>?"</em> → <code>kafka_groups</code> (<code>lag_summary</code>)</li>
+<li><em>"Produce a JSON record to <code>events</code>"</em> → <code>kafka_records</code> (<code>produce</code>)</li>
 </ul>
-<p>The active cluster id is resolved lazily and cached — honor <code>KAFKA_CLUSTER_ID</code> to
-pin it, otherwise the first cluster returned by <code>list_clusters</code> is used.</p>
-<h2 id="where-to-go-next">Where to go next<a class="headerlink" href="#where-to-go-next" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong><a href="../installation/">Installation</a></strong> — pip, extras, Docker image.</li>
-<li><strong><a href="../deployment/">Deployment</a></strong> — transports, Compose, the agent server, Caddy, DNS.</li>
-<li><strong><a href="../usage/">Usage</a></strong> — the tools, the <code>KafkaApi</code> client, the CLI.</li>
-<li><strong><a href="../architecture/">Architecture</a></strong> — the layered client and tool surface.</li>
-</ul>
+<h2 id="as-a-python-api">As a Python API<a class="headerlink" href="#as-a-python-api" title="Permanent link">&para;</a></h2>
+<p><code>KafkaApi</code> (exported as <code>Api</code>) is a <code>requests</code>-based facade over the Confluent REST
+Proxy. The active cluster id is resolved lazily, so most calls need no cluster
+argument.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kafka_mcp.api_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">Api</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">api</span> <span class="o">=</span> <span class="n">Api</span><span class="p">(</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://your-rest-proxy:8082&quot;</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>            <span class="c1"># or a bearer token</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">verify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Reads</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">clusters</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">list_clusters</span><span class="p">()</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">topics</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">list_topics</span><span class="p">()</span>                     <span class="c1"># uses the resolved cluster id</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">detail</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_topic</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">groups</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">list_consumer_groups</span><span class="p">()</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">lag</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_group_lag_summary</span><span class="p">(</span><span class="s2">&quot;billing&quot;</span><span class="p">)</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">brokers</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">list_brokers</span><span class="p">()</span>
+</span></code></pre></div>
+<p>Build a client straight from the environment:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kafka_mcp.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_client</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">api</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span>         <span class="c1"># reads KAFKA_REST_URL / KAFKA_TOKEN / ... from the environment</span>
+</span></code></pre></div>
+<h3 id="writes">Writes<a class="headerlink" href="#writes" title="Permanent link">&para;</a></h3>
+<p>Produce records and administer topics, configs, and ACLs:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">api</span><span class="o">.</span><span class="n">create_topic</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">,</span> <span class="n">partitions_count</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">replication_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">api</span><span class="o">.</span><span class="n">produce_record</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">value_format</span><span class="o">=</span><span class="s2">&quot;JSON&quot;</span><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">api</span><span class="o">.</span><span class="n">update_topic_config</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">,</span> <span class="s2">&quot;retention.ms&quot;</span><span class="p">,</span> <span class="s2">&quot;120000&quot;</span><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">api</span><span class="o">.</span><span class="n">create_acl</span><span class="p">(</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">resource_type</span><span class="o">=</span><span class="s2">&quot;TOPIC&quot;</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">resource_name</span><span class="o">=</span><span class="s2">&quot;events&quot;</span><span class="p">,</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">pattern_type</span><span class="o">=</span><span class="s2">&quot;LITERAL&quot;</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">principal</span><span class="o">=</span><span class="s2">&quot;User:alice&quot;</span><span class="p">,</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">operation</span><span class="o">=</span><span class="s2">&quot;READ&quot;</span><span class="p">,</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">permission</span><span class="o">=</span><span class="s2">&quot;ALLOW&quot;</span><span class="p">,</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="native-direct-to-broker-client">Native (direct-to-broker) client<a class="headerlink" href="#native-direct-to-broker-client" title="Permanent link">&para;</a></h3>
+<p>With the <code>kafka-mcp[native]</code> extra, connect straight to brokers:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kafka_mcp.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_native_client</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">native</span> <span class="o">=</span> <span class="n">get_native_client</span><span class="p">()</span>                   <span class="c1"># reads KAFKA_BOOTSTRAP_SERVERS</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">native</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">,</span> <span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">records</span> <span class="o">=</span> <span class="n">native</span><span class="o">.</span><span class="n">consume</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">,</span> <span class="s2">&quot;my-group&quot;</span><span class="p">,</span> <span class="n">max_messages</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="as-a-cli">As a CLI<a class="headerlink" href="#as-a-cli" title="Permanent link">&para;</a></h2>
+<p>Two console scripts ship with the package:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># MCP server (stdio by default; see Deployment for HTTP transports)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kafka-mcp<span class="w"> </span>--transport<span class="w"> </span>streamable-http<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># A2A agent server (connects to a running MCP server via --mcp-url)</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>kafka-agent<span class="w"> </span>--mcp-url<span class="w"> </span>http://localhost:8000/mcp<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8080</span>
+</span></code></pre></div>
+<p>Each connector reads its own configuration from the environment (see
+<a href="https://github.com/Knuckles-Team/kafka-mcp/blob/main/.env.example"><code>.env.example</code></a>)
+and remains inactive when the required credentials are absent.</p>
 
 
 
@@ -916,7 +1010,7 @@ pin it, otherwise the first cluster returned by <code>list_clusters</code> is us
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+          <a href="../deployment/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deployment">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -926,20 +1020,20 @@ pin it, otherwise the first cluster returned by <code>list_clusters</code> is us
                 Previous
               </span>
               <div class="md-ellipsis">
-                Home
+                Deployment
               </div>
             </div>
           </a>
         
         
           
-          <a href="../installation/" class="md-footer__link md-footer__link--next" aria-label="Next: Installation">
+          <a href="../platform/" class="md-footer__link md-footer__link--next" aria-label="Next: Backing Platform (Kafka)">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Installation
+                Backing Platform (Kafka)
               </div>
             </div>
             <div class="md-footer__button md-icon">

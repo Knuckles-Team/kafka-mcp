@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://knuckles-team.github.io/kafka-mcp/overview/">
+        <link rel="canonical" href="https://knuckles-team.github.io/kafka-mcp/installation/">
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../overview/">
       
       
-        <link rel="next" href="../installation/">
+        <link rel="next" href="../deployment/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Overview - kafka-mcp</title>
+        <title>Installation - kafka-mcp</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#overview" class="md-skip">
+        <a href="#installation" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Overview
+              Installation
             
           </span>
         </div>
@@ -253,11 +253,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../overview/" class="md-tabs__link">
         
   
   
@@ -274,9 +272,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../installation/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -466,6 +466,33 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -485,7 +512,7 @@
   <span class="md-ellipsis">
     
   
-    Overview
+    Installation
   
 
     
@@ -503,7 +530,7 @@
   <span class="md-ellipsis">
     
   
-    Overview
+    Installation
   
 
     
@@ -529,10 +556,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-tool-surface" class="md-nav__link">
+  <a href="#requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The tool surface
+        Requirements
       
     </span>
   </a>
@@ -540,10 +567,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-rest-contract" class="md-nav__link">
+  <a href="#from-pypi-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The REST contract
+        From PyPI (recommended)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="From PyPI (recommended)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optional-extras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional extras
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#from-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From source
       
     </span>
   </a>
@@ -551,10 +606,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-to-go-next" class="md-nav__link">
+  <a href="#prebuilt-docker-image" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where to go next
+        Prebuilt Docker image
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-the-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify the install
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next steps
       
     </span>
   </a>
@@ -565,33 +642,6 @@
   
 </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../installation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Installation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -758,10 +808,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-tool-surface" class="md-nav__link">
+  <a href="#requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The tool surface
+        Requirements
       
     </span>
   </a>
@@ -769,10 +819,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-rest-contract" class="md-nav__link">
+  <a href="#from-pypi-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The REST contract
+        From PyPI (recommended)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="From PyPI (recommended)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optional-extras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional extras
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#from-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From source
       
     </span>
   </a>
@@ -780,10 +858,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-to-go-next" class="md-nav__link">
+  <a href="#prebuilt-docker-image" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where to go next
+        Prebuilt Docker image
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-the-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify the install
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next steps
       
     </span>
   </a>
@@ -810,74 +910,87 @@
   
 
 
-<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
-<p><code>kafka-mcp</code> is the <strong>API + MCP server + A2A agent</strong> for Apache Kafka in the
-agent-utilities ecosystem. It wraps the Confluent REST Proxy (and, optionally, the
-native broker protocol) in typed, deterministic tools that an agent or policy router
-can call.</p>
-<h2 id="the-tool-surface">The tool surface<a class="headerlink" href="#the-tool-surface" title="Permanent link">&para;</a></h2>
-<p>Six action-dispatch MCP tools cover the full Kafka surface. Each accepts an <code>action</code>
-plus a JSON <code>params_json</code> payload:</p>
+<h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
+<p><code>kafka-mcp</code> is a standard Python package and a prebuilt container image. Pick the
+path that matches how you want to run it.</p>
+<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Python 3.11 – 3.14</strong>.</li>
+<li>A reachable <strong>Confluent REST Proxy</strong> (default surface) in front of Apache Kafka —
+  see <a href="../platform/">Backing Platform</a> to deploy Kafka locally. The optional native
+  client connects directly to brokers instead.</li>
+</ul>
+<h2 id="from-pypi-recommended">From PyPI (recommended)<a class="headerlink" href="#from-pypi-recommended" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>kafka-mcp
+</span></code></pre></div>
+<h3 id="optional-extras">Optional extras<a class="headerlink" href="#optional-extras" title="Permanent link">&para;</a></h3>
+<p>The base install is intentionally minimal. Install the extra for what you need:</p>
 <table>
 <thead>
 <tr>
-<th>Tool</th>
-<th>Resource</th>
-<th>Representative actions</th>
+<th>Extra</th>
+<th>Install</th>
+<th>Pulls in</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>kafka_topics</code></td>
-<td>Topics &amp; configs</td>
-<td><code>list</code>, <code>create</code>, <code>describe</code>, <code>delete</code>, <code>configs</code>, <code>update_config</code></td>
+<td><code>mcp</code></td>
+<td><code>pip install "kafka-mcp[mcp]"</code></td>
+<td>FastMCP MCP-server runtime (<code>agent-utilities[mcp]</code>)</td>
 </tr>
 <tr>
-<td><code>kafka_partitions</code></td>
-<td>Partitions</td>
-<td><code>list</code>, <code>get</code></td>
+<td><code>agent</code></td>
+<td><code>pip install "kafka-mcp[agent]"</code></td>
+<td>Pydantic-AI agent + Logfire tracing</td>
 </tr>
 <tr>
-<td><code>kafka_records</code></td>
-<td>Produce / consume</td>
-<td><code>produce</code>, <code>create_consumer</code>, <code>subscribe</code>, <code>consume</code>, <code>commit</code>, <code>delete_consumer</code></td>
+<td><code>native</code></td>
+<td><code>pip install "kafka-mcp[native]"</code></td>
+<td><code>confluent-kafka</code> direct-to-broker client</td>
 </tr>
 <tr>
-<td><code>kafka_groups</code></td>
-<td>Consumer groups</td>
-<td><code>list</code>, <code>describe</code>, <code>consumers</code>, <code>lag_summary</code>, <code>lags</code></td>
+<td><code>all</code></td>
+<td><code>pip install "kafka-mcp[all]"</code></td>
+<td>MCP + agent + Logfire</td>
 </tr>
 <tr>
-<td><code>kafka_cluster</code></td>
-<td>Clusters, brokers, ACLs</td>
-<td><code>list_clusters</code>, <code>get_cluster</code>, <code>list_brokers</code>, <code>get_broker</code>, <code>broker_configs</code>, <code>list_acls</code>, <code>create_acl</code>, <code>delete_acls</code></td>
-</tr>
-<tr>
-<td><code>kafka_native</code></td>
-<td>Direct-to-broker</td>
-<td><code>produce</code>, <code>consume</code>, <code>create_topic</code>, <code>delete_topic</code>, <code>list_topics</code>, <code>list_groups</code></td>
+<td><code>test</code></td>
+<td><code>pip install "kafka-mcp[test]"</code></td>
+<td><code>pytest</code>, <code>pytest-asyncio</code>, <code>pytest-cov</code>, <code>pytest-xdist</code></td>
 </tr>
 </tbody>
 </table>
-<h2 id="the-rest-contract">The REST contract<a class="headerlink" href="#the-rest-contract" title="Permanent link">&para;</a></h2>
-<p><code>KafkaApi</code> targets the <strong>Confluent REST Proxy v3</strong> for administration and v3 produce,
-with <strong>v2</strong> helpers for the consumer-instance lifecycle:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Typical: run the MCP server plus the native client</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kafka-mcp[mcp,native]&quot;</span>
+</span></code></pre></div>
+<h2 id="from-source">From source<a class="headerlink" href="#from-source" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Knuckles-Team/kafka-mcp.git
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">cd</span><span class="w"> </span>kafka-mcp
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[all]&quot;</span><span class="w">          </span><span class="c1"># editable install with the MCP + agent extras</span>
+</span></code></pre></div>
+<p>With <a href="https://docs.astral.sh/uv/"><code>uv</code></a>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[all]&quot;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>uv<span class="w"> </span>run<span class="w"> </span>kafka-mcp
+</span></code></pre></div>
+<h2 id="prebuilt-docker-image">Prebuilt Docker image<a class="headerlink" href="#prebuilt-docker-image" title="Permanent link">&para;</a></h2>
+<p>A multi-stage, slim image is published on every release (entrypoint <code>kafka-mcp</code>):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>knucklessg1/kafka-mcp:latest
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-i<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KAFKA_REST_URL</span><span class="o">=</span>http://your-rest-proxy:8082<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>knucklessg1/kafka-mcp:latest<span class="w">         </span><span class="c1"># stdio transport (default)</span>
+</span></code></pre></div>
+<p>For an HTTP server with a published port, see <a href="../deployment/">Deployment</a>.</p>
+<h2 id="verify-the-install">Verify the install<a class="headerlink" href="#verify-the-install" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kafka-mcp<span class="w"> </span>--help
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import kafka_mcp; print(kafka_mcp.__version__)&quot;</span>
+</span></code></pre></div>
+<h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Clusters / topics / partitions / brokers / ACLs</strong> — <code>GET|POST|DELETE
-  v3/clusters/{cluster}/…</code>.</li>
-<li><strong>Produce</strong> — <code>POST v3/clusters/{cluster}/topics/{topic}/records</code> with a typed
-  <code>value</code>/<code>key</code> (<code>STRING</code>, <code>JSON</code>, <code>BINARY</code>, <code>AVRO</code>, <code>JSONSCHEMA</code>, <code>PROTOBUF</code>).</li>
-<li><strong>Consume</strong> — the v2 instance lifecycle: <code>create_consumer</code> → <code>subscribe</code> →
-  <code>consume</code> (poll) → <code>commit</code> → <code>delete_consumer</code>.</li>
-</ul>
-<p>The active cluster id is resolved lazily and cached — honor <code>KAFKA_CLUSTER_ID</code> to
-pin it, otherwise the first cluster returned by <code>list_clusters</code> is used.</p>
-<h2 id="where-to-go-next">Where to go next<a class="headerlink" href="#where-to-go-next" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong><a href="../installation/">Installation</a></strong> — pip, extras, Docker image.</li>
-<li><strong><a href="../deployment/">Deployment</a></strong> — transports, Compose, the agent server, Caddy, DNS.</li>
-<li><strong><a href="../usage/">Usage</a></strong> — the tools, the <code>KafkaApi</code> client, the CLI.</li>
-<li><strong><a href="../architecture/">Architecture</a></strong> — the layered client and tool surface.</li>
+<li><strong><a href="../deployment/">Deployment</a></strong> — run it as a long-lived MCP server (and agent) behind Caddy + DNS.</li>
+<li><strong><a href="../usage/">Usage</a></strong> — call the tools, the <code>KafkaApi</code> client, and the CLI.</li>
+<li><strong><a href="../deployment/#configuration-environment">Configuration</a></strong> — every environment variable.</li>
 </ul>
 
 
@@ -916,7 +1029,7 @@ pin it, otherwise the first cluster returned by <code>list_clusters</code> is us
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+          <a href="../overview/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -926,20 +1039,20 @@ pin it, otherwise the first cluster returned by <code>list_clusters</code> is us
                 Previous
               </span>
               <div class="md-ellipsis">
-                Home
+                Overview
               </div>
             </div>
           </a>
         
         
           
-          <a href="../installation/" class="md-footer__link md-footer__link--next" aria-label="Next: Installation">
+          <a href="../deployment/" class="md-footer__link md-footer__link--next" aria-label="Next: Deployment">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Installation
+                Deployment
               </div>
             </div>
             <div class="md-footer__button md-icon">

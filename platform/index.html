@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://knuckles-team.github.io/kafka-mcp/overview/">
+        <link rel="canonical" href="https://knuckles-team.github.io/kafka-mcp/platform/">
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../usage/">
       
       
-        <link rel="next" href="../installation/">
+        <link rel="next" href="../architecture/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Overview - kafka-mcp</title>
+        <title>Backing Platform (Kafka) - kafka-mcp</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#overview" class="md-skip">
+        <a href="#backing-platform-apache-kafka" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Overview
+              Backing Platform (Kafka)
             
           </span>
         </div>
@@ -253,11 +253,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../overview/" class="md-tabs__link">
         
   
   
@@ -331,9 +329,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../platform/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -466,37 +466,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
         
   
   
@@ -512,59 +485,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#the-tool-surface" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The tool surface
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-rest-contract" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The REST contract
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-to-go-next" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where to go next
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -654,10 +574,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../platform/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backing Platform (Kafka)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -673,6 +620,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#single-node-kafka-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single-node Kafka (Compose)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-the-confluent-rest-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add the Confluent REST Proxy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connect-kafka-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connect kafka-mcp
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combined-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combined deployment
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -758,10 +769,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-tool-surface" class="md-nav__link">
+  <a href="#single-node-kafka-compose" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The tool surface
+        Single-node Kafka (Compose)
       
     </span>
   </a>
@@ -769,10 +780,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-rest-contract" class="md-nav__link">
+  <a href="#add-the-confluent-rest-proxy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The REST contract
+        Add the Confluent REST Proxy
       
     </span>
   </a>
@@ -780,10 +791,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-to-go-next" class="md-nav__link">
+  <a href="#connect-kafka-mcp" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where to go next
+        Connect kafka-mcp
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combined-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combined deployment
       
     </span>
   </a>
@@ -810,75 +832,124 @@
   
 
 
-<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
-<p><code>kafka-mcp</code> is the <strong>API + MCP server + A2A agent</strong> for Apache Kafka in the
-agent-utilities ecosystem. It wraps the Confluent REST Proxy (and, optionally, the
-native broker protocol) in typed, deterministic tools that an agent or policy router
-can call.</p>
-<h2 id="the-tool-surface">The tool surface<a class="headerlink" href="#the-tool-surface" title="Permanent link">&para;</a></h2>
-<p>Six action-dispatch MCP tools cover the full Kafka surface. Each accepts an <code>action</code>
-plus a JSON <code>params_json</code> payload:</p>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Resource</th>
-<th>Representative actions</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>kafka_topics</code></td>
-<td>Topics &amp; configs</td>
-<td><code>list</code>, <code>create</code>, <code>describe</code>, <code>delete</code>, <code>configs</code>, <code>update_config</code></td>
-</tr>
-<tr>
-<td><code>kafka_partitions</code></td>
-<td>Partitions</td>
-<td><code>list</code>, <code>get</code></td>
-</tr>
-<tr>
-<td><code>kafka_records</code></td>
-<td>Produce / consume</td>
-<td><code>produce</code>, <code>create_consumer</code>, <code>subscribe</code>, <code>consume</code>, <code>commit</code>, <code>delete_consumer</code></td>
-</tr>
-<tr>
-<td><code>kafka_groups</code></td>
-<td>Consumer groups</td>
-<td><code>list</code>, <code>describe</code>, <code>consumers</code>, <code>lag_summary</code>, <code>lags</code></td>
-</tr>
-<tr>
-<td><code>kafka_cluster</code></td>
-<td>Clusters, brokers, ACLs</td>
-<td><code>list_clusters</code>, <code>get_cluster</code>, <code>list_brokers</code>, <code>get_broker</code>, <code>broker_configs</code>, <code>list_acls</code>, <code>create_acl</code>, <code>delete_acls</code></td>
-</tr>
-<tr>
-<td><code>kafka_native</code></td>
-<td>Direct-to-broker</td>
-<td><code>produce</code>, <code>consume</code>, <code>create_topic</code>, <code>delete_topic</code>, <code>list_topics</code>, <code>list_groups</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="the-rest-contract">The REST contract<a class="headerlink" href="#the-rest-contract" title="Permanent link">&para;</a></h2>
-<p><code>KafkaApi</code> targets the <strong>Confluent REST Proxy v3</strong> for administration and v3 produce,
-with <strong>v2</strong> helpers for the consumer-instance lifecycle:</p>
-<ul>
-<li><strong>Clusters / topics / partitions / brokers / ACLs</strong> — <code>GET|POST|DELETE
-  v3/clusters/{cluster}/…</code>.</li>
-<li><strong>Produce</strong> — <code>POST v3/clusters/{cluster}/topics/{topic}/records</code> with a typed
-  <code>value</code>/<code>key</code> (<code>STRING</code>, <code>JSON</code>, <code>BINARY</code>, <code>AVRO</code>, <code>JSONSCHEMA</code>, <code>PROTOBUF</code>).</li>
-<li><strong>Consume</strong> — the v2 instance lifecycle: <code>create_consumer</code> → <code>subscribe</code> →
-  <code>consume</code> (poll) → <code>commit</code> → <code>delete_consumer</code>.</li>
-</ul>
-<p>The active cluster id is resolved lazily and cached — honor <code>KAFKA_CLUSTER_ID</code> to
-pin it, otherwise the first cluster returned by <code>list_clusters</code> is used.</p>
-<h2 id="where-to-go-next">Where to go next<a class="headerlink" href="#where-to-go-next" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong><a href="../installation/">Installation</a></strong> — pip, extras, Docker image.</li>
-<li><strong><a href="../deployment/">Deployment</a></strong> — transports, Compose, the agent server, Caddy, DNS.</li>
-<li><strong><a href="../usage/">Usage</a></strong> — the tools, the <code>KafkaApi</code> client, the CLI.</li>
-<li><strong><a href="../architecture/">Architecture</a></strong> — the layered client and tool surface.</li>
-</ul>
+<h1 id="backing-platform-apache-kafka">Backing Platform — Apache Kafka<a class="headerlink" href="#backing-platform-apache-kafka" title="Permanent link">&para;</a></h1>
+<p><code>kafka-mcp</code> is a <strong>client</strong> of an Apache Kafka cluster, reached either through the
+Confluent REST Proxy (the default surface) or directly via the native client. This
+page provides a Docker recipe for deploying Kafka locally to serve as the target of
+<code>KAFKA_REST_URL</code> / <code>KAFKA_BOOTSTRAP_SERVERS</code>. For production topologies, follow the
+upstream <a href="https://kafka.apache.org/documentation/">Apache Kafka documentation</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Backing-system recipe</p>
+<p>Each connector in the ecosystem follows the same convention — a
+<code>docs/platform.md</code> recipe for the system it integrates with, accompanied by a
+sample Compose stack that mirrors <a href="https://github.com/Knuckles-Team"><code>services/</code></a>.
+Systems offered only as a managed service have no local recipe.</p>
+</div>
+<h2 id="single-node-kafka-compose">Single-node Kafka (Compose)<a class="headerlink" href="#single-node-kafka-compose" title="Permanent link">&para;</a></h2>
+<p>Apache publishes the <code>apache/kafka</code> image. The following stack runs one KRaft-mode
+broker on <code>:9092</code> (mirrors <code>services/kafka/compose.yml</code>):</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># docker/kafka.compose.yml</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">kafka</span><span class="p">:</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache/kafka:latest</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafka</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafka</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;9092:9092&quot;</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="nt">KAFKA_NODE_ID</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">      </span><span class="nt">KAFKA_PROCESS_ROLES</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">broker,controller</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="nt">KAFKA_LISTENERS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLAINTEXT://:9092,CONTROLLER://:9093</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">      </span><span class="nt">KAFKA_ADVERTISED_LISTENERS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLAINTEXT://kafka:9092</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">      </span><span class="nt">KAFKA_CONTROLLER_LISTENER_NAMES</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONTROLLER</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">      </span><span class="nt">KAFKA_LISTENER_SECURITY_PROTOCOL_MAP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">      </span><span class="nt">KAFKA_CONTROLLER_QUORUM_VOTERS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1@localhost:9093</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">      </span><span class="nt">KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">      </span><span class="nt">KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">      </span><span class="nt">KAFKA_TRANSACTION_STATE_LOG_MIN_ISR</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">      </span><span class="nt">KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0&quot;</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafka_data:/var/lib/kafka/data</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">  </span><span class="nt">kafka_data</span><span class="p">:</span>
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker/kafka.compose.yml<span class="w"> </span>up<span class="w"> </span>-d
+</span></code></pre></div>
+<h2 id="add-the-confluent-rest-proxy">Add the Confluent REST Proxy<a class="headerlink" href="#add-the-confluent-rest-proxy" title="Permanent link">&para;</a></h2>
+<p>The default <code>kafka-mcp</code> surface speaks to the Confluent REST Proxy. Add it to the
+stack so the connector reaches Kafka over HTTP on <code>:8082</code>:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># docker/kafka.compose.yml (continued)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">rest-proxy</span><span class="p">:</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">confluentinc/cp-kafka-rest:latest</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafka-rest</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafka-rest</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafka</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8082:8082&quot;</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="nt">KAFKA_REST_HOST_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafka-rest</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">      </span><span class="nt">KAFKA_REST_BOOTSTRAP_SERVERS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafka:9092</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">      </span><span class="nt">KAFKA_REST_LISTENERS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://0.0.0.0:8082</span>
+</span></code></pre></div>
+<h2 id="connect-kafka-mcp">Connect kafka-mcp<a class="headerlink" href="#connect-kafka-mcp" title="Permanent link">&para;</a></h2>
+<p>Point the connector at the REST Proxy (default surface):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KAFKA_REST_URL</span><span class="o">=</span>http://localhost:8082
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KAFKA_SSL_VERIFY</span><span class="o">=</span>False<span class="w">          </span><span class="c1"># plaintext / self-signed homelab</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>kafka-mcp<span class="w"> </span>--transport<span class="w"> </span>streamable-http<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+</span></code></pre></div>
+<p>Or, with the <code>kafka-mcp[native]</code> extra, connect directly to brokers:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KAFKA_BOOTSTRAP_SERVERS</span><span class="o">=</span>localhost:9092
+</span></code></pre></div>
+<h2 id="combined-deployment">Combined deployment<a class="headerlink" href="#combined-deployment" title="Permanent link">&para;</a></h2>
+<p>A combined stack places Kafka, the REST Proxy, and the MCP server on one Docker
+network, so the server reaches the proxy by container name:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># docker/stack.compose.yml</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">kafka</span><span class="p">:</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apache/kafka:latest</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafka</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">      </span><span class="nt">KAFKA_NODE_ID</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">      </span><span class="nt">KAFKA_PROCESS_ROLES</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">broker,controller</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">      </span><span class="nt">KAFKA_LISTENERS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLAINTEXT://:9092,CONTROLLER://:9093</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">      </span><span class="nt">KAFKA_ADVERTISED_LISTENERS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLAINTEXT://kafka:9092</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">      </span><span class="nt">KAFKA_CONTROLLER_LISTENER_NAMES</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONTROLLER</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">      </span><span class="nt">KAFKA_LISTENER_SECURITY_PROTOCOL_MAP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">      </span><span class="nt">KAFKA_CONTROLLER_QUORUM_VOTERS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1@localhost:9093</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">      </span><span class="nt">KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">      </span><span class="nt">KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">      </span><span class="nt">KAFKA_TRANSACTION_STATE_LOG_MIN_ISR</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;kafka_data:/var/lib/kafka/data&quot;</span><span class="p p-Indicator">]</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span><span class="nt">rest-proxy</span><span class="p">:</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">confluentinc/cp-kafka-rest:latest</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafka-rest</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">kafka</span><span class="p p-Indicator">]</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">      </span><span class="nt">KAFKA_REST_HOST_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafka-rest</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">      </span><span class="nt">KAFKA_REST_BOOTSTRAP_SERVERS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kafka:9092</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">      </span><span class="nt">KAFKA_REST_LISTENERS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://0.0.0.0:8082</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">  </span><span class="nt">kafka-mcp</span><span class="p">:</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">knucklessg1/kafka-mcp:latest</span>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">rest-proxy</span><span class="p p-Indicator">]</span>
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-5-32"><a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">KAFKA_REST_URL=http://kafka-rest:8082</span>
+</span><span id="__span-5-33"><a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TRANSPORT=streamable-http</span>
+</span><span id="__span-5-34"><a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HOST=0.0.0.0</span>
+</span><span id="__span-5-35"><a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PORT=8000</span>
+</span><span id="__span-5-36"><a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;8000:8000&quot;</span><span class="p p-Indicator">]</span>
+</span><span id="__span-5-37"><a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>
+</span><span id="__span-5-38"><a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-5-39"><a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="w">  </span><span class="nt">kafka_data</span><span class="p">:</span>
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker/stack.compose.yml<span class="w"> </span>up<span class="w"> </span>-d
+</span></code></pre></div>
 
 
 
@@ -916,7 +987,7 @@ pin it, otherwise the first cluster returned by <code>list_clusters</code> is us
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+          <a href="../usage/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Usage (API / CLI / MCP)">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -926,20 +997,20 @@ pin it, otherwise the first cluster returned by <code>list_clusters</code> is us
                 Previous
               </span>
               <div class="md-ellipsis">
-                Home
+                Usage (API / CLI / MCP)
               </div>
             </div>
           </a>
         
         
           
-          <a href="../installation/" class="md-footer__link md-footer__link--next" aria-label="Next: Installation">
+          <a href="../architecture/" class="md-footer__link md-footer__link--next" aria-label="Next: Architecture">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Installation
+                Architecture
               </div>
             </div>
             <div class="md-footer__button md-icon">

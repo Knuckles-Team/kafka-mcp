@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://knuckles-team.github.io/kafka-mcp/overview/">
+        <link rel="canonical" href="https://knuckles-team.github.io/kafka-mcp/architecture/">
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../platform/">
       
       
-        <link rel="next" href="../installation/">
+        <link rel="next" href="../concepts/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Overview - kafka-mcp</title>
+        <title>Architecture - kafka-mcp</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#overview" class="md-skip">
+        <a href="#architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Overview
+              Architecture
             
           </span>
         </div>
@@ -253,11 +253,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../overview/" class="md-tabs__link">
         
   
   
@@ -350,9 +348,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../architecture/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -466,37 +466,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
         
   
   
@@ -512,59 +485,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#the-tool-surface" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The tool surface
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-rest-contract" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The REST contract
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-to-go-next" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where to go next
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -681,10 +601,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -700,6 +647,59 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-request-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The request path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#layered-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layered client
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entry-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entry points
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -758,10 +758,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-tool-surface" class="md-nav__link">
+  <a href="#the-request-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The tool surface
+        The request path
       
     </span>
   </a>
@@ -769,10 +769,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-rest-contract" class="md-nav__link">
+  <a href="#layered-client" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The REST contract
+        Layered client
       
     </span>
   </a>
@@ -780,10 +780,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-to-go-next" class="md-nav__link">
+  <a href="#entry-points" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where to go next
+        Entry points
       
     </span>
   </a>
@@ -810,74 +810,51 @@
   
 
 
-<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
-<p><code>kafka-mcp</code> is the <strong>API + MCP server + A2A agent</strong> for Apache Kafka in the
-agent-utilities ecosystem. It wraps the Confluent REST Proxy (and, optionally, the
-native broker protocol) in typed, deterministic tools that an agent or policy router
-can call.</p>
-<h2 id="the-tool-surface">The tool surface<a class="headerlink" href="#the-tool-surface" title="Permanent link">&para;</a></h2>
-<p>Six action-dispatch MCP tools cover the full Kafka surface. Each accepts an <code>action</code>
-plus a JSON <code>params_json</code> payload:</p>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Resource</th>
-<th>Representative actions</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>kafka_topics</code></td>
-<td>Topics &amp; configs</td>
-<td><code>list</code>, <code>create</code>, <code>describe</code>, <code>delete</code>, <code>configs</code>, <code>update_config</code></td>
-</tr>
-<tr>
-<td><code>kafka_partitions</code></td>
-<td>Partitions</td>
-<td><code>list</code>, <code>get</code></td>
-</tr>
-<tr>
-<td><code>kafka_records</code></td>
-<td>Produce / consume</td>
-<td><code>produce</code>, <code>create_consumer</code>, <code>subscribe</code>, <code>consume</code>, <code>commit</code>, <code>delete_consumer</code></td>
-</tr>
-<tr>
-<td><code>kafka_groups</code></td>
-<td>Consumer groups</td>
-<td><code>list</code>, <code>describe</code>, <code>consumers</code>, <code>lag_summary</code>, <code>lags</code></td>
-</tr>
-<tr>
-<td><code>kafka_cluster</code></td>
-<td>Clusters, brokers, ACLs</td>
-<td><code>list_clusters</code>, <code>get_cluster</code>, <code>list_brokers</code>, <code>get_broker</code>, <code>broker_configs</code>, <code>list_acls</code>, <code>create_acl</code>, <code>delete_acls</code></td>
-</tr>
-<tr>
-<td><code>kafka_native</code></td>
-<td>Direct-to-broker</td>
-<td><code>produce</code>, <code>consume</code>, <code>create_topic</code>, <code>delete_topic</code>, <code>list_topics</code>, <code>list_groups</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="the-rest-contract">The REST contract<a class="headerlink" href="#the-rest-contract" title="Permanent link">&para;</a></h2>
-<p><code>KafkaApi</code> targets the <strong>Confluent REST Proxy v3</strong> for administration and v3 produce,
-with <strong>v2</strong> helpers for the consumer-instance lifecycle:</p>
+<h1 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h1>
+<p>How <code>kafka-mcp</code> fits together: a layered REST client, thin MCP tool wrappers, an
+optional native broker client, and an optional Pydantic-AI agent server.</p>
+<h2 id="the-request-path">The request path<a class="headerlink" href="#the-request-path" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    Agent["Agent / policy router"] --&gt;|MCP call| Tools["kafka_* MCP tools&lt;br/&gt;(mcp/mcp_kafka.py)"]
+    CLI["kafka-agent&lt;br/&gt;(Pydantic-AI graph)"] --&gt;|MCP_URL| Tools
+    Tools --&gt;|"REST Proxy v3/v2"| Api["KafkaApi&lt;br/&gt;(api/api_client_kafka.py)"]
+    Tools -.-&gt;|"native extra"| Native["NativeKafkaClient&lt;br/&gt;(api/api_client_native.py)"]
+    Api --&gt;|"requests"| REST[("Confluent REST Proxy")]
+    Native --&gt;|"confluent-kafka"| Brokers[("Kafka brokers")]
+    REST --&gt; Brokers
+
+    classDef store fill:#dae8fe,stroke:#6c8ebf;
+    classDef proc fill:#d5e8d4,stroke:#82b366;
+    class REST,Brokers store;
+    class Tools,Api,Native proc;</code></pre>
+<p>The MCP tools add no business logic — they parse the <code>action</code> / <code>params_json</code> payload
+and dispatch to a <code>KafkaApi</code> (or <code>NativeKafkaClient</code>) method. All API surface lives in
+<code>kafka_mcp.api</code>.</p>
+<h2 id="layered-client">Layered client<a class="headerlink" href="#layered-client" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TB
+    Auth["auth.get_client() / get_native_client()&lt;br/&gt;builds clients from the environment"]
+    Auth --&gt; Api2["Api (api_client.py)&lt;br/&gt;= KafkaApi subclass"]
+    Api2 --&gt; Base["ApiClientBase&lt;br/&gt;(api/api_client_base.py)&lt;br/&gt;auth, TLS, request()"]
+    Auth --&gt; Native2["NativeKafkaClient&lt;br/&gt;(api/api_client_native.py)"]
+
+    classDef proc fill:#d5e8d4,stroke:#82b366;
+    class Auth,Api2,Base,Native2 proc;</code></pre>
 <ul>
-<li><strong>Clusters / topics / partitions / brokers / ACLs</strong> — <code>GET|POST|DELETE
-  v3/clusters/{cluster}/…</code>.</li>
-<li><strong>Produce</strong> — <code>POST v3/clusters/{cluster}/topics/{topic}/records</code> with a typed
-  <code>value</code>/<code>key</code> (<code>STRING</code>, <code>JSON</code>, <code>BINARY</code>, <code>AVRO</code>, <code>JSONSCHEMA</code>, <code>PROTOBUF</code>).</li>
-<li><strong>Consume</strong> — the v2 instance lifecycle: <code>create_consumer</code> → <code>subscribe</code> →
-  <code>consume</code> (poll) → <code>commit</code> → <code>delete_consumer</code>.</li>
+<li><strong><code>ApiClientBase</code></strong> centralizes bearer-token / basic-auth, TLS verification, and a
+  single <code>request()</code> helper.</li>
+<li><strong><code>KafkaApi</code></strong> organizes the REST surface by resource (clusters, topics,
+  partitions, records, consumer groups, brokers, ACLs) and resolves the cluster id
+  lazily.</li>
+<li><strong><code>Api</code></strong> is the public facade re-exported for import.</li>
+<li><strong><code>NativeKafkaClient</code></strong> is the optional <code>confluent-kafka</code> path for direct broker
+  produce / consume / admin.</li>
 </ul>
-<p>The active cluster id is resolved lazily and cached — honor <code>KAFKA_CLUSTER_ID</code> to
-pin it, otherwise the first cluster returned by <code>list_clusters</code> is used.</p>
-<h2 id="where-to-go-next">Where to go next<a class="headerlink" href="#where-to-go-next" title="Permanent link">&para;</a></h2>
+<h2 id="entry-points">Entry points<a class="headerlink" href="#entry-points" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong><a href="../installation/">Installation</a></strong> — pip, extras, Docker image.</li>
-<li><strong><a href="../deployment/">Deployment</a></strong> — transports, Compose, the agent server, Caddy, DNS.</li>
-<li><strong><a href="../usage/">Usage</a></strong> — the tools, the <code>KafkaApi</code> client, the CLI.</li>
-<li><strong><a href="../architecture/">Architecture</a></strong> — the layered client and tool surface.</li>
+<li><code>kafka_mcp.mcp_server:mcp_server</code> — the FastMCP server (<code>kafka-mcp</code> console
+  script), with a <code>/health</code> endpoint on HTTP transports.</li>
+<li><code>kafka_mcp.agent_server:agent_server</code> — the Pydantic-AI agent server
+  (<code>kafka-agent</code> console script), wired to the MCP server through <code>MCP_URL</code>.</li>
 </ul>
 
 
@@ -916,7 +893,7 @@ pin it, otherwise the first cluster returned by <code>list_clusters</code> is us
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+          <a href="../platform/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Backing Platform (Kafka)">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -926,20 +903,20 @@ pin it, otherwise the first cluster returned by <code>list_clusters</code> is us
                 Previous
               </span>
               <div class="md-ellipsis">
-                Home
+                Backing Platform (Kafka)
               </div>
             </div>
           </a>
         
         
           
-          <a href="../installation/" class="md-footer__link md-footer__link--next" aria-label="Next: Installation">
+          <a href="../concepts/" class="md-footer__link md-footer__link--next" aria-label="Next: Concepts">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Installation
+                Concepts
               </div>
             </div>
             <div class="md-footer__button md-icon">
