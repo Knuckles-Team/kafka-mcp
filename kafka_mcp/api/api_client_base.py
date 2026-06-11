@@ -1,14 +1,26 @@
-"""Shared HTTP base client for the Apache Kafka (REST Proxy) API wrapper."""
+"""Shared HTTP base client for the Apache Kafka (REST Proxy) API wrapper.
+
+Strangled onto :class:`agent_utilities.http.BaseApiClient` (CONCEPT:ECO-4.35
+Fleet HTTP Client Library): the public surface — constructor signature,
+``request()`` return shapes, ``last_etag`` — is identical to the legacy
+requests-based implementation, while the plumbing (base-URL joining, auth
+injection, rate-limit capture, bounded 429 backoff, log redaction) now comes
+from the shared fleet base.
+"""
 
 from typing import Any
-from urllib.parse import urljoin
 
-import requests
-import urllib3
+import httpx
+from agent_utilities.http import (
+    AuthHeaderInjector,
+    BaseApiClient,
+    BasicAuth,
+    TokenAuth,
+)
 
 
 class ApiClientBase:
-    """Thin requests.Session wrapper with token / basic-auth support.
+    """Thin wrapper over the fleet HTTP base with token / basic-auth support.
 
     The Confluent REST Proxy v3 API speaks JSON, but callers may pass an
     explicit ``content_type``/``accept`` (e.g. the versioned
@@ -24,22 +36,27 @@ class ApiClientBase:
         username: str | None = None,
         password: str | None = None,
         verify: bool = True,
+        transport: httpx.BaseTransport | None = None,
     ):
         self.base_url = base_url.rstrip("/") + "/"
         self.token = token
         self.username = username
         self.password = password
         self.last_etag: str | None = None
-        self._session = requests.Session()
-        self._session.verify = verify
 
-        if not verify:
-            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
+        auth: AuthHeaderInjector | None = None
         if token:
-            self._session.headers.update({"Authorization": f"Bearer {token}"})
+            auth = TokenAuth(token)
         elif username and password:
-            self._session.auth = (username, password)
+            auth = BasicAuth(username, password)
+
+        self._client = BaseApiClient(
+            self.base_url,
+            auth=auth,
+            verify=verify,
+            include_response_headers=True,
+            transport=transport,
+        )
 
     def request(
         self,
@@ -57,40 +74,31 @@ class ApiClientBase:
         Returns a dict when the response is JSON, otherwise
         ``{"status": "success", "text": <body>}``. Raises on HTTP >= 400.
         """
-        if endpoint.startswith("http"):
-            url = endpoint
-        else:
-            url = urljoin(self.base_url, endpoint.lstrip("/"))
+        if not endpoint.startswith("http"):
+            endpoint = endpoint.lstrip("/")
 
-        req_headers: dict[str, str] = {}
-        if content_type:
-            req_headers["Content-Type"] = content_type
-        if accept:
-            req_headers["Accept"] = accept
-        if headers:
-            req_headers.update(headers)
-
-        response = self._session.request(
-            method=method,
-            url=url,
-            headers=req_headers or None,
+        envelope = self._client.request(
+            method,
+            endpoint,
             params=params,
             data=data,
             json=json,
+            content_type=content_type,
+            accept=accept,
+            headers=headers,
+            raise_for_status=False,
         )
 
-        self.last_etag = response.headers.get("ETag")
+        self.last_etag = (envelope.get("headers") or {}).get("etag")
 
-        if response.status_code >= 400:
-            raise Exception(f"API error: {response.status_code} - {response.text}")
+        status_code = envelope["status_code"]
+        body = envelope["data"]
+        if status_code >= 400:
+            text = body if isinstance(body, str) else ("" if body is None else body)
+            raise Exception(f"API error: {status_code} - {text}")
 
-        if response.status_code == 204 or not response.text.strip():
+        if body is None or (isinstance(body, str) and not body.strip()):
             return {"status": "success"}
-
-        ctype = response.headers.get("Content-Type", "")
-        if "json" in ctype:
-            try:
-                return response.json()
-            except Exception:
-                pass
-        return {"status": "success", "text": response.text}
+        if not isinstance(body, str):
+            return body
+        return {"status": "success", "text": body}
