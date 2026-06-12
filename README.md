@@ -81,6 +81,21 @@ kafka-agent --mcp-url http://localhost:8000/mcp --host 0.0.0.0 --port 8080
 Register in your client's `mcp_config.json` (tools surface as `kafka_topics`,
 `kafka_records`, `kafka_groups`, …). See `kafka_mcp/mcp_config.json`.
 
+<!-- BEGIN GENERATED: additional-deployment-options -->
+### Additional Deployment Options
+
+`kafka-mcp` can also run as a **local container** (Docker / Podman / `uv`) or be
+consumed from a **remote deployment**. The
+[Deployment guide](https://knuckles-team.github.io/kafka-mcp/deployment/) has full, copy-paste
+`mcp_config.json` for all four transports — **stdio**, **streamable-http**,
+**local container / uv**, and **remote URL**:
+
+- **Local container / uv** — launch the server from `mcp_config.json` via `uvx`,
+  `docker run`, or `podman run`, or point at a local streamable-http container by `url`.
+- **Remote URL** — connect to a server deployed behind Caddy at
+  `http://kafka-mcp.arpa/mcp` using the `"url"` key.
+<!-- END GENERATED: additional-deployment-options -->
+
 ## Documentation
 
 The complete documentation is published as the
