@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kafka-mcp"
-version = "0.7.0"
+version = "0.8.0"
 description = "Apache Kafka (REST Proxy / native) API + MCP Server + A2A Server for Agentic AI!"
 readme = "README.md"
 classifiers = [ "Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Environment :: Console", "Operating System :: POSIX :: Linux", "Programming Language :: Python :: 3",]
 requires-python = ">=3.11, <3.15"
-dependencies = [ "agent-utilities>=0.48.0", "requests>=2.31.0",]
+dependencies = [ "agent-utilities>=0.49.0", "requests>=2.31.0",]
 [[project.authors]]
 name = "Audel Rouhi"
 email = "knucklessg1@gmail.com"
@@ -18,10 +18,10 @@ email = "knucklessg1@gmail.com"
 text = "MIT"
 
 [project.optional-dependencies]
-mcp = [ "agent-utilities[mcp]>=0.48.0",]
-agent = [ "agent-utilities[agent,logfire]>=0.48.0",]
+mcp = [ "agent-utilities[mcp]>=0.49.0",]
+agent = [ "agent-utilities[agent,logfire]>=0.49.0",]
 native = [ "confluent-kafka>=2.3.0",]
-all = [ "agent-utilities[mcp,agent,logfire]>=0.48.0",]
+all = [ "agent-utilities[mcp,agent,logfire]>=0.49.0",]
 test = [ "pytest-xdist>=3.6.0", "pytest", "pytest-asyncio", "pytest-cov",]
 
 [project.scripts]
