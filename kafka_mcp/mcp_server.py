@@ -1,19 +1,27 @@
 """Main FastMCP server and tool registration for kafka-mcp."""
 
-import os
 import sys
 from typing import Any
 
-from agent_utilities.base_utilities import to_boolean
-from agent_utilities.mcp_utilities import create_mcp_server, load_config
+from agent_utilities.mcp_utilities import (
+    create_mcp_server,
+    load_config,
+    register_tool_surface,
+)
 from fastmcp.utilities.logging import get_logger
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
+from kafka_mcp.api_client import Api
+from kafka_mcp.auth import get_client
 from kafka_mcp.mcp.mcp_kafka import register_kafka_tools
 
 __version__ = "0.2.0"
 logger = get_logger(name="kafka_mcp")
+
+# Re-exported so ``register_tool_surface``'s module auto-discovery (which scans
+# this namespace for ``register_<tag>_tools``) finds the kafka registrar.
+__all__ = ["get_mcp_instance", "mcp_server", "register_kafka_tools"]
 
 
 def get_mcp_instance() -> tuple[Any, ...]:
@@ -32,8 +40,14 @@ def get_mcp_instance() -> tuple[Any, ...]:
     async def health_check(request: Request) -> JSONResponse:
         return JSONResponse({"status": "OK"})
 
-    if to_boolean(os.getenv("KAFKATOOL", "True")):
-        register_kafka_tools(mcp)
+    registered_tags = register_tool_surface(
+        mcp,
+        client_cls=Api,
+        get_client=get_client,
+        service="kafka-mcp",
+        tools_module=sys.modules[__name__],
+    )
+    logger.info(f"Registered condensed tool surfaces: {registered_tags}")
 
     for mw in middlewares:
         mcp.add_middleware(mw)

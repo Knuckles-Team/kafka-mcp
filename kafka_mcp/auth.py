@@ -1,8 +1,7 @@
 """Identity credentials loader for the Apache Kafka clients."""
 
-import os
-
-from agent_utilities.base_utilities import get_logger, to_boolean
+from agent_utilities.base_utilities import get_logger
+from agent_utilities.core.config import setting
 
 from kafka_mcp.api.api_client_native import NativeKafkaClient
 from kafka_mcp.api_client import Api
@@ -18,11 +17,11 @@ def get_client() -> Api:
     ``KAFKA_USERNAME``/``KAFKA_PASSWORD``; TLS verification via
     ``KAFKA_SSL_VERIFY``.
     """
-    base_url = os.getenv("KAFKA_REST_URL") or "http://localhost:8082"
-    token = os.getenv("KAFKA_TOKEN", "")
-    username = os.getenv("KAFKA_USERNAME", "")
-    password = os.getenv("KAFKA_PASSWORD", "")
-    verify = to_boolean(os.getenv("KAFKA_SSL_VERIFY", "True"))
+    base_url = setting("KAFKA_REST_URL", "http://localhost:8082")
+    token = setting("KAFKA_TOKEN", "")
+    username = setting("KAFKA_USERNAME", "")
+    password = setting("KAFKA_PASSWORD", "")
+    verify = setting("KAFKA_SSL_VERIFY", True)
 
     return Api(
         base_url=base_url,
@@ -39,5 +38,5 @@ def get_native_client() -> NativeKafkaClient:
     Honors ``KAFKA_BOOTSTRAP_SERVERS`` (default ``localhost:9092``). Requires
     the optional ``kafka-mcp[native]`` extra at call time.
     """
-    bootstrap = os.getenv("KAFKA_BOOTSTRAP_SERVERS") or "localhost:9092"
+    bootstrap = setting("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
     return NativeKafkaClient(bootstrap_servers=bootstrap)
