@@ -104,12 +104,12 @@ Auto-generated — do not edit between the markers below.
 
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
-| `kafka_cluster` | `CLUSTERTOOL` | Inspect clusters/brokers and manage ACLs via the REST Proxy. |
-| `kafka_groups` | `GROUPSTOOL` | Inspect Kafka consumer groups and their lag. |
-| `kafka_native` | `NATIVETOOL` | Produce/consume/admin directly against brokers (native client). |
-| `kafka_partitions` | `PARTITIONSTOOL` | List partitions for a topic or get a single partition. |
-| `kafka_records` | `RECORDSTOOL` | Produce or consume records via the Confluent REST Proxy. |
-| `kafka_topics` | `TOPICSTOOL` | Manage Kafka topics via the Confluent REST Proxy. |
+| `kafka_cluster` | `KAFKATOOL` | Inspect clusters/brokers and manage ACLs via the REST Proxy. |
+| `kafka_groups` | `KAFKATOOL` | Inspect Kafka consumer groups and their lag. |
+| `kafka_native` | `KAFKATOOL` | Produce/consume/admin directly against brokers (native client). |
+| `kafka_partitions` | `KAFKATOOL` | List partitions for a topic or get a single partition. |
+| `kafka_records` | `KAFKATOOL` | Produce or consume records via the Confluent REST Proxy. |
+| `kafka_topics` | `KAFKATOOL` | Manage Kafka topics via the Confluent REST Proxy. |
 
 _6 action-routed tools (default `MCP_TOOL_MODE=condensed`). Each is enabled unless its toggle is set false; set `MCP_TOOL_MODE=verbose` (or `both`) for the 1:1 per-operation surface. Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
