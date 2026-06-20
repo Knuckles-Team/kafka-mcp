@@ -96,6 +96,24 @@ consumed from a **remote deployment**. The
   `http://kafka-mcp.arpa/mcp` using the `"url"` key.
 <!-- END GENERATED: additional-deployment-options -->
 
+## Available MCP Tools
+
+Auto-generated — do not edit between the markers below.
+
+<!-- MCP-TOOLS-TABLE:START -->
+
+| MCP Tool | Toggle Env Var | Description |
+|----------|----------------|-------------|
+| `kafka_cluster` | `CLUSTERTOOL` | Inspect clusters/brokers and manage ACLs via the REST Proxy. |
+| `kafka_groups` | `GROUPSTOOL` | Inspect Kafka consumer groups and their lag. |
+| `kafka_native` | `NATIVETOOL` | Produce/consume/admin directly against brokers (native client). |
+| `kafka_partitions` | `PARTITIONSTOOL` | List partitions for a topic or get a single partition. |
+| `kafka_records` | `RECORDSTOOL` | Produce or consume records via the Confluent REST Proxy. |
+| `kafka_topics` | `TOPICSTOOL` | Manage Kafka topics via the Confluent REST Proxy. |
+
+_6 action-routed tools (default `MCP_TOOL_MODE=condensed`). Each is enabled unless its toggle is set false; set `MCP_TOOL_MODE=verbose` (or `both`) for the 1:1 per-operation surface. Auto-generated — do not edit._
+<!-- MCP-TOOLS-TABLE:END -->
+
 ## Documentation
 
 The complete documentation is published as the
