@@ -45,8 +45,9 @@ Pydantic-AI agent server.
 - **An A2A agent server** (`kafka-agent` console script) — a Pydantic-AI graph agent
   wired to the MCP server via `MCP_URL`.
 
-## Configuration (environment)
+## Environment Variables
 
+### Connection & credentials (Confluent REST Proxy)
 | Var | Default | Meaning |
 |---|---|---|
 | `KAFKA_REST_URL` | `http://localhost:8082` | Confluent REST Proxy base URL |
@@ -55,17 +56,51 @@ Pydantic-AI agent server.
 | `KAFKA_USERNAME` | _(empty)_ | Basic-auth user (optional) |
 | `KAFKA_PASSWORD` | _(empty)_ | Basic-auth password (optional) |
 | `KAFKA_SSL_VERIFY` | `True` | Verify TLS (set `False` for self-signed homelab) |
-| `KAFKATOOL` | `True` | Register the Kafka tool set |
 
-The optional native client reads `KAFKA_BOOTSTRAP_SERVERS` (default
-`localhost:9092`) and requires the `kafka-mcp[native]` extra. Copy
-[`.env.example`](.env.example) to `.env` and populate only what you use; blank
+### Native client (optional `kafka-mcp[native]` extra)
+| Var | Default | Meaning |
+|---|---|---|
+| `KAFKA_BOOTSTRAP_SERVERS` | `localhost:9092` | Broker bootstrap servers for the native (direct-to-broker) client |
+| `KAFKA_SCHEMA_REGISTRY_URL` | `http://localhost:8081` | Confluent Schema Registry URL |
+
+### MCP server / transport
+| Var | Default | Meaning |
+|---|---|---|
+| `TRANSPORT` | `stdio` | `stdio`, `streamable-http`, or `sse` |
+| `HOST` | `0.0.0.0` | Bind host (HTTP transports) |
+| `PORT` | `8000` | Bind port (HTTP transports) |
+| `MCP_TOOL_MODE` | `condensed` | Tool surface: `condensed`, `verbose`, or `both` |
+
+### Tool toggles
+| Var | Default | Meaning |
+|---|---|---|
+| `KAFKATOOL` | `True` | Register the Kafka tool set (set `False` to disable) |
+
+Copy [`.env.example`](.env.example) to `.env` and populate only what you use; blank
 connector credentials leave the corresponding surface inactive.
 
-## Install & run
+## Installation
+
+Pick the extra that matches what you want to run:
+
+| Extra | Installs | Use when |
+|-------|----------|----------|
+| `kafka-mcp[mcp]` | Slim MCP server only (`agent-utilities[mcp]` — FastMCP/FastAPI) | You only run the **MCP server** (smallest install / image) |
+| `kafka-mcp[agent]` | Full agent runtime (`agent-utilities[agent,logfire]` — Pydantic AI + the epistemic-graph engine) | You run the **integrated agent** |
+| `kafka-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
-pip install -e .
+# MCP server only (recommended for tool hosting — slim deps)
+uv pip install "kafka-mcp[mcp]"
+
+# Full agent runtime (Pydantic AI + epistemic-graph engine)
+uv pip install "kafka-mcp[agent]"
+
+# Everything (development)
+uv pip install "kafka-mcp[all]"      # or: python -m pip install "kafka-mcp[all]"
+```
+
+```bash
 kafka-mcp                        # stdio MCP server (default transport)
 kafka-mcp --transport streamable-http --host 0.0.0.0 --port 8000
 ```
@@ -76,10 +111,61 @@ Run the agent server against a live MCP server:
 kafka-agent --mcp-url http://localhost:8000/mcp --host 0.0.0.0 --port 8080
 ```
 
-## MCP config
+### Container images (`:mcp` vs `:agent`)
+
+One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `--target`:
+
+| Image tag | Build target | Contents | Entrypoint |
+|-----------|--------------|----------|------------|
+| `knucklessg1/kafka-mcp:mcp` | `--target mcp` | `kafka-mcp[mcp]` — **slim**, no engine/`pydantic-ai`/`dspy`/`llama-index`/`tree-sitter` | `kafka-mcp` |
+| `knucklessg1/kafka-mcp:latest` | `--target agent` (default) | `kafka-mcp[agent]` — **full** agent runtime + epistemic-graph engine | `kafka-agent` |
+
+```bash
+docker build --target mcp   -t knucklessg1/kafka-mcp:mcp    docker/   # slim MCP server
+docker build --target agent -t knucklessg1/kafka-mcp:latest docker/   # full agent
+```
+
+### Knowledge-graph database (`epistemic-graph`)
+
+The **full agent** (`[agent]` / `:latest`) embeds the **epistemic-graph** engine (pulled in
+transitively via `agent-utilities[agent]`). For production — or to share one knowledge graph
+across multiple agents — run **epistemic-graph as its own database container** and point the
+agent at it instead of embedding it. Deployment recipes (single-node + Raft HA), connection
+config, and the full database architecture (with diagrams) are documented in the
+[epistemic-graph deployment guide](https://knuckles-team.github.io/epistemic-graph/deployment/).
+The slim `[mcp]` server does **not** require the database.
+
+## MCP Configuration Examples
+
+> **Install the slim `[mcp]` extra.** All examples below install
+> `kafka-mcp[mcp]` — the MCP-server extra that pulls only the FastMCP /
+> FastAPI tooling (`agent-utilities[mcp]`). It deliberately **excludes** the heavy
+> agent runtime (the epistemic-graph engine, `pydantic-ai`, `dspy`, `llama-index`,
+> `tree-sitter`), so `uvx`/container installs are dramatically smaller and faster.
+> Use the full `[agent]` extra only when you need the integrated Pydantic AI agent
+> (see [Installation](#installation)).
 
 Register in your client's `mcp_config.json` (tools surface as `kafka_topics`,
 `kafka_records`, `kafka_groups`, …). See `kafka_mcp/mcp_config.json`.
+
+```json
+{
+  "mcpServers": {
+    "kafka-mcp": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "kafka-mcp[mcp]",
+        "kafka-mcp"
+      ],
+      "env": {
+        "KAFKA_REST_URL": "http://localhost:8082",
+        "KAFKA_TOKEN": "your_token_here"
+      }
+    }
+  }
+}
+```
 
 <!-- BEGIN GENERATED: additional-deployment-options -->
 ### Additional Deployment Options
