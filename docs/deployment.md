@@ -26,7 +26,7 @@ The client launches the server over stdio via `uvx` — best for local IDEs
       "command": "uvx",
       "args": ["--from", "kafka-mcp", "kafka-mcp"],
       "env": {
-        "KAFKA_SCHEMA_REGISTRY_URL": "<your-kafka_schema_registry_url>"
+        "KAFKA_REST_URL": "<your-kafka_rest_url>"
       }
     }
   }
@@ -54,7 +54,7 @@ Then either let the client launch it:
         "TRANSPORT": "streamable-http",
         "HOST": "0.0.0.0",
         "PORT": "8000",
-        "KAFKA_SCHEMA_REGISTRY_URL": "<your-kafka_schema_registry_url>"
+        "KAFKA_REST_URL": "<your-kafka_rest_url>"
       }
     }
   }
@@ -84,7 +84,7 @@ no ports to manage). Swap `docker` for `podman` for a daemonless runtime:
       "args": [
         "run", "-i", "--rm",
         "-e", "TRANSPORT=stdio",
-        "-e", "KAFKA_SCHEMA_REGISTRY_URL=<your-kafka_schema_registry_url>",
+        "-e", "KAFKA_REST_URL=<your-kafka_rest_url>",
         "knucklessg1/kafka-mcp:latest"
       ]
     }
@@ -98,7 +98,7 @@ no ports to manage). Swap `docker` for `podman` for a daemonless runtime:
 docker run -d --name kafka-mcp -p 8000:8000 \
   -e TRANSPORT=streamable-http \
   -e PORT=8000 \
-  -e KAFKA_SCHEMA_REGISTRY_URL="<your-kafka_schema_registry_url>" \
+  -e KAFKA_REST_URL="<your-kafka_rest_url>" \
   knucklessg1/kafka-mcp:latest
 # or, from a clone of this repo:
 docker compose -f docker/mcp.compose.yml up -d

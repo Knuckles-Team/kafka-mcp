@@ -54,7 +54,12 @@ Pydantic-AI agent server.
 | Variable | Example | Description |
 |----------|---------|-------------|
 | `KAFKA_BOOTSTRAP_SERVERS` | `localhost:9092` |  |
-| `KAFKA_SCHEMA_REGISTRY_URL` | `http://localhost:8081` |  |
+| `KAFKA_REST_URL` | `http://localhost:8082` | Confluent REST Proxy base URL |
+| `KAFKA_CLUSTER_ID` | — | Pin the cluster id (else the first cluster is cached) |
+| `KAFKA_TOKEN` | — | Bearer token for the REST Proxy |
+| `KAFKA_USERNAME` | — | Basic-auth user (optional) |
+| `KAFKA_PASSWORD` | — | Basic-auth password (optional) |
+| `KAFKA_SSL_VERIFY` | `True` | Verify TLS (set False for self-signed homelab) |
 | `KAFKATOOL` | `True` |  |
 
 #### Inherited agent-utilities variables (apply to every connector)
@@ -84,7 +89,7 @@ Pydantic-AI agent server.
 | `MODEL_ID` | `gpt-4o` | Model id for the agent |
 | `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
-_3 package + 22 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+_8 package + 22 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 
@@ -102,7 +107,6 @@ _3 package + 22 inherited variable(s). Auto-generated from `.env.example` + the 
 | Var | Default | Meaning |
 |---|---|---|
 | `KAFKA_BOOTSTRAP_SERVERS` | `localhost:9092` | Broker bootstrap servers for the native (direct-to-broker) client |
-| `KAFKA_SCHEMA_REGISTRY_URL` | `http://localhost:8081` | Confluent Schema Registry URL |
 
 ### MCP server / transport
 | Var | Default | Meaning |
@@ -229,6 +233,8 @@ Auto-generated — do not edit between the markers below.
 
 <!-- MCP-TOOLS-TABLE:START -->
 
+#### Condensed action-routed tools (default — `MCP_TOOL_MODE=condensed`)
+
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
 | `kafka_cluster` | `KAFKATOOL` | Inspect clusters/brokers and manage ACLs via the REST Proxy. |
@@ -238,7 +244,46 @@ Auto-generated — do not edit between the markers below.
 | `kafka_records` | `KAFKATOOL` | Produce or consume records via the Confluent REST Proxy. |
 | `kafka_topics` | `KAFKATOOL` | Manage Kafka topics via the Confluent REST Proxy. |
 
-_6 action-routed tools (default `MCP_TOOL_MODE=condensed`). Each is enabled unless its toggle is set false; set `MCP_TOOL_MODE=verbose` (or `both`) for the 1:1 per-operation surface. Auto-generated — do not edit._
+#### Verbose 1:1 API-mapped tools (`MCP_TOOL_MODE=verbose` or `both`)
+
+<details>
+<summary>29 per-operation tools — one per public API method (click to expand)</summary>
+
+| MCP Tool | Toggle Env Var | Description |
+|----------|----------------|-------------|
+| `kafka_cluster_id` | `KAFKA_APITOOL` | Return the active Kafka cluster id, resolving + caching the first. |
+| `kafka_commit_offsets` | `KAFKA_APITOOL` | Commit current offsets for a v2 consumer instance. |
+| `kafka_consume_records` | `KAFKA_APITOOL` | Poll records from a v2 consumer instance. |
+| `kafka_create_acl` | `KAFKA_APITOOL` | Create an ACL binding. |
+| `kafka_create_consumer` | `KAFKA_APITOOL` | Create a v2 consumer instance inside a consumer group. |
+| `kafka_create_topic` | `KAFKA_APITOOL` | Create a topic with partitions, replication, and optional configs. |
+| `kafka_delete_acls` | `KAFKA_APITOOL` | Delete ACLs matching the given filter. |
+| `kafka_delete_consumer` | `KAFKA_APITOOL` | Delete a v2 consumer instance. |
+| `kafka_delete_topic` | `KAFKA_APITOOL` | Delete a topic. |
+| `kafka_get_broker` | `KAFKA_APITOOL` | Get a single broker's metadata. |
+| `kafka_get_cluster` | `KAFKA_APITOOL` | Get a single cluster's metadata. |
+| `kafka_get_consumer_group` | `KAFKA_APITOOL` | Describe a single consumer group. |
+| `kafka_get_group_lag_summary` | `KAFKA_APITOOL` | Get the lag summary for a consumer group. |
+| `kafka_get_group_lags` | `KAFKA_APITOOL` | List per-partition lags for a consumer group. |
+| `kafka_get_partition` | `KAFKA_APITOOL` | Get a single partition of a topic. |
+| `kafka_get_topic` | `KAFKA_APITOOL` | Describe a single topic. |
+| `kafka_list_acls` | `KAFKA_APITOOL` | Search ACLs (all filters optional). |
+| `kafka_list_broker_configs` | `KAFKA_APITOOL` | List configuration entries for a broker. |
+| `kafka_list_brokers` | `KAFKA_APITOOL` | List brokers in a cluster. |
+| `kafka_list_clusters` | `KAFKA_APITOOL` | List Kafka clusters known to the REST Proxy. |
+| `kafka_list_consumer_groups` | `KAFKA_APITOOL` | List consumer groups in a cluster. |
+| `kafka_list_consumers` | `KAFKA_APITOOL` | List the consumers (members) of a consumer group. |
+| `kafka_list_partitions` | `KAFKA_APITOOL` | List partitions for a topic. |
+| `kafka_list_topic_configs` | `KAFKA_APITOOL` | List configuration entries for a topic. |
+| `kafka_list_topics` | `KAFKA_APITOOL` | List topics in a cluster. |
+| `kafka_produce_record` | `KAFKA_APITOOL` | Produce a single record to a topic via the v3 ``/records`` endpoint. |
+| `kafka_subscribe_consumer` | `KAFKA_APITOOL` | Subscribe a v2 consumer instance to a list of topics. |
+| `kafka_update_topic_config` | `KAFKA_APITOOL` | Update (alter) a single topic configuration entry. |
+| `kafka_update_topic_configs` | `KAFKA_APITOOL` | Batch-alter multiple topic configuration entries. |
+
+</details>
+
+_6 action-routed tool(s) (default) · 29 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (`condensed` default · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
 
 ## Documentation
