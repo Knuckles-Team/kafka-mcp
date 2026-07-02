@@ -8,21 +8,13 @@
       ],
       "env": {
         "MCP_TOOL_MODE": "condensed",
-        "FASTMCP_LOG_LEVEL": "<YOUR_FASTMCP_LOG_LEVEL>",
-        "NO_COLOR": "<YOUR_NO_COLOR>",
-        "TERM": "<YOUR_TERM>",
-        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
-        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
-        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
-        "MCP_URL": "<YOUR_MCP_URL>",
-        "KAFKA_REST_URL": "<YOUR_KAFKA_REST_URL>",
-        "KAFKA_BOOTSTRAP_SERVERS": "<YOUR_KAFKA_BOOTSTRAP_SERVERS>",
-        "KAFKA_CLUSTER_ID": "<YOUR_KAFKA_CLUSTER_ID>",
-        "KAFKA_TOKEN": "<YOUR_KAFKA_TOKEN>",
-        "KAFKA_USERNAME": "<YOUR_KAFKA_USERNAME>",
-        "KAFKA_PASSWORD": "<YOUR_KAFKA_PASSWORD>",
-        "KAFKA_SSL_VERIFY": "<YOUR_KAFKA_SSL_VERIFY>",
-        "KAFKATOOL": "True"
+        "KAFKATOOL": "True",
+        "KAFKA_BOOTSTRAP_SERVERS": "localhost:9092",
+        "KAFKA_CLUSTER_ID": "",
+        "KAFKA_PASSWORD": "",
+        "KAFKA_REST_URL": "http://localhost:8082",
+        "KAFKA_TOKEN": "",
+        "KAFKA_USERNAME": ""
       }
     }
   }

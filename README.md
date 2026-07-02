@@ -180,18 +180,17 @@ config, and the full database architecture (with diagrams) are documented in the
 [epistemic-graph deployment guide](https://knuckles-team.github.io/epistemic-graph/deployment/).
 The slim `[mcp]` server does **not** require the database.
 
-## MCP Configuration Examples
+### MCP Configuration Examples
 
-> **Install the slim `[mcp]` extra.** All examples below install
-> `kafka-mcp[mcp]` — the MCP-server extra that pulls only the FastMCP /
-> FastAPI tooling (`agent-utilities[mcp]`). It deliberately **excludes** the heavy
-> agent runtime (the epistemic-graph engine, `pydantic-ai`, `dspy`, `llama-index`,
-> `tree-sitter`), so `uvx`/container installs are dramatically smaller and faster.
-> Use the full `[agent]` extra only when you need the integrated Pydantic AI agent
-> (see [Installation](#installation)).
+<!-- MCP-CONFIG-EXAMPLES:START -->
 
-Register in your client's `mcp_config.json` (tools surface as `kafka_topics`,
-`kafka_records`, `kafka_groups`, …). See `kafka_mcp/mcp_config.json`.
+> **Install the slim `[mcp]` extra.** All examples install `kafka-mcp[mcp]` — the
+> MCP-server extra that pulls only the FastMCP / FastAPI tooling (`agent-utilities[mcp]`).
+> It deliberately **excludes** the heavy agent runtime (`pydantic-ai`, the epistemic-graph
+> engine, `dspy`, `llama-index`), so `uvx` / container installs are far smaller. Use the
+> full `[agent]` extra only when you need the integrated Pydantic AI agent.
+
+#### stdio Transport (local IDEs — Cursor, Claude Desktop, VS Code)
 
 ```json
 {
@@ -204,13 +203,88 @@ Register in your client's `mcp_config.json` (tools surface as `kafka_topics`,
         "kafka-mcp"
       ],
       "env": {
+        "MCP_TOOL_MODE": "condensed",
+        "KAFKATOOL": "True",
+        "KAFKA_BOOTSTRAP_SERVERS": "localhost:9092",
+        "KAFKA_CLUSTER_ID": "",
+        "KAFKA_PASSWORD": "",
         "KAFKA_REST_URL": "http://localhost:8082",
-        "KAFKA_TOKEN": "your_token_here"
+        "KAFKA_TOKEN": "",
+        "KAFKA_USERNAME": ""
       }
     }
   }
 }
 ```
+
+#### Streamable-HTTP Transport (networked / production)
+
+```json
+{
+  "mcpServers": {
+    "kafka-mcp": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "kafka-mcp[mcp]",
+        "kafka-mcp",
+        "--transport",
+        "streamable-http",
+        "--port",
+        "8000"
+      ],
+      "env": {
+        "TRANSPORT": "streamable-http",
+        "HOST": "0.0.0.0",
+        "PORT": "8000",
+        "MCP_TOOL_MODE": "condensed",
+        "KAFKATOOL": "True",
+        "KAFKA_BOOTSTRAP_SERVERS": "localhost:9092",
+        "KAFKA_CLUSTER_ID": "",
+        "KAFKA_PASSWORD": "",
+        "KAFKA_REST_URL": "http://localhost:8082",
+        "KAFKA_TOKEN": "",
+        "KAFKA_USERNAME": ""
+      }
+    }
+  }
+}
+```
+
+Alternatively, connect to a pre-deployed Streamable-HTTP instance by `url`:
+
+```json
+{
+  "mcpServers": {
+    "kafka-mcp": {
+      "url": "http://localhost:8000/kafka-mcp/mcp"
+    }
+  }
+}
+```
+
+Deploying the Streamable-HTTP server via Docker:
+
+```bash
+docker run -d \
+  --name kafka-mcp-mcp \
+  -p 8000:8000 \
+  -e TRANSPORT=streamable-http \
+  -e HOST=0.0.0.0 \
+  -e PORT=8000 \
+  -e MCP_TOOL_MODE=condensed \
+  -e KAFKATOOL=True \
+  -e KAFKA_BOOTSTRAP_SERVERS=localhost:9092 \
+  -e KAFKA_CLUSTER_ID="" \
+  -e KAFKA_PASSWORD="" \
+  -e KAFKA_REST_URL=http://localhost:8082 \
+  -e KAFKA_TOKEN="" \
+  -e KAFKA_USERNAME="" \
+  knucklessg1/kafka-mcp:mcp
+```
+
+_Auto-generated from the code-read env surface (`MCP_TOOL_MODE` + package vars) — do not edit._
+<!-- MCP-CONFIG-EXAMPLES:END -->
 
 <!-- BEGIN GENERATED: additional-deployment-options -->
 ### Additional Deployment Options
