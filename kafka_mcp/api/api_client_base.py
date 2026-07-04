@@ -1,6 +1,6 @@
 """Shared HTTP base client for the Apache Kafka (REST Proxy) API wrapper.
 
-Strangled onto :class:`agent_utilities.http.BaseApiClient` (CONCEPT:ECO-4.35
+Strangled onto :class:`agent_utilities.http.BaseApiClient` (CONCEPT:AU-ECO.ui.fleet-http-client-library
 Fleet HTTP Client Library): the public surface — constructor signature,
 ``request()`` return shapes, ``last_etag`` — is identical to the legacy
 requests-based implementation, while the plumbing (base-URL joining, auth
