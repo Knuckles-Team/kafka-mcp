@@ -1,0 +1,164 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix : <http://knuckles.team/kg#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Apache Kafka event-streaming ontology — clusters, topics, partitions, consumer groups,
+# consumers, brokers and ACLs, with their containment and subscription relationships. All
+# classes and properties live in the shared `:` (kg#) namespace; only the owl:Ontology node
+# below gets the per-package IRI. Backs the kafka-mcp MCP tool surface (kafka_topics /
+# kafka_partitions / kafka_groups / kafka_cluster / kafka_records / kafka_native).
+
+# --- classes (owl:Class) ---
+
+:KafkaCluster a owl:Class ;
+    rdfs:label "Kafka Cluster" ;
+    rdfs:comment "A Kafka cluster addressed through the Confluent REST Proxy (kafka_cluster list_clusters/get_cluster)." .
+
+:Topic a owl:Class ;
+    rdfs:label "Topic" ;
+    rdfs:comment "A named, partitioned, replicated event log within a cluster (kafka_topics)." .
+
+:Partition a owl:Class ;
+    rdfs:label "Partition" ;
+    rdfs:comment "One ordered shard of a Topic; the unit of parallelism and offset ordering (kafka_partitions)." .
+
+:ConsumerGroup a owl:Class ;
+    rdfs:label "Consumer Group" ;
+    rdfs:comment "A set of consumers cooperatively reading a topic's partitions and tracking committed offsets (kafka_groups)." .
+
+:Consumer a owl:Class ;
+    rdfs:label "Consumer" ;
+    rdfs:comment "A single member (consumer instance) of a ConsumerGroup, assigned partitions (kafka_groups consumers)." .
+
+:Broker a owl:Class ;
+    rdfs:label "Broker" ;
+    rdfs:comment "A Kafka broker node that hosts partition replicas and serves clients (kafka_cluster list_brokers)." .
+
+:KafkaAcl a owl:Class ;
+    rdfs:label "Kafka ACL" ;
+    rdfs:comment "An access-control binding granting/denying an operation on a resource to a principal (kafka_cluster list_acls)." .
+
+# --- links (owl:ObjectProperty) ---
+
+:inCluster a owl:ObjectProperty ;
+    rdfs:label "in cluster" ;
+    rdfs:comment "Links a Topic, ConsumerGroup, Broker, or ACL to the KafkaCluster it belongs to." ;
+    rdfs:range :KafkaCluster .
+
+:partitionOf a owl:ObjectProperty ;
+    rdfs:label "partition of" ;
+    rdfs:comment "Links a Partition to the Topic it shards." ;
+    rdfs:domain :Partition ;
+    rdfs:range :Topic .
+
+:subscribesTo a owl:ObjectProperty ;
+    rdfs:label "subscribes to" ;
+    rdfs:comment "Links a ConsumerGroup to a Topic it is actively consuming." ;
+    rdfs:domain :ConsumerGroup ;
+    rdfs:range :Topic .
+
+:memberOfGroup a owl:ObjectProperty ;
+    rdfs:label "member of group" ;
+    rdfs:comment "Links a Consumer to the ConsumerGroup it belongs to." ;
+    rdfs:domain :Consumer ;
+    rdfs:range :ConsumerGroup .
+
+:assignedPartition a owl:ObjectProperty ;
+    rdfs:label "assigned partition" ;
+    rdfs:comment "Links a Consumer to a Partition currently assigned to it." ;
+    rdfs:domain :Consumer ;
+    rdfs:range :Partition .
+
+:leaderBroker a owl:ObjectProperty ;
+    rdfs:label "leader broker" ;
+    rdfs:comment "Links a Partition to the Broker currently acting as its leader replica." ;
+    rdfs:domain :Partition ;
+    rdfs:range :Broker .
+
+:appliesToTopic a owl:ObjectProperty ;
+    rdfs:label "applies to topic" ;
+    rdfs:comment "Links a KafkaAcl to the Topic resource it governs." ;
+    rdfs:domain :KafkaAcl ;
+    rdfs:range :Topic .
+
+# --- fields (owl:DatatypeProperty) ---
+
+:partitionsCount a owl:DatatypeProperty ;
+    rdfs:label "partitions count" ;
+    rdfs:comment "Number of partitions configured for a Topic." ;
+    rdfs:domain :Topic ;
+    rdfs:range xsd:integer .
+
+:replicationFactor a owl:DatatypeProperty ;
+    rdfs:label "replication factor" ;
+    rdfs:comment "Number of replicas kept for each partition of a Topic." ;
+    rdfs:domain :Topic ;
+    rdfs:range xsd:integer .
+
+:isInternal a owl:DatatypeProperty ;
+    rdfs:label "is internal" ;
+    rdfs:comment "Whether a Topic is a Kafka-internal topic (e.g. __consumer_offsets)." ;
+    rdfs:range xsd:boolean .
+
+:partitionId a owl:DatatypeProperty ;
+    rdfs:label "partition id" ;
+    rdfs:comment "Zero-based index of a Partition within its Topic." ;
+    rdfs:domain :Partition ;
+    rdfs:range xsd:integer .
+
+:consumerLag a owl:DatatypeProperty ;
+    rdfs:label "consumer lag" ;
+    rdfs:comment "Number of records a ConsumerGroup is behind the log-end offset on a partition/topic." ;
+    rdfs:range xsd:integer .
+
+:currentOffset a owl:DatatypeProperty ;
+    rdfs:label "current offset" ;
+    rdfs:comment "Last committed offset for a ConsumerGroup on a partition." ;
+    rdfs:range xsd:integer .
+
+:groupState a owl:DatatypeProperty ;
+    rdfs:label "group state" ;
+    rdfs:comment "Lifecycle state of a ConsumerGroup (Stable, PreparingRebalance, Empty, Dead)." ;
+    rdfs:domain :ConsumerGroup ;
+    rdfs:range xsd:string .
+
+:brokerHost a owl:DatatypeProperty ;
+    rdfs:label "broker host" ;
+    rdfs:comment "Advertised host of a Broker." ;
+    rdfs:domain :Broker ;
+    rdfs:range xsd:string .
+
+:brokerPort a owl:DatatypeProperty ;
+    rdfs:label "broker port" ;
+    rdfs:comment "Advertised port of a Broker." ;
+    rdfs:domain :Broker ;
+    rdfs:range xsd:integer .
+
+:principal a owl:DatatypeProperty ;
+    rdfs:label "principal" ;
+    rdfs:comment "The security principal an ACL applies to (e.g. User:alice)." ;
+    rdfs:domain :KafkaAcl ;
+    rdfs:range xsd:string .
+
+:permission a owl:DatatypeProperty ;
+    rdfs:label "permission" ;
+    rdfs:comment "ACL permission type (ALLOW or DENY)." ;
+    rdfs:domain :KafkaAcl ;
+    rdfs:range xsd:string .
+
+:operation a owl:DatatypeProperty ;
+    rdfs:label "operation" ;
+    rdfs:comment "ACL operation governed (READ, WRITE, DESCRIBE, CREATE, ...)." ;
+    rdfs:domain :KafkaAcl ;
+    rdfs:range xsd:string .
+
+<http://knuckles.team/kg/kafka> a owl:Ontology ;
+    rdfs:label "Apache Kafka Event-Streaming Ontology" ;
+    rdfs:comment """Apache Kafka event-streaming model — clusters, topics, partitions, consumer
+    groups, consumers, brokers and ACLs, with their containment, subscription and assignment
+    relationships — federated into the agent-utilities knowledge-graph hub.""" ;
+    owl:imports <http://knuckles.team/kg> .

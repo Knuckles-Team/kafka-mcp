@@ -43,7 +43,16 @@ def register_kafka_tools(mcp: FastMCP) -> None:
         p = json.loads(params_json) if params_json else {}
         cid = p.get("cluster_id")
         if action == "list":
-            return client.list_topics(cluster_id=cid)
+            topics = client.list_topics(cluster_id=cid)
+            # Wire-First: best-effort mirror the topic catalog into the KG on
+            # every list. No-ops silently when the engine is unreachable.
+            try:
+                from kafka_mcp.kg_ingest import ingest_topics
+
+                ingest_topics(topics, cluster_id=cid)
+            except Exception:  # noqa: BLE001 — ingestion must never break reads
+                pass
+            return topics
         if action == "create":
             return client.create_topic(
                 p["topic"],
@@ -59,16 +68,12 @@ def register_kafka_tools(mcp: FastMCP) -> None:
         if action == "configs":
             return client.list_topic_configs(p["topic"], cluster_id=cid)
         if action == "update_config":
-            return client.update_topic_configs(
-                p["topic"], p["configs"], cluster_id=cid
-            )
+            return client.update_topic_configs(p["topic"], p["configs"], cluster_id=cid)
         raise ValueError(f"Unknown topics action: {action!r}.")
 
     @mcp.tool(tags={"partitions"})
     async def kafka_partitions(
-        action: str = Field(
-            description="Partition action. One of: 'list', 'get'."
-        ),
+        action: str = Field(description="Partition action. One of: 'list', 'get'."),
         params_json: str = Field(
             default="{}",
             description=(
@@ -84,9 +89,7 @@ def register_kafka_tools(mcp: FastMCP) -> None:
         if action == "list":
             return client.list_partitions(p["topic"], cluster_id=cid)
         if action == "get":
-            return client.get_partition(
-                p["topic"], p["partition_id"], cluster_id=cid
-            )
+            return client.get_partition(p["topic"], p["partition_id"], cluster_id=cid)
         raise ValueError(f"Unknown partitions action: {action!r}.")
 
     @mcp.tool(tags={"records"})
@@ -133,9 +136,7 @@ def register_kafka_tools(mcp: FastMCP) -> None:
                 auto_offset_reset=p.get("auto_offset_reset", "earliest"),
             )
         if action == "subscribe":
-            return client.subscribe_consumer(
-                p["group"], p["instance"], p["topics"]
-            )
+            return client.subscribe_consumer(p["group"], p["instance"], p["topics"])
         if action == "consume":
             return client.consume_records(
                 p["group"],
@@ -297,3 +298,54 @@ def register_kafka_tools(mcp: FastMCP) -> None:
         if action == "list_groups":
             return client.list_consumer_groups(timeout=p.get("timeout", 10.0))
         raise ValueError(f"Unknown native action: {action!r}.")
+
+    @mcp.tool(tags={"kg"})
+    async def kafka_ingest_catalog(
+        params_json: str = Field(
+            default="{}",
+            description=(
+                "JSON of arguments. All optional: "
+                '{"cluster_id": "<id>", "topics": true, "groups": true, '
+                '"brokers": true, "partitions_for": ["events"]}. Defaults to '
+                "topics+groups+brokers for the resolved cluster."
+            ),
+        ),
+    ) -> Any:
+        """Ingest the live Kafka topology into the knowledge graph (Wire-First).
+
+        Lists topics, consumer groups, and brokers via the REST Proxy and pushes
+        them as typed ``:Topic`` / ``:ConsumerGroup`` / ``:Broker`` / ``:KafkaCluster``
+        nodes (+ ``:inCluster`` / ``:partitionOf`` links). Best-effort: no-ops with a
+        ``skipped`` result when the KG engine is unreachable.
+        """
+        from kafka_mcp.kg_ingest import (
+            ingest_brokers,
+            ingest_consumer_groups,
+            ingest_partitions,
+            ingest_topics,
+        )
+
+        client = get_client()
+        p = json.loads(params_json) if params_json else {}
+        cid = p.get("cluster_id")
+        result: dict[str, Any] = {"ingested": {}}
+
+        if p.get("topics", True):
+            topics = client.list_topics(cluster_id=cid)
+            result["ingested"]["topics"] = ingest_topics(topics, cluster_id=cid)
+        if p.get("groups", True):
+            groups = client.list_consumer_groups(cluster_id=cid)
+            result["ingested"]["groups"] = ingest_consumer_groups(
+                groups, cluster_id=cid
+            )
+        if p.get("brokers", True):
+            brokers = client.list_brokers(cluster_id=cid)
+            result["ingested"]["brokers"] = ingest_brokers(brokers, cluster_id=cid)
+        for topic in p.get("partitions_for", []) or []:
+            parts = client.list_partitions(topic, cluster_id=cid)
+            result["ingested"].setdefault("partitions", {})[topic] = ingest_partitions(
+                parts, topic=topic, cluster_id=cid
+            )
+        if not any(result["ingested"].values()):
+            result["status"] = "skipped (no KG engine reachable or empty cluster)"
+        return result
