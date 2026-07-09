@@ -1,5 +1,6 @@
 ---
 name: kafka-topic-administration
+skill_type: skill
 description: >-
   Administer Apache Kafka topics via the kafka-mcp MCP server — list, create,
   describe, and delete topics, inspect/alter topic configs, and enumerate

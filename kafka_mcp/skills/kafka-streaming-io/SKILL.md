@@ -1,5 +1,6 @@
 ---
 name: kafka-streaming-io
+skill_type: skill
 description: >-
   Produce and consume Apache Kafka records via the kafka-mcp MCP server — publish
   a record to a topic (v3 /records endpoint) and drive the v2 consumer-instance

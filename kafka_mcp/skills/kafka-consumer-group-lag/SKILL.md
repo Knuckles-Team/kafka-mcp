@@ -1,5 +1,6 @@
 ---
 name: kafka-consumer-group-lag
+skill_type: skill
 description: >-
   Monitor Apache Kafka consumer groups and their lag via the kafka-mcp MCP server
   — list groups, describe a group, enumerate its member consumers, and read the
