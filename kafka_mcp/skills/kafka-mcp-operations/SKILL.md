@@ -1,5 +1,6 @@
 ---
 name: kafka-mcp-operations
+skill_type: skill
 description: >-
   Operate kafka-mcp through its governed MCP and GraphOS capabilities, including kafka consumer group lag, kafka streaming io, kafka topic administration. Use when a request requires this provider's read, change, automation, ingestion, troubleshooting, or evidence workflows.
 ---
