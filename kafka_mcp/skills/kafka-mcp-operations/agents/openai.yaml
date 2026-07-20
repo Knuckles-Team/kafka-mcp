@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kafka MCP Operations"
+  short_description: "Help with Kafka MCP Operations tasks"
+  default_prompt: "Use $kafka-mcp-operations to complete a governed provider workflow."

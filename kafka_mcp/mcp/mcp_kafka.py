@@ -44,14 +44,10 @@ def register_kafka_tools(mcp: FastMCP) -> None:
         cid = p.get("cluster_id")
         if action == "list":
             topics = client.list_topics(cluster_id=cid)
-            # Wire-First: best-effort mirror the topic catalog into the KG on
-            # every list. No-ops silently when the engine is unreachable.
-            try:
-                from kafka_mcp.kg_ingest import ingest_topics
+            # Wire-First: mirror the topic catalog into the authoritative KG.
+            from kafka_mcp.kg_ingest import ingest_topics
 
-                ingest_topics(topics, cluster_id=cid)
-            except Exception:  # noqa: BLE001 — ingestion must never break reads
-                pass
+            ingest_topics(topics, cluster_id=cid)
             return topics
         if action == "create":
             return client.create_topic(
@@ -315,8 +311,8 @@ def register_kafka_tools(mcp: FastMCP) -> None:
 
         Lists topics, consumer groups, and brokers via the REST Proxy and pushes
         them as typed ``:Topic`` / ``:ConsumerGroup`` / ``:Broker`` / ``:KafkaCluster``
-        nodes (+ ``:inCluster`` / ``:partitionOf`` links). Best-effort: no-ops with a
-        ``skipped`` result when the KG engine is unreachable.
+        nodes (+ ``:inCluster`` / ``:partitionOf`` links). Native-ingest failures
+        propagate to the caller.
         """
         from kafka_mcp.kg_ingest import (
             ingest_brokers,
@@ -346,6 +342,4 @@ def register_kafka_tools(mcp: FastMCP) -> None:
             result["ingested"].setdefault("partitions", {})[topic] = ingest_partitions(
                 parts, topic=topic, cluster_id=cid
             )
-        if not any(result["ingested"].values()):
-            result["status"] = "skipped (no KG engine reachable or empty cluster)"
         return result

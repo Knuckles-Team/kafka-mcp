@@ -1,12 +1,4 @@
-"""Shared HTTP base client for the Apache Kafka (REST Proxy) API wrapper.
-
-Strangled onto :class:`agent_utilities.http.BaseApiClient` (CONCEPT:AU-ECO.ui.fleet-http-client-library
-Fleet HTTP Client Library): the public surface — constructor signature,
-``request()`` return shapes, ``last_etag`` — is identical to the legacy
-requests-based implementation, while the plumbing (base-URL joining, auth
-injection, rate-limit capture, bounded 429 backoff, log redaction) now comes
-from the shared fleet base.
-"""
+"""Shared HTTP base client for the Apache Kafka REST Proxy API wrapper."""
 
 from typing import Any
 
@@ -35,7 +27,8 @@ class ApiClientBase:
         token: str | None = None,
         username: str | None = None,
         password: str | None = None,
-        verify: bool = True,
+        tls_profile: str | None = None,
+        tls_profile_ref: str | None = None,
         transport: httpx.BaseTransport | None = None,
     ):
         self.base_url = base_url.rstrip("/") + "/"
@@ -53,7 +46,9 @@ class ApiClientBase:
         self._client = BaseApiClient(
             self.base_url,
             auth=auth,
-            verify=verify,
+            tls_service="kafka-rest",
+            tls_profile=tls_profile,
+            tls_profile_ref=tls_profile_ref,
             include_response_headers=True,
             transport=transport,
         )

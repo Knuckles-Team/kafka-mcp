@@ -50,14 +50,14 @@ uv run kafka-mcp
 
 ## Prebuilt Docker image
 
-A multi-stage, slim image is published on every release (entrypoint `kafka-mcp`):
+A multi-stage runtime image is published on every release (entrypoint `kafka-mcp`):
 
 ```bash
-docker pull knucklessg1/kafka-mcp:latest
+docker pull example/kafka-mcp@sha256:<digest>
 
 docker run --rm -i \
   -e KAFKA_REST_URL=http://your-rest-proxy:8082 \
-  knucklessg1/kafka-mcp:latest         # stdio transport (default)
+  example/kafka-mcp@sha256:<digest>         # stdio transport (default)
 ```
 
 For an HTTP server with a published port, see [Deployment](deployment.md).

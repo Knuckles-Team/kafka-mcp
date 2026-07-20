@@ -59,7 +59,8 @@ Pydantic-AI agent server.
 | `KAFKA_TOKEN` | — | Bearer token for the REST Proxy |
 | `KAFKA_USERNAME` | — | Basic-auth user (optional) |
 | `KAFKA_PASSWORD` | — | Basic-auth password (optional) |
-| `KAFKA_SSL_VERIFY` | `True` | Verify TLS (set False for self-signed homelab) |
+| `KAFKA_REST_TLS_PROFILE` | _(system trust)_ | Optional named profile from the agent-utilities TLS catalog |
+| `KAFKA_REST_TLS_PROFILE_REF` | _(empty)_ | Runtime secret ref containing a TLS profile |
 | `KAFKATOOL` | `True` |  |
 
 #### Inherited agent-utilities variables (apply to every connector)
@@ -101,7 +102,8 @@ _8 package + 22 inherited variable(s). Auto-generated from `.env.example` + the 
 | `KAFKA_TOKEN` | _(empty)_ | Bearer token for the REST Proxy |
 | `KAFKA_USERNAME` | _(empty)_ | Basic-auth user (optional) |
 | `KAFKA_PASSWORD` | _(empty)_ | Basic-auth password (optional) |
-| `KAFKA_SSL_VERIFY` | `True` | Verify TLS (set `False` for self-signed homelab) |
+| `KAFKA_REST_TLS_PROFILE` | _(system trust)_ | Optional named profile from the agent-utilities TLS catalog |
+| `KAFKA_REST_TLS_PROFILE_REF` | _(empty)_ | Runtime secret ref containing a TLS profile |
 
 ### Native client (optional `kafka-mcp[native]` extra)
 | Var | Default | Meaning |
@@ -130,15 +132,15 @@ Pick the extra that matches what you want to run:
 
 | Extra | Installs | Use when |
 |-------|----------|----------|
-| `kafka-mcp[mcp]` | Slim MCP server only (`agent-utilities[mcp]` — FastMCP/FastAPI) | You only run the **MCP server** (smallest install / image) |
-| `kafka-mcp[agent]` | Full agent runtime (`agent-utilities[agent,logfire]` — Pydantic AI + the epistemic-graph engine) | You run the **integrated agent** |
+| `kafka-mcp[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | You only run the **MCP server** (smallest install / image) |
+| `kafka-mcp[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | You run the **integrated agent** |
 | `kafka-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
-# MCP server only (recommended for tool hosting — slim deps)
+# Connector-focused MCP server (includes the shared graph engine)
 uv pip install "kafka-mcp[mcp]"
 
-# Full agent runtime (Pydantic AI + epistemic-graph engine)
+# Agent runtime (adds model orchestration to the shared graph engine)
 uv pip install "kafka-mcp[agent]"
 
 # Everything (development)
@@ -162,33 +164,33 @@ One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `
 
 | Image tag | Build target | Contents | Entrypoint |
 |-----------|--------------|----------|------------|
-| `knucklessg1/kafka-mcp:mcp` | `--target mcp` | `kafka-mcp[mcp]` — **slim**, no engine/`pydantic-ai`/`dspy`/`llama-index`/`tree-sitter` | `kafka-mcp` |
-| `knucklessg1/kafka-mcp:latest` | `--target agent` (default) | `kafka-mcp[agent]` — **full** agent runtime + epistemic-graph engine | `kafka-agent` |
+| `example/kafka-mcp:mcp` | `--target mcp` | `kafka-mcp[mcp]` — **connector-focused**, includes `epistemic-graph[full]`; no model-orchestration stack | `kafka-mcp` |
+| `example/kafka-mcp@sha256:<digest>` | `--target agent` (default) | `kafka-mcp[agent]` — **agent runtime**, model orchestration + `epistemic-graph[full]` | `kafka-agent` |
 
 ```bash
-docker build --target mcp   -t knucklessg1/kafka-mcp:mcp    docker/   # slim MCP server
-docker build --target agent -t knucklessg1/kafka-mcp:latest docker/   # full agent
+docker build --target mcp   -t example/kafka-mcp:mcp    docker/   # connector-focused MCP server
+docker build --target agent -t example/kafka-mcp:agent-local docker/   # agent runtime
 ```
 
 ### Knowledge-graph database (`epistemic-graph`)
 
-The **full agent** (`[agent]` / `:latest`) embeds the **epistemic-graph** engine (pulled in
-transitively via `agent-utilities[agent]`). For production — or to share one knowledge graph
-across multiple agents — run **epistemic-graph as its own database container** and point the
-agent at it instead of embedding it. Deployment recipes (single-node + Raft HA), connection
-config, and the full database architecture (with diagrams) are documented in the
+Both `[mcp]` and `[agent]` carry the **epistemic-graph** engine through the required
+Agent Utilities core dependency (`epistemic-graph[full]`). The `[mcp]` extra keeps
+the server connector-focused; `[agent]` additionally enables model orchestration. Local
+deployments can use the bundled engine. For production or shared state, run
+**epistemic-graph as a dedicated database service** and configure the runtime to use it.
+Deployment recipes (single-node + Raft HA), connection configuration, and architecture
+diagrams are documented in the
 [epistemic-graph deployment guide](https://knuckles-team.github.io/epistemic-graph/deployment/).
-The slim `[mcp]` server does **not** require the database.
 
 ### MCP Configuration Examples
 
 <!-- MCP-CONFIG-EXAMPLES:START -->
 
-> **Install the slim `[mcp]` extra.** All examples install `kafka-mcp[mcp]` — the
-> MCP-server extra that pulls only the FastMCP / FastAPI tooling (`agent-utilities[mcp]`).
-> It deliberately **excludes** the heavy agent runtime (`pydantic-ai`, the epistemic-graph
-> engine, `dspy`, `llama-index`), so `uvx` / container installs are far smaller. Use the
-> full `[agent]` extra only when you need the integrated Pydantic AI agent.
+> **Install the connector-focused `[mcp]` extra.** Examples use `kafka-mcp[mcp]` to add
+> FastMCP / FastAPI through `agent-utilities[mcp]`; the required Agent Utilities core
+> still carries `epistemic-graph[full]`. The `[agent-runtime]` extra additionally
+> enables model orchestration.
 
 #### stdio Transport (local IDEs — Cursor, Claude Desktop, VS Code)
 
@@ -203,19 +205,19 @@ The slim `[mcp]` server does **not** require the database.
         "kafka-mcp"
       ],
       "env": {
-        "MCP_TOOL_MODE": "condensed",
+        "MCP_TOOL_MODE": "intent",
         "KAFKATOOL": "True",
         "KAFKA_BOOTSTRAP_SERVERS": "localhost:9092",
-        "KAFKA_CLUSTER_ID": "",
-        "KAFKA_PASSWORD": "",
-        "KAFKA_REST_URL": "http://localhost:8082",
-        "KAFKA_TOKEN": "",
-        "KAFKA_USERNAME": ""
+        "KAFKA_REST_URL": "http://localhost:8082"
       }
     }
   }
 }
 ```
+
+Runtime references require an alias-aware launcher such as GraphOS. Other
+launchers must omit those entries and inject the resolved values through their
+own runtime secret boundary.
 
 #### Streamable-HTTP Transport (networked / production)
 
@@ -235,16 +237,12 @@ The slim `[mcp]` server does **not** require the database.
       ],
       "env": {
         "TRANSPORT": "streamable-http",
-        "HOST": "0.0.0.0",
+        "HOST": "127.0.0.1",
         "PORT": "8000",
-        "MCP_TOOL_MODE": "condensed",
+        "MCP_TOOL_MODE": "intent",
         "KAFKATOOL": "True",
         "KAFKA_BOOTSTRAP_SERVERS": "localhost:9092",
-        "KAFKA_CLUSTER_ID": "",
-        "KAFKA_PASSWORD": "",
-        "KAFKA_REST_URL": "http://localhost:8082",
-        "KAFKA_TOKEN": "",
-        "KAFKA_USERNAME": ""
+        "KAFKA_REST_URL": "http://localhost:8082"
       }
     }
   }
@@ -263,25 +261,28 @@ Alternatively, connect to a pre-deployed Streamable-HTTP instance by `url`:
 }
 ```
 
-Deploying the Streamable-HTTP server via Docker:
+Run a reviewed container image as a least-privilege stdio child (no
+listener or published port):
 
 ```bash
-docker run -d \
-  --name kafka-mcp-mcp \
-  -p 8000:8000 \
-  -e TRANSPORT=streamable-http \
-  -e HOST=0.0.0.0 \
-  -e PORT=8000 \
-  -e MCP_TOOL_MODE=condensed \
+docker run -i --rm \
+  --read-only \
+  --cap-drop=ALL \
+  --security-opt=no-new-privileges \
+  --pids-limit=256 \
+  --tmpfs /tmp:rw,noexec,nosuid,nodev,size=64m \
+  -e TRANSPORT=stdio \
+  -e MCP_TOOL_MODE=intent \
   -e KAFKATOOL=True \
   -e KAFKA_BOOTSTRAP_SERVERS=localhost:9092 \
-  -e KAFKA_CLUSTER_ID="" \
-  -e KAFKA_PASSWORD="" \
   -e KAFKA_REST_URL=http://localhost:8082 \
-  -e KAFKA_TOKEN="" \
-  -e KAFKA_USERNAME="" \
-  knucklessg1/kafka-mcp:mcp
+  registry.example.invalid/kafka-mcp@sha256:<digest> kafka-mcp
 ```
+
+For containerized network HTTP, supply an authenticated TLS ingress (or
+direct server TLS), exact `MCP_ALLOWED_HOSTS`, and an exact trusted-proxy
+CIDR policy through the operator-owned deployment profile. The generator
+does not emit an unauthenticated non-loopback listener.
 
 _Auto-generated from the code-read env surface (`MCP_TOOL_MODE` + package vars) — do not edit._
 <!-- MCP-CONFIG-EXAMPLES:END -->
@@ -289,16 +290,16 @@ _Auto-generated from the code-read env surface (`MCP_TOOL_MODE` + package vars) 
 <!-- BEGIN GENERATED: additional-deployment-options -->
 ### Additional Deployment Options
 
-`kafka-mcp` can also run as a **local container** (Docker / Podman / `uv`) or be
-consumed from a **remote deployment**. The
-[Deployment guide](https://knuckles-team.github.io/kafka-mcp/deployment/) has full, copy-paste
-`mcp_config.json` for all four transports — **stdio**, **streamable-http**,
-**local container / uv**, and **remote URL**:
+`kafka-mcp` can run as a local stdio process or container, or behind a remote
+network boundary. The
+[Deployment guide](https://knuckles-team.github.io/kafka-mcp/deployment/) carries
+the detailed transport contract.
 
-- **Local container / uv** — launch the server from `mcp_config.json` via `uvx`,
-  `docker run`, or `podman run`, or point at a local streamable-http container by `url`.
-- **Remote URL** — connect to a server deployed behind Caddy at
-  `http://kafka-mcp.arpa/mcp` using the `"url"` key.
+- **Local container** — launch a reviewed immutable image as a least-privilege
+  stdio child with no listener or published port.
+- **Remote URL** — connect through an operator-supplied authenticated HTTPS
+  ingress. Keep its URL, outbound identity references, trust profile, and exact
+  `MCP_ALLOWED_HOSTS` in `AgentConfig`.
 <!-- END GENERATED: additional-deployment-options -->
 
 ## Available MCP Tools
@@ -379,23 +380,40 @@ recommended reference for installation, deployment, and day-to-day operation.
 `AGENTS.md` is the canonical contributor/agent guidance.
 
 
-<!-- BEGIN agent-os-genesis-deploy (generated; do not edit between markers) -->
+<!-- BEGIN agent-utilities-deployment (generated; do not edit between markers) -->
 
-## Deploy with `agent-os-genesis`
+## Deploy with `agent-utilities-deployment`
 
-This package can be provisioned for you — skill-guided — by the **`agent-os-genesis`**
-universal skill (its *single-package deploy mode*): it picks your install method, seeds
-secrets to OpenBao/Vault (or `.env`), trusts your enterprise CA, registers the MCP
-server, and verifies it — the same machinery that stands up the whole Agent OS, narrowed
-to just this package. Ask your agent to **"deploy `kafka-mcp` with agent-os-genesis"**.
+Provision this package with the consolidated **`agent-utilities-deployment`**
+workflow. It selects an installed-package, editable-source, or immutable-container
+path; records only runtime secret and TLS-profile references in `AgentConfig`; and
+runs doctor, registration, policy, observability, and rollback gates. Ask your agent
+to **"deploy `kafka-mcp` with agent-utilities-deployment"**.
 
 | Install mode | Command |
 |------|---------|
-| Bare-metal, prod (PyPI) | `uvx kafka-mcp` · or `uv tool install kafka-mcp` |
-| Bare-metal, dev (editable) | `uv pip install -e ".[all]"` · or `pip install -e ".[all]"` |
-| Container, prod | deploy `knucklessg1/kafka-mcp:latest` via docker-compose / swarm / podman / podman-compose / kubernetes |
-| Container, dev (editable) | deploy `docker/compose.dev.yml` (source-mounted at `/src`; edits live on restart) |
+| Installed package | `uv tool install "kafka-mcp[mcp]"`, then run `kafka-mcp` |
+| Editable source | `uv pip install -e ".[agent]"`, then run `kafka-mcp` |
+| Immutable container | deploy `registry.example.invalid/kafka-mcp@sha256:<digest>` through the operator-selected orchestrator |
 
-Secrets are read-existing + seeded via `vault_sync` — you are only prompted for what's missing.
+The repository embeds no deployment profile, credential value, certificate path, or
+environment-specific endpoint. Supply those at runtime through `AgentConfig` and the
+configured secret provider.
 
-<!-- END agent-os-genesis-deploy -->
+<!-- END agent-utilities-deployment -->
+
+<!-- GOVERNED-CAPABILITY:START -->
+## Governed capability contract
+
+This package ships a compact canonical skill surface with specialist procedures
+kept as referenced workflows. The current MCP tools, skill metadata,
+`connector_manifest.yml`, ontology, mappings, shapes, fixtures, migrations,
+tool-schema fingerprints, and certification metadata form one versioned
+capability contract. Validate them together; do not rely on stale tool names or
+historical per-task skill wrappers.
+
+Runtime endpoints, credentials, certificate trust, tenant identity, retention,
+and observability policy are deployment inputs and are never packaged values.
+See [Configuration, trust, and privacy](docs/configuration.md) before enabling a
+network transport, connector ingestion, GraphOS delegation, or trace export.
+<!-- GOVERNED-CAPABILITY:END -->

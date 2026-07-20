@@ -1,0 +1,20 @@
+schema_version: '1'
+connector: kafka-mcp
+ontology_source: kafka
+sync:
+- preset: kafka-topics
+  server: kafka-mcp
+  tool: kafka_topics
+  action: list
+  records_path: data
+  id_field: topic_name
+  title_field: topic_name
+  text_field: topic_name
+  updated_field: null
+  doc_type: kafka_topic
+  tool_schema_sha256: a4344229f235c9f28257ba4b6fc92d9ca0ea025b36aef8448e15953c349fa7b9
+governance:
+  default_acl: quarantine
+  identity: opaque-reference
+  tenant: required-at-materialization
+  provenance: required-at-materialization

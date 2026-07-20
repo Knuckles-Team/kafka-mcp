@@ -14,21 +14,23 @@ def get_client() -> Api:
 
     Honors ``KAFKA_REST_URL`` (default ``http://localhost:8082``); bearer token
     via ``KAFKA_TOKEN``; optional basic auth via
-    ``KAFKA_USERNAME``/``KAFKA_PASSWORD``; TLS verification via
-    ``KAFKA_SSL_VERIFY``.
+    ``KAFKA_USERNAME``/``KAFKA_PASSWORD``; TLS trust through the shared
+    mandatory-verification profile contract.
     """
     base_url = setting("KAFKA_REST_URL", "http://localhost:8082")
     token = setting("KAFKA_TOKEN", "")
     username = setting("KAFKA_USERNAME", "")
     password = setting("KAFKA_PASSWORD", "")
-    verify = setting("KAFKA_SSL_VERIFY", True)
+    tls_profile = setting("KAFKA_REST_TLS_PROFILE", "")
+    tls_profile_ref = setting("KAFKA_REST_TLS_PROFILE_REF", "")
 
     return Api(
         base_url=base_url,
         token=token or None,
         username=username or None,
         password=password or None,
-        verify=verify,
+        tls_profile=tls_profile or None,
+        tls_profile_ref=tls_profile_ref or None,
     )
 
 

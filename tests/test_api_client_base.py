@@ -1,11 +1,6 @@
-"""Facade-parity tests for the strangled ApiClientBase.
+"""Focused tests for the shared-client Kafka REST facade."""
 
-The public surface must match the legacy requests-based implementation:
-return shapes (parsed JSON / {"status": "success"} / {"status": "success",
-"text": ...}), the generic ``API error: <status> - <body>`` exception on
-HTTP >= 400, ``last_etag`` capture, and auth header injection. All transport
-via httpx.MockTransport — no live REST Proxy.
-"""
+import inspect
 
 import httpx
 import pytest
@@ -17,6 +12,30 @@ BASE = "http://rest-proxy.test:8082"
 
 def _client(handler, **kwargs) -> ApiClientBase:
     return ApiClientBase(BASE, transport=httpx.MockTransport(handler), **kwargs)
+
+
+def test_tls_profile_contract_is_forwarded(monkeypatch):
+    captured = {}
+
+    class _Client:
+        def __init__(self, _base_url, **kwargs):
+            captured.update(kwargs)
+
+    monkeypatch.setattr("kafka_mcp.api.api_client_base.BaseApiClient", _Client)
+    ApiClientBase(
+        BASE,
+        tls_profile="private-pki",
+        tls_profile_ref="env://KAFKA_TLS_PROFILE_JSON",
+    )
+
+    assert captured["tls_service"] == "kafka-rest"
+    assert captured["tls_profile"] == "private-pki"
+    assert captured["tls_profile_ref"] == "env://KAFKA_TLS_PROFILE_JSON"
+    assert "verify" not in captured
+
+
+def test_boolean_tls_verification_argument_is_not_supported():
+    assert "verify" not in inspect.signature(ApiClientBase).parameters
 
 
 def test_json_response_returned_directly():

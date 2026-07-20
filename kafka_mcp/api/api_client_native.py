@@ -50,7 +50,7 @@ class NativeKafkaClient:
                 future.result()
                 results[topic] = "created"
             except Exception as exc:  # noqa: BLE001
-                results[topic] = f"error: {exc}"
+                results[topic] = f"error: {type(exc).__name__}"
         return {"topics": results}
 
     def delete_topics(self, topics: list[str]) -> Any:
@@ -66,7 +66,7 @@ class NativeKafkaClient:
                 future.result()
                 results[topic] = "deleted"
             except Exception as exc:  # noqa: BLE001
-                results[topic] = f"error: {exc}"
+                results[topic] = f"error: {type(exc).__name__}"
         return {"topics": results}
 
     def list_topics(self, timeout: float = 10.0) -> Any:

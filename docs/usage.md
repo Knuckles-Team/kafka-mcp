@@ -28,7 +28,7 @@ Example agent prompts that map onto these tools:
 
 ## As a Python API
 
-`KafkaApi` (exported as `Api`) is a `requests`-based facade over the Confluent REST
+`KafkaApi` (exported as `Api`) is a shared HTTP-client facade over the Confluent REST
 Proxy. The active cluster id is resolved lazily, so most calls need no cluster
 argument.
 
@@ -38,7 +38,7 @@ from kafka_mcp.api_client import Api
 api = Api(
     base_url="http://your-rest-proxy:8082",
     token=None,            # or a bearer token
-    verify=True,
+    tls_profile=None,      # optional named profile from the runtime catalog
 )
 
 # Reads

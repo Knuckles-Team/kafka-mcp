@@ -9,6 +9,9 @@ CONCEPT:AU-KG.ingest.enterprise-source-extractor.
 
 from __future__ import annotations
 
+import pytest
+from agent_utilities.knowledge_graph.memory.native_ingest import NativeIngestError
+
 from kafka_mcp.kg_ingest import (
     ingest_brokers,
     ingest_consumer_groups,
@@ -21,6 +24,7 @@ from kafka_mcp.kg_ingest import (
 class _FakeTxn:
     def __init__(self):
         self.nodes = {}
+        self.edges = []
         self.committed = False
 
     def begin(self, graph=None):
@@ -30,33 +34,27 @@ class _FakeTxn:
     def add_node(self, txn, node_id, props):
         self.nodes[node_id] = props
 
+    def add_edge(self, txn, source, target, props):
+        self.edges.append((source, target, props))
+
     def commit(self, txn):
         self.committed = True
         return True
 
 
-class _FakeEdges:
-    def __init__(self):
-        self.edges = []
-
-    def add(self, src, dst, props):
-        self.edges.append((src, dst, props))
-
-
 class _FakeClient:
     def __init__(self):
         self.txn = _FakeTxn()
-        self.edges = _FakeEdges()
 
 
 def test_ingest_entities_writes_nodes_and_edges():
     c = _FakeClient()
     res = ingest_entities(
         [
-            {"id": "a", "type": "Topic", "name": "events"},
-            {"id": "b", "type": "KafkaCluster"},
+            {"id": "a", "node_type": "Topic", "name": "events"},
+            {"id": "b", "node_type": "KafkaCluster"},
         ],
-        [{"source": "a", "target": "b", "type": "inCluster"}],
+        [{"source": "a", "target": "b", "relationship": "inCluster"}],
         client=c,
         graph="__commons__",
     )
@@ -66,7 +64,7 @@ def test_ingest_entities_writes_nodes_and_edges():
     # provenance is stamped
     assert c.txn.nodes["a"]["source"] == "kafka-mcp"
     assert c.txn.nodes["a"]["domain"] == "kafka"
-    assert c.edges.edges == [("a", "b", {"type": "inCluster"})]
+    assert c.txn.edges == [("a", "b", {"relationship": "inCluster"})]
 
 
 def test_ingest_topics_maps_topic_and_cluster():
@@ -88,13 +86,13 @@ def test_ingest_topics_maps_topic_and_cluster():
     )
     assert res == {"nodes": 2, "edges": 1}
     topic = c.txn.nodes["kafka:topic:clstr-1:events"]
-    assert topic["type"] == "Topic"
+    assert topic["node_type"] == "Topic"
     assert topic["partitionsCount"] == 3
     assert topic["replicationFactor"] == 2
     assert topic["externalToolId"] == "events"
-    assert c.txn.nodes["kafka:cluster:clstr-1"]["type"] == "KafkaCluster"
-    assert c.edges.edges == [
-        ("kafka:topic:clstr-1:events", "kafka:cluster:clstr-1", {"type": "inCluster"})
+    assert c.txn.nodes["kafka:cluster:clstr-1"]["node_type"] == "KafkaCluster"
+    assert c.txn.edges == [
+        ("kafka:topic:clstr-1:events", "kafka:cluster:clstr-1", {"relationship": "inCluster"})
     ]
 
 
@@ -113,13 +111,13 @@ def test_ingest_partitions_maps_partition_of_topic():
     )
     assert res == {"nodes": 2, "edges": 2}
     p0 = c.txn.nodes["kafka:partition:clstr-1:events:0"]
-    assert p0["type"] == "Partition"
+    assert p0["node_type"] == "Partition"
     assert p0["partitionId"] == 0
     assert (
         "kafka:partition:clstr-1:events:0",
         "kafka:topic:clstr-1:events",
-        {"type": "partitionOf"},
-    ) in c.edges.edges
+        {"relationship": "partitionOf"},
+    ) in c.txn.edges
 
 
 def test_ingest_consumer_groups_maps_group_and_cluster():
@@ -139,7 +137,7 @@ def test_ingest_consumer_groups_maps_group_and_cluster():
     )
     assert res == {"nodes": 2, "edges": 1}
     grp = c.txn.nodes["kafka:group:clstr-1:analytics"]
-    assert grp["type"] == "ConsumerGroup"
+    assert grp["node_type"] == "ConsumerGroup"
     assert grp["groupState"] == "STABLE"
 
 
@@ -156,19 +154,19 @@ def test_ingest_brokers_maps_broker_and_cluster():
     )
     assert res == {"nodes": 2, "edges": 1}
     brk = c.txn.nodes["kafka:broker:clstr-1:1"]
-    assert brk["type"] == "Broker"
+    assert brk["node_type"] == "Broker"
     assert brk["brokerHost"] == "b1"
     assert brk["brokerPort"] == 9092
 
 
-def test_ingest_noops_without_engine():
-    # No injected client + no reachable engine -> clean no-op.
-    assert ingest_entities([{"id": "a", "type": "Topic"}]) is None
+def test_retired_node_type_alias_is_rejected():
+    with pytest.raises(NativeIngestError, match="canonical node_type"):
+        ingest_entities(
+            [{"id": "retired", "type": "RetiredAlias"}],
+            client=_FakeClient(),
+        )
 
 
-def test_ingest_empty_is_noop():
-    assert ingest_entities([], client=_FakeClient()) is None
-    assert ingest_topics({"data": []}, client=_FakeClient()) is None
-    assert ingest_partitions({"data": []}, topic="x", client=_FakeClient()) is None
-    assert ingest_consumer_groups({"data": []}, client=_FakeClient()) is None
-    assert ingest_brokers({"data": []}, client=_FakeClient()) is None
+def test_empty_native_ingest_is_rejected():
+    with pytest.raises(NativeIngestError, match="at least one entity"):
+        ingest_entities([], client=_FakeClient())

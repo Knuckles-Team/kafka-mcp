@@ -1,0 +1,6 @@
+{
+  "connector": "kafka-mcp",
+  "current_ontology_source": "kafka",
+  "migrations": [],
+  "schema_version": "1"
+}

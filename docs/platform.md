@@ -21,7 +21,7 @@ broker on `:9092` (mirrors `services/kafka/compose.yml`):
 # docker/kafka.compose.yml
 services:
   kafka:
-    image: apache/kafka:latest
+    image: apache/kafka@sha256:<digest>
     container_name: kafka
     hostname: kafka
     restart: unless-stopped
@@ -58,7 +58,7 @@ stack so the connector reaches Kafka over HTTP on `:8082`:
 ```yaml
 # docker/kafka.compose.yml (continued)
   rest-proxy:
-    image: confluentinc/cp-kafka-rest:latest
+    image: confluentinc/cp-kafka-rest@sha256:<digest>
     container_name: kafka-rest
     hostname: kafka-rest
     restart: unless-stopped
@@ -78,7 +78,9 @@ Point the connector at the REST Proxy (default surface):
 
 ```bash
 export KAFKA_REST_URL=http://localhost:8082
-export KAFKA_SSL_VERIFY=False          # plaintext / self-signed homelab
+# TLS verification is mandatory. Select private trust through a named profile
+# or KAFKA_REST_TLS_PROFILE_REF when the platform does not use system trust.
+export KAFKA_REST_TLS_PROFILE_REF="secret://runtime/kafka-rest-tls"
 
 kafka-mcp --transport streamable-http --host 0.0.0.0 --port 8000
 ```
@@ -98,7 +100,7 @@ network, so the server reaches the proxy by container name:
 # docker/stack.compose.yml
 services:
   kafka:
-    image: apache/kafka:latest
+    image: apache/kafka@sha256:<digest>
     hostname: kafka
     environment:
       KAFKA_NODE_ID: "1"
@@ -114,7 +116,7 @@ services:
     volumes: ["kafka_data:/var/lib/kafka/data"]
 
   rest-proxy:
-    image: confluentinc/cp-kafka-rest:latest
+    image: confluentinc/cp-kafka-rest@sha256:<digest>
     hostname: kafka-rest
     depends_on: [kafka]
     environment:
@@ -123,7 +125,7 @@ services:
       KAFKA_REST_LISTENERS: http://0.0.0.0:8082
 
   kafka-mcp:
-    image: knucklessg1/kafka-mcp:latest
+    image: example/kafka-mcp@sha256:<digest>
     depends_on: [rest-proxy]
     environment:
       - KAFKA_REST_URL=http://kafka-rest:8082
