@@ -2,34 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://knuckles-team.github.io/kafka-mcp/</loc>
-         <lastmod>2026-07-09</lastmod>
+         <lastmod>2026-07-23</lastmod>
     </url>
     <url>
          <loc>https://knuckles-team.github.io/kafka-mcp/architecture/</loc>
-         <lastmod>2026-07-09</lastmod>
+         <lastmod>2026-07-23</lastmod>
     </url>
     <url>
          <loc>https://knuckles-team.github.io/kafka-mcp/concepts/</loc>
-         <lastmod>2026-07-09</lastmod>
+         <lastmod>2026-07-23</lastmod>
+    </url>
+    <url>
+         <loc>https://knuckles-team.github.io/kafka-mcp/configuration/</loc>
+         <lastmod>2026-07-23</lastmod>
     </url>
     <url>
          <loc>https://knuckles-team.github.io/kafka-mcp/deployment/</loc>
-         <lastmod>2026-07-09</lastmod>
+         <lastmod>2026-07-23</lastmod>
     </url>
     <url>
          <loc>https://knuckles-team.github.io/kafka-mcp/installation/</loc>
-         <lastmod>2026-07-09</lastmod>
+         <lastmod>2026-07-23</lastmod>
     </url>
     <url>
          <loc>https://knuckles-team.github.io/kafka-mcp/overview/</loc>
-         <lastmod>2026-07-09</lastmod>
+         <lastmod>2026-07-23</lastmod>
     </url>
     <url>
          <loc>https://knuckles-team.github.io/kafka-mcp/platform/</loc>
-         <lastmod>2026-07-09</lastmod>
+         <lastmod>2026-07-23</lastmod>
     </url>
     <url>
          <loc>https://knuckles-team.github.io/kafka-mcp/usage/</loc>
-         <lastmod>2026-07-09</lastmod>
+         <lastmod>2026-07-23</lastmod>
     </url>
 </urlset>
