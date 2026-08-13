@@ -1,8 +1,8 @@
 {
   "api_version": "graphos.io/v1",
   "artifacts": {
-    "a2a.json": "9788e41024aaaea8d453073d97f384bc78517fbe7ff8cde47410e79e0bede93f",
-    "connector_manifest.yml": "241d1260a0493e37081fc43e142f681a6320e64e28f6f28d7f1d48c04434579b",
+    "a2a.json": "ad7482ef4bd12fca8749ad423057c8b9e43a47b2988f88aa083e6ab35a83f780",
+    "connector_manifest.yml": "1006d32c31a51b3bcb9aa5e23307b9a77b9ebe9ae268d3ba270324d5da163c90",
     "kafka_mcp/connectors/mcp_source_presets.json": "4d2badf4c9e9f439a4f47aeb525fc472ea45bfae27f6f915314b5ae73c15b86b",
     "kafka_mcp/connectors/tool_schema_fingerprints.json": "da7d9029ef2d6a0210329997ac9aa6bc40daf9900ba32b6e583edeb21dce4a86",
     "kafka_mcp/ontology/fixtures/records.json": "8f18e74acae55609822604005213e2fd59086b86d2d2d99912354778a472efc5",
@@ -19,7 +19,7 @@
     "synthetic_fixture_contract": "passed"
   },
   "compatibility": {
-    "agent_utilities": ">=1.27.1,<2",
+    "agent_utilities": ">=2.1.0,<3",
     "bundle_schema": "2",
     "epistemic_graph": ">=2.23.1,<3"
   },
@@ -28,10 +28,10 @@
   "live_certified": false,
   "mode": "offline-source",
   "schema_version": "2",
-  "signature": "ynbBjQTw7MptHZeeZV-vSMxUiYLkGSbRqdxW0qalKmt1z57IXlIjQpPmKJs4V-CQtHPEHswoXls1yX515ZxzBg",
+  "signature": "lY2VO5U7KVvHM-mBHLGJA34nbZ_FqngkfQfAAdvnwAH5apbcytUD9zrlTFUFfv1sNQeb3WkDQR5ugjq7FhKLCw",
   "signature_algorithm": "ed25519",
   "signer": "ontology-manifest-generator",
-  "signing_public_key": "q0Cp7bmQMqJhbofGKKw8xXC6KbFzukBDDke0UYVi8y4",
+  "signing_public_key": "QkigdPNpcUU7x7NcSkwCsUXIQpaFncMQbYSoiSgI2SY",
   "status": "source-validated",
-  "validated_at": "2026-07-18T00:00:00Z"
+  "validated_at": "2026-07-28T10:14:00Z"
 }
