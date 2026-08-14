@@ -7,14 +7,10 @@
         "kafka-mcp"
       ],
       "env": {
-        "MCP_TOOL_MODE": "condensed",
+        "MCP_TOOL_MODE": "intent",
         "KAFKATOOL": "True",
         "KAFKA_BOOTSTRAP_SERVERS": "localhost:9092",
-        "KAFKA_CLUSTER_ID": "",
-        "KAFKA_PASSWORD": "",
-        "KAFKA_REST_URL": "http://localhost:8082",
-        "KAFKA_TOKEN": "",
-        "KAFKA_USERNAME": ""
+        "KAFKA_REST_URL": "http://localhost:8082"
       }
     }
   }

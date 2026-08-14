@@ -11,7 +11,7 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 from kafka_mcp.api_client import Api
-from kafka_mcp.auth import get_client
+from kafka_mcp.auth import get_client, get_native_client
 from kafka_mcp.mcp.mcp_kafka import register_kafka_tools
 
 __version__ = "0.2.0"
@@ -36,7 +36,42 @@ def get_mcp_instance() -> tuple[Any, ...]:
 
     @mcp.custom_route("/health", methods=["GET"])
     async def health_check(request: Request) -> JSONResponse:
-        return JSONResponse({"status": "OK"})
+        """Liveness/readiness probe.
+
+        Proves the process is up AND that it can actually reach a real
+        Kafka broker — a bare ``{"status": "OK"}`` here previously reported
+        healthy for weeks while ``KAFKA_URL`` (a dead key from an earlier
+        refactor) meant the REST-proxy client never had a valid endpoint.
+        Uses the native (direct-to-broker) client rather than the REST
+        Proxy client, since no Confluent REST Proxy is deployed in this
+        environment — only broker ports (a known, accepted gap, not what
+        this probe is meant to catch). The ``kafka-mcp[native]`` extra is
+        optional, so its absence degrades to "unverified", not "down".
+        """
+        try:
+            import confluent_kafka.admin  # noqa: F401
+        except ImportError as exc:
+            return JSONResponse(
+                {
+                    "status": "OK",
+                    "backend": "unverified",
+                    "reason": f"native client extra not installed: {exc}",
+                }
+            )
+        try:
+            result = get_native_client().list_topics(timeout=2.0)
+        except Exception as exc:  # noqa: BLE001 - report any backend failure as degraded
+            return JSONResponse(
+                {"status": "degraded", "backend": "unreachable", "error": str(exc)},
+                status_code=503,
+            )
+        return JSONResponse(
+            {
+                "status": "OK",
+                "backend": "reachable",
+                "topics_visible": len(result.get("topics", [])),
+            }
+        )
 
     registered_tags = register_tool_surface(
         mcp,
