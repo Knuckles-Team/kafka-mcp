@@ -3,7 +3,7 @@
 from typing import Any
 
 import httpx
-from agent_utilities.http import (
+from agent_utilities.httpsupport import (
     AuthHeaderInjector,
     BaseApiClient,
     BasicAuth,
