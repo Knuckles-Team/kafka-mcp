@@ -56,33 +56,35 @@ Pydantic-AI agent server.
 | `KAFKA_BOOTSTRAP_SERVERS` | `localhost:9092` |  |
 | `KAFKA_REST_URL` | `http://localhost:8082` | Confluent REST Proxy base URL |
 | `KAFKA_CLUSTER_ID` | — | Pin the cluster id (else the first cluster is cached) |
-| `KAFKA_TOKEN` | — | Bearer token for the REST Proxy |
+| `KAFKA_TOKEN` | secret-injected | Bearer token for the REST Proxy |
 | `KAFKA_USERNAME` | — | Basic-auth user (optional) |
-| `KAFKA_PASSWORD` | — | Basic-auth password (optional) |
-| `KAFKA_REST_TLS_PROFILE` | _(system trust)_ | Optional named profile from the agent-utilities TLS catalog |
-| `KAFKA_REST_TLS_PROFILE_REF` | _(empty)_ | Runtime secret ref containing a TLS profile |
+| `KAFKA_PASSWORD` | secret-injected | Basic-auth password (optional) |
+| `KAFKA_REST_TLS_PROFILE` | — | Optional named profile from the agent-utilities TLS catalog |
+| `KAFKA_REST_TLS_PROFILE_REF` | — | Optional runtime secret ref containing a TLS profile |
 | `KAFKATOOL` | `True` |  |
 
 #### Inherited agent-utilities variables (apply to every connector)
 
 | Variable | Example | Description |
 |----------|---------|-------------|
-| `TRANSPORT` | `stdio` | MCP transport: `stdio` | `streamable-http` | `sse` |
-| `HOST` | `0.0.0.0` | Bind host (HTTP transports) |
+| `TRANSPORT` | `stdio` | MCP transport: `stdio` \| `streamable-http` \| `sse` |
+| `HOST` | `127.0.0.1` | Loopback bind host (set an authenticated ingress explicitly) |
 | `PORT` | `8000` | Bind port (HTTP transports) |
-| `MCP_TOOL_MODE` | `condensed` | Tool surface: `condensed` | `verbose` | `both` |
+| `MCP_TOOL_MODE` | `intent` | Tool surface: `intent` \| `condensed` \| `verbose` \| `both` |
 | `MCP_ENABLED_TOOLS` | — | Comma-separated tool allow-list |
 | `MCP_DISABLED_TOOLS` | — | Comma-separated tool deny-list |
 | `MCP_ENABLED_TAGS` | — | Comma-separated tag allow-list |
 | `MCP_DISABLED_TAGS` | — | Comma-separated tag deny-list |
-| `EUNOMIA_TYPE` | `none` | Authorization mode: `none` | `embedded` | `remote` |
+| `EUNOMIA_TYPE` | `none` | Authorization mode: `none` \| `embedded` \| `remote` |
 | `EUNOMIA_POLICY_FILE` | `mcp_policies.json` | Embedded Eunomia policy file |
 | `EUNOMIA_REMOTE_URL` | — | Remote Eunomia authorization server URL |
 | `ENABLE_OTEL` | `False` | Enable OpenTelemetry export |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | — | OTLP collector endpoint |
-| `MCP_CLIENT_AUTH` | — | Outbound MCP auth (`oidc-client-credentials` for fleet calls) |
+| `MCP_CLIENT_AUTH` | — | Outbound MCP child auth: `oidc-client-credentials` \| `basic` \| `none` |
 | `OIDC_CLIENT_ID` | — | OIDC client id (service-account auth) |
-| `OIDC_CLIENT_SECRET` | — | OIDC client secret (service-account auth) |
+| `OIDC_CLIENT_SECRET_REF` | `secret://identity/oidc-client-secret` | Runtime secret reference for the OIDC service account |
+| `MCP_BASIC_AUTH_USERNAME` | — | HTTP Basic username (`MCP_CLIENT_AUTH=basic`) |
+| `MCP_BASIC_AUTH_PASSWORD_REF` | `secret://identity/mcp-basic-password` | Runtime secret reference for HTTP Basic auth (`MCP_CLIENT_AUTH=basic`) |
 | `DEBUG` | `False` | Verbose logging |
 | `PYTHONUNBUFFERED` | `1` | Unbuffered stdout (recommended in containers) |
 | `MCP_URL` | `http://localhost:8000/mcp` | URL of the MCP server the agent connects to |
@@ -90,7 +92,7 @@ Pydantic-AI agent server.
 | `MODEL_ID` | `gpt-4o` | Model id for the agent |
 | `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
-_8 package + 22 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+_9 package + 24 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 
@@ -308,12 +310,13 @@ Auto-generated — do not edit between the markers below.
 
 <!-- MCP-TOOLS-TABLE:START -->
 
-#### Condensed action-routed tools (default — `MCP_TOOL_MODE=condensed`)
+#### Condensed action-routed tools (`MCP_TOOL_MODE=condensed`)
 
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
 | `kafka_cluster` | `KAFKATOOL` | Inspect clusters/brokers and manage ACLs via the REST Proxy. |
 | `kafka_groups` | `KAFKATOOL` | Inspect Kafka consumer groups and their lag. |
+| `kafka_ingest_catalog` | `KAFKATOOL` | Ingest the live Kafka topology into the knowledge graph (Wire-First). |
 | `kafka_native` | `KAFKATOOL` | Produce/consume/admin directly against brokers (native client). |
 | `kafka_partitions` | `KAFKATOOL` | List partitions for a topic or get a single partition. |
 | `kafka_records` | `KAFKATOOL` | Produce or consume records via the Confluent REST Proxy. |
@@ -358,7 +361,7 @@ Auto-generated — do not edit between the markers below.
 
 </details>
 
-_6 action-routed tool(s) (default) · 29 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (`condensed` default · `verbose` 1:1 · `both`). Auto-generated — do not edit._
+_7 action-routed tool(s) · 29 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
 
 ## Documentation
