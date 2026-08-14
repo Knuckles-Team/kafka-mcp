@@ -1,17 +1,20 @@
 # Two right-sized images from ONE Dockerfile, selected by build --target. Both are
 # slim multi-stage (build in a builder, ship only /usr/local — no dev-tools/source):
 #
-#   --target agent  (DEFAULT)  installs kafka-mcp[agent] = the FULL runtime
+#   --target agent  (DEFAULT)  installs kafka-mcp[agent,native] = the FULL runtime
 #                              (agent-utilities[agent-runtime]: pydantic-ai + skills;
-#                              the full epistemic-graph engine is a base dependency).
-#                              The provider's [agent] also includes [mcp], so this image
-#                              can run EITHER the agent OR the mcp server. Push as the
+#                              the full epistemic-graph engine is a base dependency)
+#                              PLUS the native confluent-kafka client so the broker
+#                              (kafk__native) tools actually work. The provider's
+#                              [agent] also includes [mcp], so this image can run
+#                              EITHER the agent OR the mcp server. Push as the
 #                              default tags: latest / main / <version>.
 #
-#   --target mcp               installs kafka-mcp[mcp]   = MCP-server tooling ONLY
+#   --target mcp               installs kafka-mcp[mcp,native] = MCP-server tooling
 #                              (agent-utilities[mcp]: FastMCP/FastAPI plus the mandatory
-#                              full epistemic-graph base runtime). It omits the optional
-#                              provider agent/frontends. Push as the :mcp / :mcp-<version> tag.
+#                              full epistemic-graph base runtime) PLUS the native
+#                              confluent-kafka client. It omits the optional provider
+#                              agent/frontends. Push as the :mcp / :mcp-<version> tag.
 #
 #   docker build --target agent -t kafka-mcp:local .
 #   docker build --target mcp   -t kafka-mcp:mcp    .
@@ -28,12 +31,12 @@ RUN apt-get update \
 # Slim MCP-only dependency closure.
 FROM builder-base AS builder-mcp
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system --break-system-packages kafka-mcp[mcp]==0.10.0
+    uv pip install --system --break-system-packages kafka-mcp[mcp,native]==1.0.1
 
 # Full agent runtime dependency closure.
 FROM builder-base AS builder-agent
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system --break-system-packages kafka-mcp[agent]==0.10.0
+    uv pip install --system --break-system-packages kafka-mcp[agent,native]==1.0.1
 
 FROM python:3.14-slim@sha256:cea0e6040540fb2b965b6e7fb5ffa00871e632eef63719f0ea54bca189ce14a6 AS runtime-base
 ARG HOST=127.0.0.1
