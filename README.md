@@ -61,7 +61,15 @@ Pydantic-AI agent server.
 | `KAFKA_PASSWORD` | secret-injected | Basic-auth password (optional) |
 | `KAFKA_REST_TLS_PROFILE` | — | Optional named profile from the agent-utilities TLS catalog |
 | `KAFKA_REST_TLS_PROFILE_REF` | — | Optional runtime secret ref containing a TLS profile |
+| `KAFKA_CONNECT_URL` | `http://localhost:8083` | Kafka Connect worker REST base URL |
+| `KAFKA_CONNECT_TOKEN` | secret-injected | Bearer token for Connect REST (no built-in auth upstream; optional) |
+| `KAFKA_CONNECT_USERNAME` | — | Basic-auth user (optional) |
+| `KAFKA_CONNECT_PASSWORD` | secret-injected | Basic-auth password (optional) |
+| `KAFKA_CONNECT_TLS_PROFILE` | — | Optional named profile from the agent-utilities TLS catalog |
+| `KAFKA_CONNECT_TLS_PROFILE_REF` | — | Optional runtime secret ref containing a TLS profile |
 | `KAFKATOOL` | `True` |  |
+| `KAFKA_CONNECTTOOL` | `True` |  |
+| `KAFKA_CDCTOOL` | `True` |  |
 
 #### Inherited agent-utilities variables (apply to every connector)
 
@@ -92,7 +100,7 @@ Pydantic-AI agent server.
 | `MODEL_ID` | `gpt-4o` | Model id for the agent |
 | `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
-_9 package + 24 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+_17 package + 24 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 
@@ -210,6 +218,9 @@ diagrams are documented in the
         "MCP_TOOL_MODE": "intent",
         "KAFKATOOL": "True",
         "KAFKA_BOOTSTRAP_SERVERS": "localhost:9092",
+        "KAFKA_CDCTOOL": "True",
+        "KAFKA_CONNECTTOOL": "True",
+        "KAFKA_CONNECT_URL": "http://localhost:8083",
         "KAFKA_REST_URL": "http://localhost:8082"
       }
     }
@@ -244,6 +255,9 @@ own runtime secret boundary.
         "MCP_TOOL_MODE": "intent",
         "KAFKATOOL": "True",
         "KAFKA_BOOTSTRAP_SERVERS": "localhost:9092",
+        "KAFKA_CDCTOOL": "True",
+        "KAFKA_CONNECTTOOL": "True",
+        "KAFKA_CONNECT_URL": "http://localhost:8083",
         "KAFKA_REST_URL": "http://localhost:8082"
       }
     }
@@ -277,6 +291,9 @@ docker run -i --rm \
   -e MCP_TOOL_MODE=intent \
   -e KAFKATOOL=True \
   -e KAFKA_BOOTSTRAP_SERVERS=localhost:9092 \
+  -e KAFKA_CDCTOOL=True \
+  -e KAFKA_CONNECTTOOL=True \
+  -e KAFKA_CONNECT_URL=http://localhost:8083 \
   -e KAFKA_REST_URL=http://localhost:8082 \
   registry.example.invalid/kafka-mcp@sha256:<digest> kafka-mcp
 ```
@@ -314,9 +331,15 @@ Auto-generated — do not edit between the markers below.
 
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
+| `kafka_cdc_lag` | `KAFKA_CDCTOOL` | Report consumer-group lag for a CDC-reading group. |
+| `kafka_cdc_slot_health` | `KAFKA_CDCTOOL` | Report what Kafka Connect exposes about a source connector's slot. |
+| `kafka_cdc_topic_map` | `KAFKA_CDCTOOL` | Resolve a Debezium connector's declared source tables to CDC topics. |
 | `kafka_cluster` | `KAFKATOOL` | Inspect clusters/brokers and manage ACLs via the REST Proxy. |
+| `kafka_connect` | `KAFKA_CONNECTTOOL` | Manage Kafka Connect connectors via the worker's REST API (:8083). |
+| `kafka_connect_plugins` | `KAFKA_CONNECTTOOL` | List connector plugins available on the Kafka Connect worker's classpath. |
 | `kafka_groups` | `KAFKATOOL` | Inspect Kafka consumer groups and their lag. |
 | `kafka_ingest_catalog` | `KAFKATOOL` | Ingest the live Kafka topology into the knowledge graph (Wire-First). |
+| `kafka_ingest_cdc_topology` | `KAFKA_CDCTOOL` | Ingest the live Kafka Connect CDC topology into the knowledge graph. |
 | `kafka_native` | `KAFKATOOL` | Produce/consume/admin directly against brokers (native client). |
 | `kafka_partitions` | `KAFKATOOL` | List partitions for a topic or get a single partition. |
 | `kafka_records` | `KAFKATOOL` | Produce or consume records via the Confluent REST Proxy. |
@@ -361,7 +384,7 @@ Auto-generated — do not edit between the markers below.
 
 </details>
 
-_7 action-routed tool(s) · 29 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
+_13 action-routed tool(s) · 29 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
 
 ## Documentation

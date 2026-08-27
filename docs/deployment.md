@@ -118,6 +118,25 @@ the Confluent REST Proxy surface:
 | `KAFKA_REST_TLS_PROFILE_REF` | _(empty)_ | Runtime secret ref containing a TLS profile |
 | `KAFKATOOL` | `True` | Register the Kafka tool set |
 
+The Kafka Connect + CDC surface (`kafka_connect`, `kafka_connect_plugins`,
+`kafka_cdc_*`):
+
+| Var | Default | Meaning |
+|---|---|---|
+| `KAFKA_CONNECT_URL` | `http://localhost:8083` | Kafka Connect worker REST base URL |
+| `KAFKA_CONNECT_TOKEN` | _(empty)_ | Bearer token for Connect REST (no built-in auth upstream; optional) |
+| `KAFKA_CONNECT_USERNAME` | _(empty)_ | Basic-auth user (optional) |
+| `KAFKA_CONNECT_PASSWORD` | _(empty)_ | Basic-auth password (optional) |
+| `KAFKA_CONNECT_TLS_PROFILE` | _(system trust)_ | Optional named profile from the agent-utilities TLS catalog |
+| `KAFKA_CONNECT_TLS_PROFILE_REF` | _(empty)_ | Runtime secret ref containing a TLS profile |
+| `KAFKA_CONNECTTOOL` | `True` | Register the Kafka Connect tool set |
+| `KAFKA_CDCTOOL` | `True` | Register the CDC read/ingest tool set |
+
+When no `KAFKA_CONNECT_TOKEN`/`KAFKA_CONNECT_USERNAME`+`KAFKA_CONNECT_PASSWORD` is
+set, the Connect client connects unauthenticated and logs a loud warning — Kafka
+Connect's own REST API has no documented built-in auth, so this is expected only
+behind a trusted network boundary (e.g. in-cluster).
+
 The optional native (direct-to-broker) client reads `KAFKA_BOOTSTRAP_SERVERS`
 (default `localhost:9092`) and requires the `kafka-mcp[native]` extra. Plus
 `HOST` / `PORT` / `TRANSPORT` for HTTP transports. Copy
@@ -253,7 +272,10 @@ Add to your client's `mcp_config.json`:
         "KAFKA_REST_URL": "http://your-rest-proxy:8082",
         "KAFKA_CLUSTER_ID": "",
         "KAFKA_TOKEN": "",
-        "KAFKATOOL": "True"
+        "KAFKATOOL": "True",
+        "KAFKA_CONNECT_URL": "http://your-connect-worker:8083",
+        "KAFKA_CONNECTTOOL": "True",
+        "KAFKA_CDCTOOL": "True"
       }
     }
   }

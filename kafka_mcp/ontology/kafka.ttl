@@ -10,7 +10,9 @@
 # consumers, brokers and ACLs, with their containment and subscription relationships. All
 # classes and properties live in the shared `:` (kg#) namespace; only the owl:Ontology node
 # below gets the per-package IRI. Backs the kafka-mcp MCP tool surface (kafka_topics /
-# kafka_partitions / kafka_groups / kafka_cluster / kafka_records / kafka_native).
+# kafka_partitions / kafka_groups / kafka_cluster / kafka_records / kafka_native), plus the
+# Kafka Connect + CDC surface (kafka_connect / kafka_cdc_* — CA-44): CdcConnector and
+# ReplicationSlot below.
 
 # --- classes (owl:Class) ---
 
@@ -41,6 +43,14 @@
 :KafkaAcl a owl:Class ;
     rdfs:label "Kafka ACL" ;
     rdfs:comment "An access-control binding granting/denying an operation on a resource to a principal (kafka_cluster list_acls)." .
+
+:CdcConnector a owl:Class ;
+    rdfs:label "CDC Connector" ;
+    rdfs:comment "A Kafka Connect connector performing change-data-capture (e.g. a Debezium source connector), declared and controlled via kafka_connect (CA-44)." .
+
+:ReplicationSlot a owl:Class ;
+    rdfs:label "Replication Slot" ;
+    rdfs:comment "A source-database replication slot (e.g. a PostgreSQL logical replication slot) a CdcConnector consumes from. Its live health is read through sql-mcp's pg_replication_slots — this package never embeds a database client (kafka_cdc_slot_health)." .
 
 # --- links (owl:ObjectProperty) ---
 
@@ -84,6 +94,24 @@
     rdfs:comment "Links a KafkaAcl to the Topic resource it governs." ;
     rdfs:domain :KafkaAcl ;
     rdfs:range :Topic .
+
+:cdcTracksTopic a owl:ObjectProperty ;
+    rdfs:label "cdc tracks topic" ;
+    rdfs:comment "Links a CdcConnector to a Topic it publishes change-event envelopes onto (kafka_cdc_topic_map)." ;
+    rdfs:domain :CdcConnector ;
+    rdfs:range :Topic .
+
+:usesReplicationSlot a owl:ObjectProperty ;
+    rdfs:label "uses replication slot" ;
+    rdfs:comment "Links a CdcConnector to the ReplicationSlot it consumes from on the source database." ;
+    rdfs:domain :CdcConnector ;
+    rdfs:range :ReplicationSlot .
+
+:tracksTable a owl:ObjectProperty ;
+    rdfs:label "tracks table" ;
+    rdfs:comment "Links a CdcConnector to the source DatabaseTable it captures changes from (sql-mcp's ontology). Cross-connector relation target only — declared here, never resolved via a direct database call from this package (DEC-CA-08)." ;
+    rdfs:domain :CdcConnector ;
+    rdfs:range :DatabaseTable .
 
 # --- fields (owl:DatatypeProperty) ---
 
@@ -155,6 +183,36 @@
     rdfs:comment "ACL operation governed (READ, WRITE, DESCRIBE, CREATE, ...)." ;
     rdfs:domain :KafkaAcl ;
     rdfs:range xsd:string .
+
+:connectorClass a owl:DatatypeProperty ;
+    rdfs:label "connector class" ;
+    rdfs:comment "Fully-qualified Kafka Connect connector class (e.g. io.debezium.connector.postgresql.PostgresConnector)." ;
+    rdfs:domain :CdcConnector ;
+    rdfs:range xsd:string .
+
+:connectorState a owl:DatatypeProperty ;
+    rdfs:label "connector state" ;
+    rdfs:comment "Connect worker-reported lifecycle state (RUNNING, PAUSED, FAILED, UNASSIGNED)." ;
+    rdfs:domain :CdcConnector ;
+    rdfs:range xsd:string .
+
+:tasksMax a owl:DatatypeProperty ;
+    rdfs:label "tasks max" ;
+    rdfs:comment "Configured tasks.max for the connector." ;
+    rdfs:domain :CdcConnector ;
+    rdfs:range xsd:integer .
+
+:slotName a owl:DatatypeProperty ;
+    rdfs:label "slot name" ;
+    rdfs:comment "Source-database replication slot name (e.g. PostgreSQL slot.name)." ;
+    rdfs:domain :ReplicationSlot ;
+    rdfs:range xsd:string .
+
+:slotActive a owl:DatatypeProperty ;
+    rdfs:label "slot active" ;
+    rdfs:comment "Whether the slot is currently held/active. Populated by cross-checking sql-mcp's pg_replication_slots — never queried directly by this package." ;
+    rdfs:domain :ReplicationSlot ;
+    rdfs:range xsd:boolean .
 
 <http://knuckles.team/kg/kafka> a owl:Ontology ;
     rdfs:label "Apache Kafka Event-Streaming Ontology" ;

@@ -6,7 +6,7 @@ complete tool surface is summarized in [Overview](overview.md).
 
 ## As an MCP server
 
-Once [deployed](deployment.md), the server registers six action-dispatch tools. Each
+Once [deployed](deployment.md), the server registers action-dispatch tools. Each
 takes an `action` and a JSON `params_json` payload, so a single tool covers a whole
 Kafka resource family:
 
@@ -18,6 +18,11 @@ Kafka resource family:
 | `kafka_groups` | `list`, `describe`, `consumers`, `lag_summary`, `lags` |
 | `kafka_cluster` | `list_clusters`, `get_cluster`, `list_brokers`, `get_broker`, `broker_configs`, `list_acls`, `create_acl`, `delete_acls` |
 | `kafka_native` | `produce`, `consume`, `create_topic`, `delete_topic`, `list_topics`, `list_groups` (requires `kafka-mcp[native]`) |
+| `kafka_connect` | `list`, `get`, `create`, `update`, `delete`, `status`, `restart`, `pause`, `resume`, `offsets` |
+| `kafka_connect_plugins` | (read-only, no `action`) |
+
+Plus standalone CDC read/ingest tools: `kafka_cdc_topic_map`, `kafka_cdc_lag`,
+`kafka_cdc_slot_health`, `kafka_ingest_cdc_topology`.
 
 Example agent prompts that map onto these tools:
 

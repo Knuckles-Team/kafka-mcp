@@ -219,3 +219,77 @@ def ingest_brokers(
             {"source": node_id, "target": cluster_node_id, "relationship": "inCluster"}
         )
     return ingest_entities(entities, relationships, client=client, graph=graph)
+
+
+def ingest_cdc_connectors(
+    connectors: list[dict[str, Any]],
+    *,
+    client: Any | None = None,
+    graph: str | None = None,
+) -> dict[str, int]:
+    """Map normalized Kafka Connect connector records -> ``:CdcConnector`` nodes.
+
+    ``connectors`` is a list of pre-normalized dicts (assembled by the caller from
+    Connect REST ``/connectors?expand=status`` + per-connector ``/config``), each
+    shaped::
+
+        {"name": str, "connector_class": str | None, "state": str | None,
+         "tasks_max": int | None, "topics": list[str], "slot_name": str | None,
+         "cluster_id": str | None}
+
+    Emits one ``:CdcConnector`` node per entry, one ``:cdcTracksTopic`` edge per
+    listed topic (topic nodes are NOT created here — they must already exist via
+    :func:`ingest_topics`; an edge to a not-yet-ingested topic id is still written,
+    matching the rest of this module's Wire-First, best-effort convention), and
+    one ``:usesReplicationSlot`` edge to a ``:ReplicationSlot`` node (created here)
+    when ``slot_name`` is present. Never queries a source database directly — slot
+    identity comes only from the connector's own declared config.
+    """
+    entities: list[dict[str, Any]] = []
+    relationships: list[dict[str, Any]] = []
+    for c in connectors:
+        name = c.get("name")
+        if not name:
+            continue
+        cid = c.get("cluster_id") or "default"
+        node_id = f"kafka:cdcconnector:{cid}:{name}"
+        entities.append(
+            {
+                "id": node_id,
+                "node_type": "CdcConnector",
+                "name": name,
+                "connectorClass": c.get("connector_class"),
+                "connectorState": c.get("state"),
+                "tasksMax": c.get("tasks_max"),
+                "externalToolId": name,
+            }
+        )
+        for topic in c.get("topics") or []:
+            topic_id = f"kafka:topic:{cid}:{topic}"
+            relationships.append(
+                {
+                    "source": node_id,
+                    "target": topic_id,
+                    "relationship": "cdcTracksTopic",
+                }
+            )
+        slot_name = c.get("slot_name")
+        if slot_name:
+            slot_id = f"kafka:replicationslot:{cid}:{name}:{slot_name}"
+            entities.append(
+                {
+                    "id": slot_id,
+                    "node_type": "ReplicationSlot",
+                    "name": slot_name,
+                    "slotName": slot_name,
+                    "externalToolId": slot_name,
+                }
+            )
+            relationships.append(
+                {
+                    "source": node_id,
+                    "target": slot_id,
+                    "relationship": "usesReplicationSlot",
+                }
+            )
+    return ingest_entities(entities, relationships, client=client, graph=graph)
