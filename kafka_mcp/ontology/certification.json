@@ -1,14 +1,14 @@
 {
   "api_version": "graphos.io/v1",
   "artifacts": {
-    "connector_manifest.yml": "f7b7913842d74f1bdd60faa3ee81d4fffca3b7458cff1af1ec491b30829b683d",
+    "connector_manifest.yml": "88a589a4e7df54fc3949b436103db11dde03c4e3933ba31870ee6f4179099efa",
     "kafka_mcp/connectors/mcp_source_presets.json": "4d2badf4c9e9f439a4f47aeb525fc472ea45bfae27f6f915314b5ae73c15b86b",
     "kafka_mcp/connectors/tool_schema_fingerprints.json": "da7d9029ef2d6a0210329997ac9aa6bc40daf9900ba32b6e583edeb21dce4a86",
     "kafka_mcp/ontology/fixtures/records.json": "8f18e74acae55609822604005213e2fd59086b86d2d2d99912354778a472efc5",
-    "kafka_mcp/ontology/kafka.ttl": "eca1bc07974f830050dfc4ac1962d0b18e15024edfd59dc9411358cb00556858",
+    "kafka_mcp/ontology/kafka.ttl": "01d3d4ffc9721d6172a47eaecc8ae0ae322fc65315abfa845dce97cc72f12f6f",
     "kafka_mcp/ontology/mappings/source.yaml": "ce10afd49cca3ff8bb5aa648a48bb58b23aeb2d265ef67f1749dcfa0ec1362c4",
     "kafka_mcp/ontology/migrations/manifest.json": "da5864c8524f464957b44777c6d26c9db345ac71f167ef619a129669e98d117f",
-    "kafka_mcp/ontology/shapes/connector.shacl.ttl": "8438d02f2c9980fabba2b5072934c99098bc96ceaf12fb2d7371493f630c2700"
+    "kafka_mcp/ontology/shapes/connector.shacl.ttl": "cdace2e9826e6fb36a5882729e744830fa25147e0828c55401cce7832a95ea02"
   },
   "checks": {
     "declared_tool_schema": "passed",
@@ -18,9 +18,9 @@
     "synthetic_fixture_contract": "passed"
   },
   "compatibility": {
-    "agent_utilities": ">=2.4.0,<3",
+    "agent_utilities": ">=2.5.0,<3",
     "bundle_schema": "2",
-    "epistemic_graph": ">=2.26.0,<3"
+    "epistemic_graph": ">=2.27.0,<3"
   },
   "connector": "kafka-mcp",
   "kind": "ConnectorSourceAttestation",
@@ -32,5 +32,5 @@
   "signer": "UNSIGNED-PREVIEW",
   "signing_public_key": "",
   "status": "source-validated",
-  "validated_at": "2026-08-21T04:30:39Z"
+  "validated_at": "2026-08-27T02:44:50Z"
 }
