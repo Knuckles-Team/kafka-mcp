@@ -7,7 +7,7 @@ can call.
 
 ## The tool surface
 
-Six action-dispatch MCP tools cover the full Kafka surface. Each accepts an `action`
+Action-dispatch MCP tools cover the full Kafka surface. Each accepts an `action`
 plus a JSON `params_json` payload:
 
 | Tool | Resource | Representative actions |
@@ -18,6 +18,13 @@ plus a JSON `params_json` payload:
 | `kafka_groups` | Consumer groups | `list`, `describe`, `consumers`, `lag_summary`, `lags` |
 | `kafka_cluster` | Clusters, brokers, ACLs | `list_clusters`, `get_cluster`, `list_brokers`, `get_broker`, `broker_configs`, `list_acls`, `create_acl`, `delete_acls` |
 | `kafka_native` | Direct-to-broker | `produce`, `consume`, `create_topic`, `delete_topic`, `list_topics`, `list_groups` |
+| `kafka_connect` | Kafka Connect connectors | `list`, `get`, `create`, `update`, `delete`, `status`, `restart`, `pause`, `resume`, `offsets` |
+| `kafka_connect_plugins` | Connect plugins (read-only) | — |
+
+Plus three standalone CDC read tools — `kafka_cdc_topic_map`, `kafka_cdc_lag`,
+`kafka_cdc_slot_health` — and the ingest tools `kafka_ingest_catalog` /
+`kafka_ingest_cdc_topology`. See [`deployment.md`](deployment.md) for the
+Kafka Connect + CDC surface's environment contract.
 
 ## The REST contract
 

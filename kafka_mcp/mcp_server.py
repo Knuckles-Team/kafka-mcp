@@ -13,13 +13,21 @@ from starlette.responses import JSONResponse
 from kafka_mcp.api_client import Api
 from kafka_mcp.auth import get_client, get_native_client
 from kafka_mcp.mcp.mcp_kafka import register_kafka_tools
+from kafka_mcp.mcp.mcp_kafka_cdc import register_kafka_cdc_tools
+from kafka_mcp.mcp.mcp_kafka_connect import register_kafka_connect_tools
 
 __version__ = "0.2.0"
 logger = get_logger(name="kafka_mcp")
 
 # Re-exported so ``register_tool_surface``'s module auto-discovery (which scans
-# this namespace for ``register_<tag>_tools``) finds the kafka registrar.
-__all__ = ["get_mcp_instance", "mcp_server", "register_kafka_tools"]
+# this namespace for ``register_<tag>_tools``) finds each domain registrar.
+__all__ = [
+    "get_mcp_instance",
+    "mcp_server",
+    "register_kafka_tools",
+    "register_kafka_connect_tools",
+    "register_kafka_cdc_tools",
+]
 
 
 def get_mcp_instance() -> tuple[Any, ...]:

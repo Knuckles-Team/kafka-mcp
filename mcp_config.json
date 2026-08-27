@@ -10,6 +10,9 @@
         "MCP_TOOL_MODE": "intent",
         "KAFKATOOL": "True",
         "KAFKA_BOOTSTRAP_SERVERS": "localhost:9092",
+        "KAFKA_CDCTOOL": "True",
+        "KAFKA_CONNECTTOOL": "True",
+        "KAFKA_CONNECT_URL": "http://localhost:8083",
         "KAFKA_REST_URL": "http://localhost:8082"
       }
     }
