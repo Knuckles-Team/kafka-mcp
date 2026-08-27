@@ -302,7 +302,7 @@ sync:
     doc_type: kafka_topic
 provenance:
   generated_by: scripts/generate_connector_manifests.py
-  generated_at: '2026-08-26T13:42:55Z'
+  generated_at: '2026-08-27T02:44:50Z'
   source_artifacts:
   - kafka_mcp/connectors/mcp_source_presets.json
   - kafka_mcp/connectors/tool_schema_fingerprints.json
@@ -315,7 +315,7 @@ provenance:
   signature_algorithm: none
   signing_public_key: ''
   signature: null
-  source_commit: 52554af959888a5fe81a110376596dabbb31eb24
+  source_commit: 116e229d6f95a68eb3ae89a5ca15d563add11931
 policy:
   pii_fields: {}
   tenant_boundary: null
@@ -344,12 +344,3 @@ review_todos:
   \ heuristic] \u2014 verify manually before relying on this crosswalk for reasoning/joins."
 - "schema_mappings.Topic.ontology_class = None [UNRESOLVED \u2014 no crosswalk found by any heuristic]\
   \ \u2014 verify manually before relying on this crosswalk for reasoning/joins."
-- "CA-44 (DEC-CA-07): every mutating tool in this package (kafka_topics create/delete/update_config;\
-  \ kafka_records produce/create_consumer/subscribe/commit/delete_consumer; kafka_cluster create_acl/delete_acls;\
-  \ kafka_native produce/create_topic/delete_topic; kafka_connect create/update/delete/restart/pause/resume)\
-  \ has an INTENDED OntologyAction declaration in the DEC-CA-07 actions: shape (parameters/target_resource/conflict_policy/requires_approval),\
-  \ but it is NOT written into this manifest's actions: block \u2014 agent_utilities/knowledge_graph/ontology/connector_manifest.py's\
-  \ ActionSpec model is {id, name, description} with extra=\"forbid\" (verified connector_manifest.py:274-284) and would reject the extended shape.\
-  \ Filed as a cross-lane blocker to OWNER-PROGRAM (CA-44-W02); ActionSpec is outside agents/kafka-mcp/** and not owned by this lane.\
-  \ Every mutating tool call therefore still executes with NO governed approval/conflict-policy gate \u2014 identical to today's behavior, not a regression\
-  \ \u2014 until ActionSpec is extended and this block is revisited."

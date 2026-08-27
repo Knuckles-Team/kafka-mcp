@@ -23,6 +23,26 @@ shape:BrokerGovernanceShape a sh:NodeShape ;
         sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string
     ] .
 
+shape:CdcConnectorGovernanceShape a sh:NodeShape ;
+    sh:targetClass :CdcConnector ;
+    sh:closed false ;
+    sh:property [
+        sh:path :sourceRecordRef ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string
+    ] ;
+    sh:property [
+        sh:path :tenantReference ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string
+    ] ;
+    sh:property [
+        sh:path :accessPolicyReference ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string
+    ] ;
+    sh:property [
+        sh:path :provenanceReference ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string
+    ] .
+
 shape:ConsumerGovernanceShape a sh:NodeShape ;
     sh:targetClass :Consumer ;
     sh:closed false ;
@@ -105,6 +125,26 @@ shape:KafkaClusterGovernanceShape a sh:NodeShape ;
 
 shape:PartitionGovernanceShape a sh:NodeShape ;
     sh:targetClass :Partition ;
+    sh:closed false ;
+    sh:property [
+        sh:path :sourceRecordRef ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string
+    ] ;
+    sh:property [
+        sh:path :tenantReference ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string
+    ] ;
+    sh:property [
+        sh:path :accessPolicyReference ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string
+    ] ;
+    sh:property [
+        sh:path :provenanceReference ;
+        sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string
+    ] .
+
+shape:ReplicationSlotGovernanceShape a sh:NodeShape ;
+    sh:targetClass :ReplicationSlot ;
     sh:closed false ;
     sh:property [
         sh:path :sourceRecordRef ;
