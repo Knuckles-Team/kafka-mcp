@@ -7,15 +7,13 @@ name = "kafka-mcp"
 version = "2.2.0"
 description = "Apache Kafka (REST Proxy / native) API + MCP Server + A2A Server for Agentic AI!"
 readme = "README.md"
-classifiers = [ "Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Environment :: Console", "Operating System :: POSIX :: Linux", "Programming Language :: Python :: 3",]
+license = "MIT"
+classifiers = [ "Development Status :: 4 - Beta", "Environment :: Console", "Operating System :: POSIX :: Linux", "Programming Language :: Python :: 3",]
 requires-python = ">=3.12, <3.15"
 dependencies = [ "agent-utilities>=2.0.0,<3.0.0", "httpx>=0.28.1", "requests>=2.34.2",]
 [[project.authors]]
 name = "Project Maintainers"
 email = "maintainers@users.noreply.github.com"
-
-[project.license]
-text = "MIT"
 
 [project.optional-dependencies]
 mcp = [ "agent-utilities[mcp]>=2.0.0,<3.0.0",]
@@ -67,6 +65,7 @@ ignore = [ "E402", "E501", "B008",]
 
 [tool.setuptools.packages.find]
 where = [ ".",]
+include = [ "kafka_mcp*",]
 
 [tool.uv]
 override-dependencies = [

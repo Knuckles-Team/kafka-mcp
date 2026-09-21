@@ -1,5 +1,3 @@
 include README.md
 include requirements.txt
-recursive-include kafka_mcp *.py *.json *.md *.yaml *.yml
-recursive-include kafka_mcp *.json
-recursive-include kafka_mcp/agent_data *
+recursive-include kafka_mcp *.py *.json *.md *.yaml
