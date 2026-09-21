@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kafka Connect and CDC Operations"
+  short_description: "Operate Kafka Connect and CDC workflows"
+  default_prompt: "Use $kafka-connect-cdc-operations to inspect or manage a Kafka Connect CDC workflow."

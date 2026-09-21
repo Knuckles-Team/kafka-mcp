@@ -1,6 +1,5 @@
 ---
 name: kafka-connect-cdc-operations
-skill_type: skill
 description: >-
   Drive Kafka Connect connector lifecycle (list/get/create/update/delete/status/
   restart/pause/resume/offsets) and CDC-specific reads (topic mapping, consumer-
@@ -12,11 +11,6 @@ description: >-
   topic/partition provisioning (use kafka-topic-administration), or reading live
   PostgreSQL replication-slot health directly (use sql-mcp's sql_query — this
   package never embeds a database client).
-license: MIT
-tags: [kafka, kafka-connect, cdc, debezium, connectors, mcp]
-metadata:
-  author: Genius
-  version: '0.1.0'
 ---
 # Kafka Connect + CDC Operations
 
