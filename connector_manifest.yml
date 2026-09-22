@@ -289,7 +289,7 @@ sync:
   updated_field: null
   pagination: null
   doc_type: kafka_topic
-  tool_schema_sha256: a4344229f235c9f28257ba4b6fc92d9ca0ea025b36aef8448e15953c349fa7b9
+  tool_schema_sha256: 6b3936650bad521ac6ccbb3cb0ce23aba8884f22c3f25d9bb1dce7fe46723405
   raw:
     server: kafka-mcp
     tool: kafka_topics

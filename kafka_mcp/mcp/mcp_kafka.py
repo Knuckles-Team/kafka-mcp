@@ -6,7 +6,7 @@ surface lives in ``kafka_mcp.api`` — these tools add no business logic.
 """
 
 import json
-from typing import Any
+from typing import Any, Literal
 
 from fastmcp import FastMCP
 from pydantic import Field
@@ -19,7 +19,9 @@ def register_kafka_tools(mcp: FastMCP) -> None:
 
     @mcp.tool(tags={"topics"})
     async def kafka_topics(
-        action: str = Field(
+        action: Literal[
+            "configs", "create", "delete", "describe", "list", "update_config"
+        ] = Field(
             description=(
                 "Topic action. One of: 'list', 'create', 'describe', 'delete', "
                 "'configs' (list configs), 'update_config' (alter configs)."
