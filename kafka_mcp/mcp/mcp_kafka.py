@@ -17,7 +17,18 @@ from kafka_mcp.auth import get_client, get_native_client
 def register_kafka_tools(mcp: FastMCP) -> None:
     """Register topic, record, group, cluster, and native tools for Kafka."""
 
-    @mcp.tool(tags={"topics"})
+    @mcp.tool(
+        tags={"topics"},
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": True,
+            "idempotentHint": False,
+            "openWorldHint": True,
+        },
+        meta={
+            "eg.annotations": {"modalities_in": ["text"], "modalities_out": ["text"]}
+        },
+    )
     async def kafka_topics(
         action: Literal[
             "configs", "create", "delete", "describe", "list", "update_config"
