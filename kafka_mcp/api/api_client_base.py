@@ -3,7 +3,7 @@
 from typing import Any
 
 import httpx
-from kafka_mcp._httpsupport_compat import (
+from agent_utilities.httpsupport import (
     AuthHeaderInjector,
     BaseApiClient,
     BasicAuth,
