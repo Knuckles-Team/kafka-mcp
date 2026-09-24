@@ -158,7 +158,11 @@ def test_ingest_topics_maps_topic_and_cluster():
     assert topic["externalToolId"] == "events"
     assert c.nodes.values["kafka:cluster:clstr-1"]["node_type"] == "KafkaCluster"
     assert c.changes.edges == [
-        ("kafka:topic:clstr-1:events", "kafka:cluster:clstr-1", {"relationship": "inCluster"})
+        (
+            "kafka:topic:clstr-1:events",
+            "kafka:cluster:clstr-1",
+            {"relationship": "inCluster"},
+        )
     ]
 
 
