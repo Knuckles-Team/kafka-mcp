@@ -320,7 +320,9 @@ class BaseApiClient(_ApiClientCore):
         )
         tls = _resolve_tls(tls_service, tls_profile, tls_profile_ref)
         self._client = create_http_client(
-            HttpClientOptions(base_url=self.base_url, timeout=timeout, tls=tls),
+            HttpClientOptions(
+                base_url=self.base_url, timeout=timeout, tls=tls, allow_plaintext=True
+            ),
             transport=transport,
         )
 
@@ -463,7 +465,9 @@ class AsyncBaseApiClient(_ApiClientCore):
         from agent_connector_sdk.http.client import create_async_http_client
 
         self._client = create_async_http_client(
-            HttpClientOptions(base_url=self.base_url, timeout=timeout, tls=tls),
+            HttpClientOptions(
+                base_url=self.base_url, timeout=timeout, tls=tls, allow_plaintext=True
+            ),
             transport=transport,
         )
 
