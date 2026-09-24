@@ -13,8 +13,11 @@ def test_mcp_available_flag_true_when_mcp_server_importable():
     assert kafka_mcp._MCP_AVAILABLE is True
 
 
-def test_agent_available_flag_true_when_agent_server_importable():
-    assert kafka_mcp._AGENT_AVAILABLE is True
+def test_agent_available_flag_false_after_agent_server_removal():
+    # agent_server.py (the standalone pydantic-ai A2A runtime) was removed in
+    # the agent-connector-sdk migration (SDK-GAPS.md #11: no SDK equivalent);
+    # the generic optional-module probe correctly now reports it unavailable.
+    assert kafka_mcp._AGENT_AVAILABLE is False
 
 
 def test_availability_flag_false_when_no_optional_module_matches_fragment(
