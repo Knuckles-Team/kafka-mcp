@@ -103,7 +103,6 @@ Pydantic-AI agent server.
 _17 package + 24 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
-
 ### Connection & credentials (Confluent REST Proxy)
 | Var | Default | Meaning |
 |---|---|---|
@@ -143,15 +142,11 @@ Pick the extra that matches what you want to run:
 | Extra | Installs | Use when |
 |-------|----------|----------|
 | `kafka-mcp[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | You only run the **MCP server** (smallest install / image) |
-| `kafka-mcp[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | You run the **integrated agent** |
 | `kafka-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
 # Connector-focused MCP server (includes the shared graph engine)
 uv pip install "kafka-mcp[mcp]"
-
-# Agent runtime (adds model orchestration to the shared graph engine)
-uv pip install "kafka-mcp[agent]"
 
 # Everything (development)
 uv pip install "kafka-mcp[all]"      # or: python -m pip install "kafka-mcp[all]"
@@ -162,32 +157,22 @@ kafka-mcp                        # stdio MCP server (default transport)
 kafka-mcp --transport streamable-http --host 0.0.0.0 --port 8000
 ```
 
-Run the agent server against a live MCP server:
+### Container image
 
-```bash
-kafka-agent --mcp-url http://localhost:8000/mcp --host 0.0.0.0 --port 8080
-```
-
-### Container images (`:mcp` vs `:agent`)
-
-One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `--target`:
+One multi-stage `docker/Dockerfile` builds a single, right-sized image:
 
 | Image tag | Build target | Contents | Entrypoint |
 |-----------|--------------|----------|------------|
 | `example/kafka-mcp:mcp` | `--target mcp` | `kafka-mcp[mcp]` — **connector-focused**, includes `epistemic-graph[full]`; no model-orchestration stack | `kafka-mcp` |
-| `example/kafka-mcp@sha256:<digest>` | `--target agent` (default) | `kafka-mcp[agent]` — **agent runtime**, model orchestration + `epistemic-graph[full]` | `kafka-agent` |
 
 ```bash
 docker build --target mcp   -t example/kafka-mcp:mcp    docker/   # connector-focused MCP server
-docker build --target agent -t example/kafka-mcp:agent-local docker/   # agent runtime
 ```
 
 ### Knowledge-graph database (`epistemic-graph`)
 
-Both `[mcp]` and `[agent]` carry the **epistemic-graph** engine through the required
-Agent Utilities core dependency (`epistemic-graph[full]`). The `[mcp]` extra keeps
-the server connector-focused; `[agent]` additionally enables model orchestration. Local
-deployments can use the bundled engine. For production or shared state, run
+`[mcp]` carries the **epistemic-graph** engine through the required Agent Utilities
+core dependency (`epistemic-graph[full]`). Local deployments can use the bundled engine. For production or shared state, run
 **epistemic-graph as a dedicated database service** and configure the runtime to use it.
 Deployment recipes (single-node + Raft HA), connection configuration, and architecture
 diagrams are documented in the
@@ -199,8 +184,6 @@ diagrams are documented in the
 
 > **Install the connector-focused `[mcp]` extra.** Examples use `kafka-mcp[mcp]` to add
 > FastMCP / FastAPI through `agent-utilities[mcp]`; the required Agent Utilities core
-> still carries `epistemic-graph[full]`. The `[agent-runtime]` extra additionally
-> enables model orchestration.
 
 #### stdio Transport (local IDEs — Cursor, Claude Desktop, VS Code)
 
@@ -405,7 +388,6 @@ recommended reference for installation, deployment, and day-to-day operation.
 
 `AGENTS.md` is the canonical contributor/agent guidance.
 
-
 <!-- BEGIN agent-utilities-deployment (generated; do not edit between markers) -->
 
 ## Deploy with `agent-utilities-deployment`
@@ -419,7 +401,7 @@ to **"deploy `kafka-mcp` with agent-utilities-deployment"**.
 | Install mode | Command |
 |------|---------|
 | Installed package | `uv tool install "kafka-mcp[mcp]"`, then run `kafka-mcp` |
-| Editable source | `uv pip install -e ".[agent]"`, then run `kafka-mcp` |
+| Editable source | `uv pip install -e ".[mcp]"`, then run `kafka-mcp` |
 | Immutable container | deploy `registry.example.invalid/kafka-mcp@sha256:<digest>` through the operator-selected orchestrator |
 
 The repository embeds no deployment profile, credential value, certificate path, or
