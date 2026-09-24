@@ -10,21 +10,17 @@ readme = "README.md"
 license = "MIT"
 classifiers = [ "Development Status :: 4 - Beta", "Environment :: Console", "Operating System :: POSIX :: Linux", "Programming Language :: Python :: 3",]
 requires-python = ">=3.12, <3.15"
-dependencies = [ "agent-utilities>=2.0.0,<3.0.0", "httpx>=0.28.1", "requests>=2.34.2",]
+dependencies = [ "agent-connector-sdk>=0.1.0,<1.0.0", "httpx>=0.28.1", "requests>=2.34.2",]
 [[project.authors]]
 name = "Project Maintainers"
 email = "maintainers@users.noreply.github.com"
 
 [project.optional-dependencies]
-mcp = [ "agent-utilities[mcp]>=2.0.0,<3.0.0",]
-agent = [ "agent-utilities[agent-runtime,logfire]>=2.0.0,<3.0.0",]
 native = [ "confluent-kafka>=2.15.0",]
-all = [ "agent-utilities[mcp,agent-runtime,logfire]>=2.0.0,<3.0.0",]
 test = [ "pytest-xdist>=3.8.0", "pytest>=9.1.1", "pytest-asyncio>=1.4.0", "pytest-cov>=7.1.0",]
 
 [project.scripts]
 kafka-mcp = "kafka_mcp.mcp_server:mcp_server"
-kafka-agent = "kafka_mcp.agent_server:agent_server"
 
 [project.entry-points."agent_utilities.skill_providers"]
 kafka-mcp = "kafka_mcp.skills"
@@ -72,5 +68,3 @@ override-dependencies = [
     "fastmcp-slim[client,server]>=4.0.0b1",
 ]
 
-[tool.uv.sources]
-agent-utilities = { path = ".uv-workspace-siblings/agent-utilities", editable = true }

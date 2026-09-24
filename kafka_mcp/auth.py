@@ -1,7 +1,7 @@
 """Identity credentials loader for the Apache Kafka clients."""
 
-from agent_utilities.base_utilities import get_logger
-from agent_utilities.core.config import setting
+from agent_connector_sdk.utilities import get_logger
+from agent_connector_sdk.config import setting
 
 from kafka_mcp.api.api_client_connect import ConnectApi
 from kafka_mcp.api.api_client_native import NativeKafkaClient
