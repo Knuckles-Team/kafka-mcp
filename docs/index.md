@@ -34,7 +34,7 @@ the client cache the first cluster the REST Proxy returns.
 
 <div class="grid cards" markdown>
 
-- :material-rocket-launch: **[Installation](installation.md)** — pip, source, extras, and the prebuilt Docker image.
+- :material-rocket-start: **[Installation](installation.md)** — pip, source, extras, and the prebuilt Docker image.
 - :material-server-network: **[Deployment](deployment.md)** — run the MCP and agent servers, Docker Compose, Caddy + Technitium.
 - :material-console: **[Usage](usage.md)** — the MCP tools, the `KafkaApi` client, and the CLI.
 - :material-database-cog: **[Backing Platform](platform.md)** — deploy Apache Kafka with Docker.
@@ -50,7 +50,7 @@ pip install "kafka-mcp[mcp]"
 kafka-mcp                        # stdio MCP server (default transport)
 ```
 
-Connect it to a Confluent REST Proxy in front of your Kafka cluster:
+Connect it to a Confluent REST Proxy in front of the operator's Kafka cluster:
 
 ```bash
 export KAFKA_REST_URL=http://your-rest-proxy:8082

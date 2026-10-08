@@ -1,7 +1,7 @@
 # Usage — API / CLI / MCP
 
 `kafka-mcp` exposes the same capability three ways: as **MCP tools** an agent calls,
-as a **Python API** (`KafkaApi`) you import, and as **command-line servers**. The
+as a **Python API** (`KafkaApi`) the operator import, and as **command-line servers**. The
 complete tool surface is summarized in [Overview](overview.md).
 
 ## As an MCP server
