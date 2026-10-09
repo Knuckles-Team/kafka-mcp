@@ -17,29 +17,21 @@ def _client(handler, **kwargs) -> ApiClientBase:
 def test_tls_profile_contract_is_forwarded(monkeypatch):
     captured = {}
 
-    class _Resolved:
-        @staticmethod
-        def httpx_kwargs():
-            return {}
+    class _Client:
+        def __init__(self, _base_url, **kwargs):
+            captured.update(kwargs)
 
-    def _fake_resolve(service, *, profile_name=None, profile_ref=None, **_kwargs):
-        captured["service"] = service
-        captured["profile_name"] = profile_name
-        captured["profile_ref"] = profile_ref
-        return _Resolved()
-
-    monkeypatch.setattr(
-        "kafka_mcp.api.api_client_base.resolve_tls_profile", _fake_resolve
-    )
+    monkeypatch.setattr("kafka_mcp.api.api_client_base.BaseApiClient", _Client)
     ApiClientBase(
         BASE,
         tls_profile="private-pki",
         tls_profile_ref="env://KAFKA_TLS_PROFILE_JSON",
     )
 
-    assert captured["service"] == "kafka-rest"
-    assert captured["profile_name"] == "private-pki"
-    assert captured["profile_ref"] == "env://KAFKA_TLS_PROFILE_JSON"
+    assert captured["tls_service"] == "kafka-rest"
+    assert captured["tls_profile"] == "private-pki"
+    assert captured["tls_profile_ref"] == "env://KAFKA_TLS_PROFILE_JSON"
+    assert "verify" not in captured
 
 
 def test_boolean_tls_verification_argument_is_not_supported():
