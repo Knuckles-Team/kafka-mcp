@@ -1,62 +1,104 @@
 """Native epistemic-graph ingestion for Kafka records.
 
 CONCEPT:AU-KG.ingest.enterprise-source-extractor. Connector-specific mappers emit
-canonical node_type nodes and relationship edges. The required agent-utilities
-native-ingest primitive owns the transaction and raises NativeIngestError when the
-authoritative engine cannot commit.
+canonical node_type nodes and relationship edges through the generated
+``agent_connector_sdk.ingest`` SourceIngest client, not a local ingestion helper.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from agent_utilities.knowledge_graph.memory.native_ingest import (
-    ingest_documents as _native_ingest_documents,
+from agent_connector_sdk.ingest import (
+    ChangeSet,
+    Document,
+    Entity,
+    IngestBinding,
+    IngestError,
+    KnowledgeIngest,
+    Relationship,
+    current_ingest,
 )
-from agent_utilities.knowledge_graph.memory.native_ingest import (
-    ingest_entities as _native_ingest_entities,
-)
 
-_SOURCE = "kafka-mcp"
-_DOMAIN = "kafka"
+_BINDING = IngestBinding(connector="kafka-mcp", stream="kafka")
+
+_ENTITY_RESERVED_KEYS = frozenset({"id", "node_type"})
+_RELATIONSHIP_RESERVED_KEYS = frozenset({"source", "target", "relationship"})
 
 
-def ingest_entities(
+def _to_entity(record: dict[str, Any]) -> Entity:
+    return Entity(
+        id=record.get("id"),
+        node_type=record.get("node_type"),
+        properties={
+            key: value
+            for key, value in record.items()
+            if key not in _ENTITY_RESERVED_KEYS
+        },
+    )
+
+
+def _to_relationship(record: dict[str, Any]) -> Relationship:
+    properties = {
+        key: value
+        for key, value in record.items()
+        if key not in _RELATIONSHIP_RESERVED_KEYS
+    }
+    return Relationship(
+        source=record["source"],
+        target=record["target"],
+        relationship=record["relationship"],
+        properties=properties or None,
+    )
+
+
+async def ingest_entities(
     entities: list[dict[str, Any]],
     relationships: list[dict[str, Any]] | None = None,
     *,
-    source: str = _SOURCE,
-    domain: str = _DOMAIN,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
-    """Write canonical typed nodes and relationships through agent-utilities."""
-    return _native_ingest_entities(
-        entities,
-        relationships,
-        source=source,
-        domain=domain,
-        client=client,
-        graph=graph,
+    """Write canonical typed nodes and relationships through the SDK ingest facade."""
+    if not entities:
+        raise IngestError("ingest_entities needs at least one entity")
+    change_set = ChangeSet(
+        entities=tuple(_to_entity(entity) for entity in entities),
+        relationships=tuple(
+            _to_relationship(relationship) for relationship in relationships or ()
+        ),
     )
+    service = ingest or current_ingest()
+    receipt = await service.submit(_BINDING, change_set)
+    return {"nodes": receipt.affected_count, "edges": receipt.relationship_count}
 
 
-def ingest_documents(
+async def ingest_documents(
     documents: list[dict[str, Any]],
     *,
-    source: str = _SOURCE,
-    domain: str = _DOMAIN,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
-    """Write searchable documents through the authoritative native-ingest path."""
-    return _native_ingest_documents(
-        documents,
-        source=source,
-        domain=domain,
-        client=client,
-        graph=graph,
+    """Write searchable documents through the SDK ingest facade."""
+    if not documents:
+        raise IngestError("ingest_documents needs at least one document")
+    change_set = ChangeSet(
+        documents=tuple(
+            Document(
+                id=doc["id"],
+                text=doc["text"],
+                title=doc.get("title"),
+                source_uri=doc.get("source_uri"),
+                properties={
+                    key: value
+                    for key, value in doc.items()
+                    if key not in {"id", "text", "title", "source_uri"}
+                },
+            )
+            for doc in documents
+        )
     )
+    service = ingest or current_ingest()
+    receipt = await service.submit(_BINDING, change_set)
+    return {"nodes": receipt.affected_count, "edges": receipt.relationship_count}
 
 
 def _records(data: Any) -> list[dict[str, Any]]:
@@ -70,12 +112,11 @@ def _records(data: Any) -> list[dict[str, Any]]:
     return []
 
 
-def ingest_topics(
+async def ingest_topics(
     topics: Any,
     *,
     cluster_id: str | None = None,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
     """Map REST Proxy topic records -> ``:Topic`` (+ ``:KafkaCluster``) nodes and ingest."""
     entities: list[dict[str, Any]] = []
@@ -107,16 +148,15 @@ def ingest_topics(
         relationships.append(
             {"source": tid, "target": cluster_node_id, "relationship": "inCluster"}
         )
-    return ingest_entities(entities, relationships, client=client, graph=graph)
+    return await ingest_entities(entities, relationships, ingest=ingest)
 
 
-def ingest_partitions(
+async def ingest_partitions(
     partitions: Any,
     *,
     topic: str,
     cluster_id: str | None = None,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
     """Map partition records -> ``:Partition`` nodes linked ``:partitionOf`` a Topic."""
     entities: list[dict[str, Any]] = []
@@ -141,15 +181,14 @@ def ingest_partitions(
         relationships.append(
             {"source": node_id, "target": topic_id, "relationship": "partitionOf"}
         )
-    return ingest_entities(entities, relationships, client=client, graph=graph)
+    return await ingest_entities(entities, relationships, ingest=ingest)
 
 
-def ingest_consumer_groups(
+async def ingest_consumer_groups(
     groups: Any,
     *,
     cluster_id: str | None = None,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
     """Map consumer-group records -> ``:ConsumerGroup`` (+ ``:KafkaCluster``) nodes."""
     entities: list[dict[str, Any]] = []
@@ -179,15 +218,14 @@ def ingest_consumer_groups(
         relationships.append(
             {"source": node_id, "target": cluster_node_id, "relationship": "inCluster"}
         )
-    return ingest_entities(entities, relationships, client=client, graph=graph)
+    return await ingest_entities(entities, relationships, ingest=ingest)
 
 
-def ingest_brokers(
+async def ingest_brokers(
     brokers: Any,
     *,
     cluster_id: str | None = None,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
     """Map broker records -> ``:Broker`` (+ ``:KafkaCluster``) nodes."""
     entities: list[dict[str, Any]] = []
@@ -218,14 +256,13 @@ def ingest_brokers(
         relationships.append(
             {"source": node_id, "target": cluster_node_id, "relationship": "inCluster"}
         )
-    return ingest_entities(entities, relationships, client=client, graph=graph)
+    return await ingest_entities(entities, relationships, ingest=ingest)
 
 
-def ingest_cdc_connectors(
+async def ingest_cdc_connectors(
     connectors: list[dict[str, Any]],
     *,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
     """Map normalized Kafka Connect connector records -> ``:CdcConnector`` nodes.
 
@@ -292,4 +329,4 @@ def ingest_cdc_connectors(
                     "relationship": "usesReplicationSlot",
                 }
             )
-    return ingest_entities(entities, relationships, client=client, graph=graph)
+    return await ingest_entities(entities, relationships, ingest=ingest)
