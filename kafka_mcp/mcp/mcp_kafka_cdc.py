@@ -225,5 +225,5 @@ def register_kafka_cdc_tools(mcp: FastMCP) -> None:
                     "cluster_id": cid,
                 }
             )
-        result = ingest_cdc_connectors(normalized, graph=None)
+        result = await ingest_cdc_connectors(normalized)
         return {"connectors_ingested": len(normalized), "ingested": result}
