@@ -1,18 +1,17 @@
 """Shared HTTP base client for the Apache Kafka REST Proxy API wrapper."""
 
+from __future__ import annotations
+
+import json as _json
+from base64 import b64encode
 from typing import Any
 
 import httpx
-from agent_utilities.httpsupport import (
-    AuthHeaderInjector,
-    BaseApiClient,
-    BasicAuth,
-    TokenAuth,
-)
+from agent_connector_sdk.tls.resolve import resolve_tls_profile
 
 
 class ApiClientBase:
-    """Thin wrapper over the fleet HTTP base with token / basic-auth support.
+    """Thin wrapper over httpx with token / basic-auth support.
 
     The Confluent REST Proxy v3 API speaks JSON, but callers may pass an
     explicit ``content_type``/``accept`` (e.g. the versioned
@@ -37,20 +36,24 @@ class ApiClientBase:
         self.password = password
         self.last_etag: str | None = None
 
-        auth: AuthHeaderInjector | None = None
+        default_headers: dict[str, str] = {}
         if token:
-            auth = TokenAuth(token)
+            default_headers["Authorization"] = f"Bearer {token}"
         elif username and password:
-            auth = BasicAuth(username, password)
+            basic = b64encode(f"{username}:{password}".encode()).decode()
+            default_headers["Authorization"] = f"Basic {basic}"
 
-        self._client = BaseApiClient(
-            self.base_url,
-            auth=auth,
-            tls_service="kafka-rest",
-            tls_profile=tls_profile,
-            tls_profile_ref=tls_profile_ref,
-            include_response_headers=True,
+        resolved = resolve_tls_profile(
+            "kafka-rest",
+            profile_name=tls_profile,
+            profile_ref=tls_profile_ref,
+        )
+
+        self._client = httpx.Client(
+            base_url=self.base_url,
+            headers=default_headers,
             transport=transport,
+            **resolved.httpx_kwargs(),
         )
 
     def request(
@@ -69,31 +72,43 @@ class ApiClientBase:
         Returns a dict when the response is JSON, otherwise
         ``{"status": "success", "text": <body>}``. Raises on HTTP >= 400.
         """
-        if not endpoint.startswith("http"):
-            endpoint = endpoint.lstrip("/")
+        if endpoint.startswith("http"):
+            url = endpoint
+        else:
+            url = endpoint.lstrip("/")
 
-        envelope = self._client.request(
+        req_headers: dict[str, str] = dict(headers or {})
+        if accept:
+            req_headers["Accept"] = accept
+
+        content: bytes | None = None
+        if json is not None:
+            content = _json.dumps(json).encode()
+            req_headers["Content-Type"] = content_type or "application/json"
+            data = None
+        elif content_type:
+            req_headers["Content-Type"] = content_type
+
+        response = self._client.request(
             method,
-            endpoint,
+            url,
             params=params,
             data=data,
-            json=json,
-            content_type=content_type,
-            accept=accept,
-            headers=headers,
-            raise_for_status=False,
+            content=content,
+            headers=req_headers or None,
         )
 
-        self.last_etag = (envelope.get("headers") or {}).get("etag")
+        self.last_etag = response.headers.get("etag")
 
-        status_code = envelope["status_code"]
-        body = envelope["data"]
+        status_code = response.status_code
         if status_code >= 400:
-            text = body if isinstance(body, str) else ("" if body is None else body)
+            text = response.text
             raise Exception(f"API error: {status_code} - {text}")
 
-        if body is None or (isinstance(body, str) and not body.strip()):
+        if status_code == 204 or not response.text.strip():
             return {"status": "success"}
-        if not isinstance(body, str):
-            return body
-        return {"status": "success", "text": body}
+
+        try:
+            return response.json()
+        except ValueError:
+            return {"status": "success", "text": response.text}
