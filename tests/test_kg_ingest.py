@@ -1,105 +1,142 @@
 """Native epistemic-graph typed-node ingestion — Wire-First coverage.
 
 Exercises the real ``ingest_entities`` / ``ingest_topics`` / ``ingest_partitions`` /
-``ingest_consumer_groups`` / ``ingest_brokers`` / ``ingest_cdc_connectors`` seams
-against a fake transport boundary (one level below the SDK's own request
-builder), asserting the Kafka REST-Proxy record ->
-:Topic/:Partition/:ConsumerGroup/:Broker/:KafkaCluster/:CdcConnector mapping.
-
-The transport receives the real generated ``SourceIngestionRequest`` built by
-``agent_connector_sdk.ingest.request.build_request``: entities surface as
-``SourceRecord`` (``record_id`` + ``payload`` + a ``mapping_reference`` that
-encodes the node_type), and relationships as ``SourceRelationship``
-(``source``/``target`` are ``SourceEntityRef`` objects with ``record_id``;
-the relationship name + the *source* entity's node_type are encoded in
-``relation_reference``, not on flat attributes).
+``ingest_consumer_groups`` / ``ingest_brokers`` seams with a fake engine client (no
+engine required), asserting the txn add_node/commit + edge calls and the Kafka
+REST-Proxy record → :Topic/:Partition/:ConsumerGroup/:Broker/:KafkaCluster mapping.
 CONCEPT:AU-KG.ingest.enterprise-source-extractor.
 """
 
 from __future__ import annotations
 
-from types import SimpleNamespace
 from typing import Any
 
+import msgpack
 import pytest
-from agent_connector_sdk.ingest import IngestError, KnowledgeIngest
+from agent_utilities.knowledge_graph.memory.native_ingest import NativeIngestError
+from agent_utilities.security.brain_context import ActorContext, use_actor
+from agent_utilities.security.actor_identity import ActorType
+from agent_utilities.knowledge_graph.core.session import GraphSession, use_session
 
 from kafka_mcp.kg_ingest import (
     ingest_brokers,
-    ingest_cdc_connectors,
     ingest_consumer_groups,
     ingest_entities,
     ingest_partitions,
     ingest_topics,
 )
 
-_CONNECTOR = "kafka-mcp"
+
+@pytest.fixture(autouse=True)
+def _governed_session():
+    actor = ActorContext(
+        actor_id="subject:opaque:synthetic",
+        actor_type=ActorType.AUTOMATED_SERVICE,
+        roles=(),
+        tenant_id="tenant:opaque:synthetic",
+        authenticated=True,
+    )
+    session = GraphSession(
+        actor=actor,
+        tenant=actor.tenant_id,
+        scopes=frozenset({"kg:write"}),
+        graph="graph:opaque:synthetic",
+        policy_version="policy:opaque:synthetic",
+        audience="epistemic-graph",
+    )
+    with use_actor(actor), use_session(session):
+        yield
 
 
-class _FakeTransport:
+class _FakeNodes:
     def __init__(self) -> None:
-        self.requests: list[Any] = []
+        self.values: dict[str, dict[str, Any]] = {}
 
-    async def source_status(self, connector: str, stream: str) -> Any:
-        return SimpleNamespace(accepted_checkpoint=None)
+    def properties(self, node_id: str) -> dict[str, Any] | None:
+        return self.values.get(node_id)
 
-    async def submit(self, request: Any) -> Any:
-        self.requests.append(request)
-        return SimpleNamespace(
-            affected_count=len(request.records),
-            relationship_count=len(request.relationships),
-        )
-
-    async def store_blob(self, data: Any) -> Any:
-        raise AssertionError("this connector's ingestion carries no media")
+    def list(self) -> list[tuple[str, dict[str, Any]]]:
+        return list(self.values.items())
 
 
-@pytest.fixture
-def ingest():
-    transport = _FakeTransport()
-    return KnowledgeIngest(transport, loop=None), transport
+class _FakeChanges:
+    def __init__(self, nodes: _FakeNodes) -> None:
+        self.nodes = nodes
+        self.edges: list[tuple[str, str, dict[str, Any]]] = []
+        self.applied: list[dict[str, Any]] = []
+        self.records: dict[str, dict[str, Any]] = {}
+        self.versions: dict[str, dict[str, Any]] = {}
+
+    def get(self, envelope_id: str) -> dict[str, Any] | None:
+        return self.records.get(envelope_id)
+
+    def content_version(self, object_id: str) -> dict[str, Any] | None:
+        return self.versions.get(object_id)
+
+    def cursor(self, _source: str, _partition: str = "") -> None:
+        return None
+
+    def apply(self, envelope: dict[str, Any]) -> dict[str, Any]:
+        self.applied.append(envelope)
+        mutation = envelope["mutation"]
+        for operation in mutation["operations"]:
+            method = operation["method"]
+            params = method["params"]
+            properties = msgpack.unpackb(params["properties_msgpack"], raw=False)
+            if method["method"] == "AddNode":
+                self.nodes.values[params["node_id"]] = properties
+            elif method["method"] == "AddEdge":
+                self.edges.append(
+                    (params["source_id"], params["target_id"], properties)
+                )
+        version = envelope["content_version"]
+        self.versions[version["object_id"]] = version
+        self.records[envelope["envelope_id"]] = envelope
+        return {
+            "batch_id": mutation["batch_id"],
+            "replayed": False,
+            "projection_pending": False,
+        }
 
 
-def _records_by_id(request: Any) -> dict[str, Any]:
-    return {r.record_id: r for r in request.records}
+class _FakeRdf:
+    def validate_shacl(self, _shapes: str, _data_graph: str) -> dict[str, Any]:
+        return {"conforms": True, "results": []}
 
 
-def _mapping_reference(connector: str, node_type: str) -> str:
-    return f"manifest:{connector}#schema_mappings/{node_type}"
+class _FakeClient:
+    def __init__(self) -> None:
+        self.nodes = _FakeNodes()
+        self.changes = _FakeChanges(self.nodes)
+        self.rdf = _FakeRdf()
+
+    @staticmethod
+    def supports(operation: str) -> bool:
+        return operation == "ApplyChangeEnvelope"
 
 
-def _relation_reference(connector: str, source_node_type: str, relationship: str) -> str:
-    return f"manifest:{connector}#resources/{source_node_type}/relations/{relationship}"
-
-
-@pytest.mark.asyncio
-async def test_ingest_entities_writes_nodes_and_edges(ingest):
-    service, transport = ingest
-    res = await ingest_entities(
+def test_ingest_entities_writes_nodes_and_edges():
+    c = _FakeClient()
+    res = ingest_entities(
         [
             {"id": "a", "node_type": "Topic", "name": "events"},
             {"id": "b", "node_type": "KafkaCluster"},
         ],
         [{"source": "a", "target": "b", "relationship": "inCluster"}],
-        ingest=service,
+        client=c,
     )
     assert res == {"nodes": 2, "edges": 1}
-    request = transport.requests[0]
-    records = _records_by_id(request)
-    assert set(records) == {"a", "b"}
-    assert records["a"].mapping_reference == _mapping_reference(_CONNECTOR, "Topic")
-    assert records["a"].payload["name"] == "events"
-
-    rel = request.relationships[0]
-    assert rel.source.record_id == "a"
-    assert rel.target.record_id == "b"
-    assert rel.relation_reference == _relation_reference(_CONNECTOR, "Topic", "inCluster")
+    assert len(c.changes.applied) == 1
+    assert set(c.nodes.values) == {"a", "b"}
+    # provenance is stamped
+    assert c.nodes.values["a"]["source"] == "kafka-mcp"
+    assert c.nodes.values["a"]["domain"] == "kafka"
+    assert c.changes.edges == [("a", "b", {"relationship": "inCluster"})]
 
 
-@pytest.mark.asyncio
-async def test_ingest_topics_maps_topic_and_cluster(ingest):
-    service, transport = ingest
-    res = await ingest_topics(
+def test_ingest_topics_maps_topic_and_cluster():
+    c = _FakeClient()
+    res = ingest_topics(
         {
             "data": [
                 {
@@ -111,29 +148,23 @@ async def test_ingest_topics_maps_topic_and_cluster(ingest):
                 }
             ]
         },
-        ingest=service,
+        client=c,
     )
     assert res == {"nodes": 2, "edges": 1}
-    request = transport.requests[0]
-    records = _records_by_id(request)
-    topic = records["kafka:topic:clstr-1:events"]
-    assert topic.mapping_reference == _mapping_reference(_CONNECTOR, "Topic")
-    assert topic.payload["partitionsCount"] == 3
-    assert topic.payload["replicationFactor"] == 2
-    assert topic.payload["externalToolId"] == "events"
-    cluster = records["kafka:cluster:clstr-1"]
-    assert cluster.mapping_reference == _mapping_reference(_CONNECTOR, "KafkaCluster")
-
-    rel = request.relationships[0]
-    assert rel.source.record_id == "kafka:topic:clstr-1:events"
-    assert rel.target.record_id == "kafka:cluster:clstr-1"
-    assert rel.relation_reference == _relation_reference(_CONNECTOR, "Topic", "inCluster")
+    topic = c.nodes.values["kafka:topic:clstr-1:events"]
+    assert topic["node_type"] == "Topic"
+    assert topic["partitionsCount"] == 3
+    assert topic["replicationFactor"] == 2
+    assert topic["externalToolId"] == "events"
+    assert c.nodes.values["kafka:cluster:clstr-1"]["node_type"] == "KafkaCluster"
+    assert c.changes.edges == [
+        ("kafka:topic:clstr-1:events", "kafka:cluster:clstr-1", {"relationship": "inCluster"})
+    ]
 
 
-@pytest.mark.asyncio
-async def test_ingest_partitions_maps_partition_of_topic(ingest):
-    service, transport = ingest
-    res = await ingest_partitions(
+def test_ingest_partitions_maps_partition_of_topic():
+    c = _FakeClient()
+    res = ingest_partitions(
         {
             "data": [
                 {"cluster_id": "clstr-1", "topic_name": "events", "partition_id": 0},
@@ -141,22 +172,22 @@ async def test_ingest_partitions_maps_partition_of_topic(ingest):
             ]
         },
         topic="events",
-        ingest=service,
+        client=c,
     )
     assert res == {"nodes": 2, "edges": 2}
-    request = transport.requests[0]
-    records = _records_by_id(request)
-    p0 = records["kafka:partition:clstr-1:events:0"]
-    assert p0.mapping_reference == _mapping_reference(_CONNECTOR, "Partition")
-    assert p0.payload["partitionId"] == 0
-    endpoints = {(r.source.record_id, r.target.record_id) for r in request.relationships}
-    assert ("kafka:partition:clstr-1:events:0", "kafka:topic:clstr-1:events") in endpoints
+    p0 = c.nodes.values["kafka:partition:clstr-1:events:0"]
+    assert p0["node_type"] == "Partition"
+    assert p0["partitionId"] == 0
+    assert (
+        "kafka:partition:clstr-1:events:0",
+        "kafka:topic:clstr-1:events",
+        {"relationship": "partitionOf"},
+    ) in c.changes.edges
 
 
-@pytest.mark.asyncio
-async def test_ingest_consumer_groups_maps_group_and_cluster(ingest):
-    service, transport = ingest
-    res = await ingest_consumer_groups(
+def test_ingest_consumer_groups_maps_group_and_cluster():
+    c = _FakeClient()
+    res = ingest_consumer_groups(
         {
             "data": [
                 {
@@ -166,85 +197,39 @@ async def test_ingest_consumer_groups_maps_group_and_cluster(ingest):
                 }
             ]
         },
-        ingest=service,
+        client=c,
     )
     assert res == {"nodes": 2, "edges": 1}
-    request = transport.requests[0]
-    grp = _records_by_id(request)["kafka:group:clstr-1:analytics"]
-    assert grp.mapping_reference == _mapping_reference(_CONNECTOR, "ConsumerGroup")
-    assert grp.payload["groupState"] == "STABLE"
+    grp = c.nodes.values["kafka:group:clstr-1:analytics"]
+    assert grp["node_type"] == "ConsumerGroup"
+    assert grp["groupState"] == "STABLE"
 
 
-@pytest.mark.asyncio
-async def test_ingest_brokers_maps_broker_and_cluster(ingest):
-    service, transport = ingest
-    res = await ingest_brokers(
+def test_ingest_brokers_maps_broker_and_cluster():
+    c = _FakeClient()
+    res = ingest_brokers(
         {
             "data": [
                 {"cluster_id": "clstr-1", "broker_id": 1, "host": "b1", "port": 9092}
             ]
         },
-        ingest=service,
+        client=c,
     )
     assert res == {"nodes": 2, "edges": 1}
-    request = transport.requests[0]
-    brk = _records_by_id(request)["kafka:broker:clstr-1:1"]
-    assert brk.mapping_reference == _mapping_reference(_CONNECTOR, "Broker")
-    assert brk.payload["brokerHost"] == "b1"
-    assert brk.payload["brokerPort"] == 9092
+    brk = c.nodes.values["kafka:broker:clstr-1:1"]
+    assert brk["node_type"] == "Broker"
+    assert brk["brokerHost"] == "b1"
+    assert brk["brokerPort"] == 9092
 
 
-@pytest.mark.asyncio
-async def test_ingest_cdc_connectors_maps_connector_and_slot(ingest):
-    service, transport = ingest
-    res = await ingest_cdc_connectors(
-        [
-            {
-                "name": "ca51pilot",
-                "connector_class": "io.debezium.connector.postgresql.PostgresConnector",
-                "state": "RUNNING",
-                "tasks_max": 1,
-                "topics": ["cdc.ca51pilot.public.orders"],
-                "slot_name": "ca_ca51pilot",
-                "cluster_id": "clstr-1",
-            }
-        ],
-        ingest=service,
-    )
-    assert res == {"nodes": 2, "edges": 2}
-    request = transport.requests[0]
-    records = _records_by_id(request)
-    connector = records["kafka:cdcconnector:clstr-1:ca51pilot"]
-    assert connector.mapping_reference == _mapping_reference(_CONNECTOR, "CdcConnector")
-    assert connector.payload["connectorState"] == "RUNNING"
-    endpoints = {
-        (r.source.record_id, r.target.record_id, r.relation_reference)
-        for r in request.relationships
-    }
-    assert (
-        "kafka:cdcconnector:clstr-1:ca51pilot",
-        "kafka:topic:clstr-1:cdc.ca51pilot.public.orders",
-        _relation_reference(_CONNECTOR, "CdcConnector", "cdcTracksTopic"),
-    ) in endpoints
-    assert (
-        "kafka:cdcconnector:clstr-1:ca51pilot",
-        "kafka:replicationslot:clstr-1:ca51pilot:ca_ca51pilot",
-        _relation_reference(_CONNECTOR, "CdcConnector", "usesReplicationSlot"),
-    ) in endpoints
-
-
-@pytest.mark.asyncio
-async def test_empty_native_ingest_is_rejected(ingest):
-    service, _ = ingest
-    with pytest.raises(IngestError, match="at least one entity"):
-        await ingest_entities([], ingest=service)
-
-
-@pytest.mark.asyncio
-async def test_retired_node_type_alias_is_rejected(ingest):
-    service, _ = ingest
-    with pytest.raises(IngestError, match="needs an id and a node_type"):
-        await ingest_entities(
+def test_retired_node_type_alias_is_rejected():
+    with pytest.raises(NativeIngestError, match="canonical node_type"):
+        ingest_entities(
             [{"id": "retired", "type": "RetiredAlias"}],
-            ingest=service,
+            client=_FakeClient(),
         )
+
+
+def test_empty_native_ingest_is_rejected():
+    with pytest.raises(NativeIngestError, match="at least one entity"):
+        ingest_entities([], client=_FakeClient())

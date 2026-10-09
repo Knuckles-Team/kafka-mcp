@@ -47,7 +47,7 @@ def register_kafka_tools(mcp: FastMCP) -> None:
             # Wire-First: mirror the topic catalog into the authoritative KG.
             from kafka_mcp.kg_ingest import ingest_topics
 
-            await ingest_topics(topics, cluster_id=cid)
+            ingest_topics(topics, cluster_id=cid)
             return topics
         if action == "create":
             return client.create_topic(
@@ -328,18 +328,18 @@ def register_kafka_tools(mcp: FastMCP) -> None:
 
         if p.get("topics", True):
             topics = client.list_topics(cluster_id=cid)
-            result["ingested"]["topics"] = await ingest_topics(topics, cluster_id=cid)
+            result["ingested"]["topics"] = ingest_topics(topics, cluster_id=cid)
         if p.get("groups", True):
             groups = client.list_consumer_groups(cluster_id=cid)
-            result["ingested"]["groups"] = await ingest_consumer_groups(
+            result["ingested"]["groups"] = ingest_consumer_groups(
                 groups, cluster_id=cid
             )
         if p.get("brokers", True):
             brokers = client.list_brokers(cluster_id=cid)
-            result["ingested"]["brokers"] = await ingest_brokers(brokers, cluster_id=cid)
+            result["ingested"]["brokers"] = ingest_brokers(brokers, cluster_id=cid)
         for topic in p.get("partitions_for", []) or []:
             parts = client.list_partitions(topic, cluster_id=cid)
-            result["ingested"].setdefault(
-                "partitions", {}
-            )[topic] = await ingest_partitions(parts, topic=topic, cluster_id=cid)
+            result["ingested"].setdefault("partitions", {})[topic] = ingest_partitions(
+                parts, topic=topic, cluster_id=cid
+            )
         return result

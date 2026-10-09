@@ -1,17 +1,18 @@
 """Shared HTTP base client for the Apache Kafka REST Proxy API wrapper."""
 
-from __future__ import annotations
-
-import json as _json
-from base64 import b64encode
 from typing import Any
 
 import httpx
-from agent_connector_sdk.tls.resolve import resolve_tls_profile
+from agent_utilities.httpsupport import (
+    AuthHeaderInjector,
+    BaseApiClient,
+    BasicAuth,
+    TokenAuth,
+)
 
 
 class ApiClientBase:
-    """Thin wrapper over httpx with token / basic-auth support.
+    """Thin wrapper over the fleet HTTP base with token / basic-auth support.
 
     The Confluent REST Proxy v3 API speaks JSON, but callers may pass an
     explicit ``content_type``/``accept`` (e.g. the versioned
@@ -36,24 +37,20 @@ class ApiClientBase:
         self.password = password
         self.last_etag: str | None = None
 
-        default_headers: dict[str, str] = {}
+        auth: AuthHeaderInjector | None = None
         if token:
-            default_headers["Authorization"] = f"Bearer {token}"
+            auth = TokenAuth(token)
         elif username and password:
-            basic = b64encode(f"{username}:{password}".encode()).decode()
-            default_headers["Authorization"] = f"Basic {basic}"
+            auth = BasicAuth(username, password)
 
-        resolved = resolve_tls_profile(
-            "kafka-rest",
-            profile_name=tls_profile,
-            profile_ref=tls_profile_ref,
-        )
-
-        self._client = httpx.Client(
-            base_url=self.base_url,
-            headers=default_headers,
+        self._client = BaseApiClient(
+            self.base_url,
+            auth=auth,
+            tls_service="kafka-rest",
+            tls_profile=tls_profile,
+            tls_profile_ref=tls_profile_ref,
+            include_response_headers=True,
             transport=transport,
-            **resolved.httpx_kwargs(),
         )
 
     def request(
@@ -72,43 +69,31 @@ class ApiClientBase:
         Returns a dict when the response is JSON, otherwise
         ``{"status": "success", "text": <body>}``. Raises on HTTP >= 400.
         """
-        if endpoint.startswith("http"):
-            url = endpoint
-        else:
-            url = endpoint.lstrip("/")
+        if not endpoint.startswith("http"):
+            endpoint = endpoint.lstrip("/")
 
-        req_headers: dict[str, str] = dict(headers or {})
-        if accept:
-            req_headers["Accept"] = accept
-
-        content: bytes | None = None
-        if json is not None:
-            content = _json.dumps(json).encode()
-            req_headers["Content-Type"] = content_type or "application/json"
-            data = None
-        elif content_type:
-            req_headers["Content-Type"] = content_type
-
-        response = self._client.request(
+        envelope = self._client.request(
             method,
-            url,
+            endpoint,
             params=params,
             data=data,
-            content=content,
-            headers=req_headers or None,
+            json=json,
+            content_type=content_type,
+            accept=accept,
+            headers=headers,
+            raise_for_status=False,
         )
 
-        self.last_etag = response.headers.get("etag")
+        self.last_etag = (envelope.get("headers") or {}).get("etag")
 
-        status_code = response.status_code
+        status_code = envelope["status_code"]
+        body = envelope["data"]
         if status_code >= 400:
-            text = response.text
+            text = body if isinstance(body, str) else ("" if body is None else body)
             raise Exception(f"API error: {status_code} - {text}")
 
-        if status_code == 204 or not response.text.strip():
+        if body is None or (isinstance(body, str) and not body.strip()):
             return {"status": "success"}
-
-        try:
-            return response.json()
-        except ValueError:
-            return {"status": "success", "text": response.text}
+        if not isinstance(body, str):
+            return body
+        return {"status": "success", "text": body}
