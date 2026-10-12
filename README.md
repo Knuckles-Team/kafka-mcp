@@ -78,7 +78,6 @@ Pydantic-AI agent server.
 | `TRANSPORT` | `stdio` | MCP transport: `stdio` \| `streamable-http` \| `sse` |
 | `HOST` | `127.0.0.1` | Loopback bind host (set an authenticated ingress explicitly) |
 | `PORT` | `8000` | Bind port (HTTP transports) |
-| `MCP_TOOL_MODE` | `intent` | Tool surface: `intent` \| `condensed` \| `verbose` \| `both` |
 | `MCP_ENABLED_TOOLS` | — | Comma-separated tool allow-list |
 | `MCP_DISABLED_TOOLS` | — | Comma-separated tool deny-list |
 | `MCP_ENABLED_TAGS` | — | Comma-separated tag allow-list |
@@ -100,7 +99,7 @@ Pydantic-AI agent server.
 | `MODEL_ID` | — | Operator-configured model id for the agent |
 | `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
-_17 package + 24 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+_17 package + 23 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 
@@ -215,7 +214,6 @@ diagrams are documented in the
         "kafka-mcp"
       ],
       "env": {
-        "MCP_TOOL_MODE": "intent",
         "KAFKATOOL": "True",
         "KAFKA_BOOTSTRAP_SERVERS": "localhost:9092",
         "KAFKA_CDCTOOL": "True",
@@ -252,7 +250,6 @@ own runtime secret boundary.
         "TRANSPORT": "streamable-http",
         "HOST": "127.0.0.1",
         "PORT": "8000",
-        "MCP_TOOL_MODE": "intent",
         "KAFKATOOL": "True",
         "KAFKA_BOOTSTRAP_SERVERS": "localhost:9092",
         "KAFKA_CDCTOOL": "True",
@@ -288,7 +285,6 @@ docker run -i --rm \
   --pids-limit=256 \
   --tmpfs /tmp:rw,noexec,nosuid,nodev,size=64m \
   -e TRANSPORT=stdio \
-  -e MCP_TOOL_MODE=intent \
   -e KAFKATOOL=True \
   -e KAFKA_BOOTSTRAP_SERVERS=localhost:9092 \
   -e KAFKA_CDCTOOL=True \
@@ -303,7 +299,7 @@ direct server TLS), exact `MCP_ALLOWED_HOSTS`, and an exact trusted-proxy
 CIDR policy through the operator-owned deployment profile. The generator
 does not emit an unauthenticated non-loopback listener.
 
-_Auto-generated from the code-read env surface (`MCP_TOOL_MODE` + package vars) — do not edit._
+_Auto-generated from the code-read env surface (package vars) — do not edit._
 <!-- MCP-CONFIG-EXAMPLES:END -->
 
 <!-- BEGIN GENERATED: additional-deployment-options -->
@@ -327,64 +323,25 @@ Auto-generated — do not edit between the markers below.
 
 <!-- MCP-TOOLS-TABLE:START -->
 
-#### Condensed action-routed tools (`MCP_TOOL_MODE=condensed`)
+#### Intent tools
 
-| MCP Tool | Toggle Env Var | Description |
-|----------|----------------|-------------|
-| `kafka_cdc_lag` | `KAFKA_CDCTOOL` | Report consumer-group lag for a CDC-reading group. |
-| `kafka_cdc_slot_health` | `KAFKA_CDCTOOL` | Report what Kafka Connect exposes about a source connector's slot. |
-| `kafka_cdc_topic_map` | `KAFKA_CDCTOOL` | Resolve a Debezium connector's declared source tables to CDC topics. |
-| `kafka_cluster` | `KAFKATOOL` | Inspect clusters/brokers and manage ACLs via the REST Proxy. |
-| `kafka_connect` | `KAFKA_CONNECTTOOL` | Manage Kafka Connect connectors via the worker's REST API (:8083). |
-| `kafka_connect_plugins` | `KAFKA_CONNECTTOOL` | List connector plugins available on the Kafka Connect worker's classpath. |
-| `kafka_groups` | `KAFKATOOL` | Inspect Kafka consumer groups and their lag. |
-| `kafka_ingest_catalog` | `KAFKATOOL` | Ingest the live Kafka topology into the knowledge graph (Wire-First). |
-| `kafka_ingest_cdc_topology` | `KAFKA_CDCTOOL` | Ingest the live Kafka Connect CDC topology into the knowledge graph. |
-| `kafka_native` | `KAFKATOOL` | Produce/consume/admin directly against brokers (native client). |
-| `kafka_partitions` | `KAFKATOOL` | List partitions for a topic or get a single partition. |
-| `kafka_records` | `KAFKATOOL` | Produce or consume records via the Confluent REST Proxy. |
-| `kafka_topics` | `KAFKATOOL` | Manage Kafka topics via the Confluent REST Proxy. |
+| MCP Tool | Kind | Description |
+|----------|------|-------------|
+| `kafka_cdc_lag` | intent | Report consumer-group lag for a CDC-reading group. |
+| `kafka_cdc_slot_health` | intent | Report what Kafka Connect exposes about a source connector's slot. |
+| `kafka_cdc_topic_map` | intent | Resolve a Debezium connector's declared source tables to CDC topics. |
+| `kafka_cluster` | intent | Inspect clusters/brokers and manage ACLs via the REST Proxy. |
+| `kafka_connect` | intent | Manage Kafka Connect connectors via the worker's REST API (:8083). |
+| `kafka_connect_plugins` | intent | List connector plugins available on the Kafka Connect worker's classpath. |
+| `kafka_groups` | intent | Inspect Kafka consumer groups and their lag. |
+| `kafka_ingest_catalog` | intent | Ingest the live Kafka topology into the knowledge graph (Wire-First). |
+| `kafka_ingest_cdc_topology` | intent | Ingest the live Kafka Connect CDC topology into the knowledge graph. |
+| `kafka_native` | intent | Produce/consume/admin directly against brokers (native client). |
+| `kafka_partitions` | intent | List partitions for a topic or get a single partition. |
+| `kafka_records` | intent | Produce or consume records via the Confluent REST Proxy. |
+| `kafka_topics` | intent | Manage Kafka topics via the Confluent REST Proxy. |
 
-#### Verbose 1:1 API-mapped tools (`MCP_TOOL_MODE=verbose` or `both`)
-
-<details>
-<summary>29 per-operation tools — one per public API method (click to expand)</summary>
-
-| MCP Tool | Toggle Env Var | Description |
-|----------|----------------|-------------|
-| `kafka_cluster_id` | `KAFKA_APITOOL` | Return the active Kafka cluster id, resolving + caching the first. |
-| `kafka_commit_offsets` | `KAFKA_APITOOL` | Commit current offsets for a v2 consumer instance. |
-| `kafka_consume_records` | `KAFKA_APITOOL` | Poll records from a v2 consumer instance. |
-| `kafka_create_acl` | `KAFKA_APITOOL` | Create an ACL binding. |
-| `kafka_create_consumer` | `KAFKA_APITOOL` | Create a v2 consumer instance inside a consumer group. |
-| `kafka_create_topic` | `KAFKA_APITOOL` | Create a topic with partitions, replication, and optional configs. |
-| `kafka_delete_acls` | `KAFKA_APITOOL` | Delete ACLs matching the given filter. |
-| `kafka_delete_consumer` | `KAFKA_APITOOL` | Delete a v2 consumer instance. |
-| `kafka_delete_topic` | `KAFKA_APITOOL` | Delete a topic. |
-| `kafka_get_broker` | `KAFKA_APITOOL` | Get a single broker's metadata. |
-| `kafka_get_cluster` | `KAFKA_APITOOL` | Get a single cluster's metadata. |
-| `kafka_get_consumer_group` | `KAFKA_APITOOL` | Describe a single consumer group. |
-| `kafka_get_group_lag_summary` | `KAFKA_APITOOL` | Get the lag summary for a consumer group. |
-| `kafka_get_group_lags` | `KAFKA_APITOOL` | List per-partition lags for a consumer group. |
-| `kafka_get_partition` | `KAFKA_APITOOL` | Get a single partition of a topic. |
-| `kafka_get_topic` | `KAFKA_APITOOL` | Describe a single topic. |
-| `kafka_list_acls` | `KAFKA_APITOOL` | Search ACLs (all filters optional). |
-| `kafka_list_broker_configs` | `KAFKA_APITOOL` | List configuration entries for a broker. |
-| `kafka_list_brokers` | `KAFKA_APITOOL` | List brokers in a cluster. |
-| `kafka_list_clusters` | `KAFKA_APITOOL` | List Kafka clusters known to the REST Proxy. |
-| `kafka_list_consumer_groups` | `KAFKA_APITOOL` | List consumer groups in a cluster. |
-| `kafka_list_consumers` | `KAFKA_APITOOL` | List the consumers (members) of a consumer group. |
-| `kafka_list_partitions` | `KAFKA_APITOOL` | List partitions for a topic. |
-| `kafka_list_topic_configs` | `KAFKA_APITOOL` | List configuration entries for a topic. |
-| `kafka_list_topics` | `KAFKA_APITOOL` | List topics in a cluster. |
-| `kafka_produce_record` | `KAFKA_APITOOL` | Produce a single record to a topic via the v3 ``/records`` endpoint. |
-| `kafka_subscribe_consumer` | `KAFKA_APITOOL` | Subscribe a v2 consumer instance to a list of topics. |
-| `kafka_update_topic_config` | `KAFKA_APITOOL` | Update (alter) a single topic configuration entry. |
-| `kafka_update_topic_configs` | `KAFKA_APITOOL` | Batch-alter multiple topic configuration entries. |
-
-</details>
-
-_13 action-routed tool(s) · 29 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
+_13 intent tool(s) · 0 operation(s). Call an operation as `act(action='<operation>', params={...})` (`ask` for reads); `find(action='describe', params={'action': '<operation>'})` returns its arguments. An operation is enabled unless its `<DOMAIN>TOOL` toggle is set false. Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
 
 ## Documentation

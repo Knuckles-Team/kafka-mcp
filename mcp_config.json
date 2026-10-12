@@ -7,7 +7,6 @@
         "kafka-mcp"
       ],
       "env": {
-        "MCP_TOOL_MODE": "intent",
         "KAFKATOOL": "True",
         "KAFKA_BOOTSTRAP_SERVERS": "localhost:9092",
         "KAFKA_CDCTOOL": "True",
