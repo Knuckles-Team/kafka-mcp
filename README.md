@@ -19,7 +19,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/kafka-mcp)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/kafka-mcp)
 
-Apache Kafka **API + MCP Server + A2A Agent** for the agent-utilities ecosystem.
+Apache Kafka **API + MCP Server + A2A Agent** for the Graph OS ecosystem.
 
 *Version: 0.5.0*
 
@@ -59,19 +59,19 @@ Pydantic-AI agent server.
 | `KAFKA_TOKEN` | secret-injected | Bearer token for the REST Proxy |
 | `KAFKA_USERNAME` | — | Basic-auth user (optional) |
 | `KAFKA_PASSWORD` | secret-injected | Basic-auth password (optional) |
-| `KAFKA_REST_TLS_PROFILE` | — | Optional named profile from the agent-utilities TLS catalog |
+| `KAFKA_REST_TLS_PROFILE` | — | Optional named profile from the agent-connector-sdk TLS catalog |
 | `KAFKA_REST_TLS_PROFILE_REF` | — | Optional runtime secret ref containing a TLS profile |
 | `KAFKA_CONNECT_URL` | `http://localhost:8083` | Kafka Connect worker REST base URL |
 | `KAFKA_CONNECT_TOKEN` | secret-injected | Bearer token for Connect REST (no built-in auth upstream; optional) |
 | `KAFKA_CONNECT_USERNAME` | — | Basic-auth user (optional) |
 | `KAFKA_CONNECT_PASSWORD` | secret-injected | Basic-auth password (optional) |
-| `KAFKA_CONNECT_TLS_PROFILE` | — | Optional named profile from the agent-utilities TLS catalog |
+| `KAFKA_CONNECT_TLS_PROFILE` | — | Optional named profile from the agent-connector-sdk TLS catalog |
 | `KAFKA_CONNECT_TLS_PROFILE_REF` | — | Optional runtime secret ref containing a TLS profile |
 | `KAFKATOOL` | `True` |  |
 | `KAFKA_CONNECTTOOL` | `True` |  |
 | `KAFKA_CDCTOOL` | `True` |  |
 
-#### Inherited agent-utilities variables (apply to every connector)
+#### Inherited agent-connector-sdk variables (apply to every connector)
 
 | Variable | Example | Description |
 |----------|---------|-------------|
@@ -99,7 +99,7 @@ Pydantic-AI agent server.
 | `MODEL_ID` | — | Operator-configured model id for the agent |
 | `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
-_17 package + 23 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+_17 package + 23 inherited variable(s). Auto-generated from `.env.example` + the shared agent-connector-sdk set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 
@@ -111,7 +111,7 @@ _17 package + 23 inherited variable(s). Auto-generated from `.env.example` + the
 | `KAFKA_TOKEN` | _(empty)_ | Bearer token for the REST Proxy |
 | `KAFKA_USERNAME` | _(empty)_ | Basic-auth user (optional) |
 | `KAFKA_PASSWORD` | _(empty)_ | Basic-auth password (optional) |
-| `KAFKA_REST_TLS_PROFILE` | _(system trust)_ | Optional named profile from the agent-utilities TLS catalog |
+| `KAFKA_REST_TLS_PROFILE` | _(system trust)_ | Optional named profile from the agent-connector-sdk TLS catalog |
 | `KAFKA_REST_TLS_PROFILE_REF` | _(empty)_ | Runtime secret ref containing a TLS profile |
 
 ### Native client (optional `kafka-mcp[native]` extra)
@@ -141,8 +141,8 @@ Pick the extra that matches what the operator want to run:
 
 | Extra | Installs | Use when |
 |-------|----------|----------|
-| `kafka-mcp[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
-| `kafka-mcp[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | The operator run the **integrated agent** |
+| `kafka-mcp[mcp]` | Connector-focused MCP server (`agent-connector-sdk[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
+| `kafka-mcp[agent]` | Agent runtime (`agent-connector-sdk[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | The operator run the **integrated agent** |
 | `kafka-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
@@ -197,7 +197,7 @@ diagrams are documented in the
 <!-- MCP-CONFIG-EXAMPLES:START -->
 
 > **Install the connector-focused `[mcp]` extra.** Examples use `kafka-mcp[mcp]` to add
-> FastMCP / FastAPI through `agent-utilities[mcp]`; the required Agent Utilities core
+> FastMCP / FastAPI through `agent-connector-sdk[mcp]`; the required Agent Utilities core
 > still carries `epistemic-graph[full]`. The `[agent-runtime]` extra additionally
 > enables model orchestration.
 
@@ -363,15 +363,15 @@ recommended reference for installation, deployment, and day-to-day operation.
 `AGENTS.md` is the canonical contributor/agent guidance.
 
 
-<!-- BEGIN agent-utilities-deployment (generated; do not edit between markers) -->
+<!-- BEGIN agent-connector-sdk-deployment (generated; do not edit between markers) -->
 
-## Deploy with `agent-utilities-deployment`
+## Deploy with `agent-connector-sdk-deployment`
 
-Provision this package with the consolidated **`agent-utilities-deployment`**
+Provision this package with the consolidated **`agent-connector-sdk-deployment`**
 workflow. It selects an installed-package, editable-source, or immutable-container
 path; records only runtime secret and TLS-profile references in `AgentConfig`; and
 runs doctor, registration, policy, observability, and rollback gates. Ask your agent
-to **"deploy `kafka-mcp` with agent-utilities-deployment"**.
+to **"deploy `kafka-mcp` with agent-connector-sdk-deployment"**.
 
 | Install mode | Command |
 |------|---------|
@@ -383,7 +383,7 @@ The repository embeds no deployment profile, credential value, certificate path,
 environment-specific endpoint. Supply those at runtime through `AgentConfig` and the
 configured secret provider.
 
-<!-- END agent-utilities-deployment -->
+<!-- END agent-connector-sdk-deployment -->
 
 <!-- GOVERNED-CAPABILITY:START -->
 ## Governed capability contract

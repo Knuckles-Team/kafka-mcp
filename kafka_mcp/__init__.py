@@ -9,7 +9,6 @@ __all__: list[str] = []
 
 CORE_MODULES = ["kafka_mcp.api_client"]
 OPTIONAL_MODULES = {
-    "kafka_mcp.agent_server": "agent",
     "kafka_mcp.mcp_server": "mcp",
 }
 
@@ -67,8 +66,6 @@ def _find_in_optional_modules(name: str) -> Any:
 def __getattr__(name: str) -> Any:
     if name == "_MCP_AVAILABLE":
         return _optional_module_importable("mcp_server")
-    if name == "_AGENT_AVAILABLE":
-        return _optional_module_importable("agent_server")
     return _find_in_optional_modules(name)
 
 

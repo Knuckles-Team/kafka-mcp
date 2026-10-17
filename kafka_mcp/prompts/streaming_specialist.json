@@ -4,7 +4,7 @@
   "schema_version": "1.0",
   "prompt_version": "0.1.0",
   "source": "kafka-mcp",
-  "extends": "agent-utilities:base",
+  "extends": "agent-connector-sdk:base",
   "compose": "append",
   "description": "Apache Kafka streaming specialist: topic administration, produce/consume, and consumer-group lag over the kafka-mcp MCP server.",
   "metadata": {
