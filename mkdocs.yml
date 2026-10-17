@@ -1,5 +1,5 @@
 site_name: "kafka-mcp"
-site_description: "Apache Kafka API + MCP Server + A2A Agent — topics, records, consumer groups, brokers, and ACLs for the Graph OS ecosystem."
+site_description: "Apache Kafka API + MCP Server + A2A Agent — topics, records, consumer groups, brokers, and ACLs for the Arbora ecosystem."
 site_url: "https://knuckles-team.github.io/kafka-mcp/"
 repo_name: "Knuckles-Team/kafka-mcp"
 repo_url: "https://github.com/Knuckles-Team/kafka-mcp"

@@ -1,5 +1,5 @@
 {
-  "api_version": "graphos.io/v1",
+  "api_version": "arbora.io/v1",
   "artifacts": {
     "connector_manifest.yml": "88a589a4e7df54fc3949b436103db11dde03c4e3933ba31870ee6f4179099efa",
     "kafka_mcp/connectors/mcp_source_presets.json": "4d2badf4c9e9f439a4f47aeb525fc472ea45bfae27f6f915314b5ae73c15b86b",

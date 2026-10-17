@@ -19,7 +19,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/kafka-mcp)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/kafka-mcp)
 
-Apache Kafka **API + MCP Server + A2A Agent** for the Graph OS ecosystem.
+Apache Kafka **API + MCP Server + A2A Agent** for the Arbora ecosystem.
 
 *Version: 0.5.0*
 
@@ -226,7 +226,7 @@ diagrams are documented in the
 }
 ```
 
-Runtime references require an alias-aware launcher such as GraphOS. Other
+Runtime references require an alias-aware launcher such as Arbora. Other
 launchers must omit those entries and inject the resolved values through their
 own runtime secret boundary.
 
@@ -398,5 +398,5 @@ historical per-task skill wrappers.
 Runtime endpoints, credentials, certificate trust, tenant identity, retention,
 and observability policy are deployment inputs and are never packaged values.
 See [Configuration, trust, and privacy](docs/configuration.md) before enabling a
-network transport, connector ingestion, GraphOS delegation, or trace export.
+network transport, connector ingestion, Arbora delegation, or trace export.
 <!-- GOVERNED-CAPABILITY:END -->
