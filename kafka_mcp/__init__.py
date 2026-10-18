@@ -4,7 +4,7 @@ import importlib
 import inspect
 from typing import Any
 
-__version__ = "2.3.1"
+__version__ = "2.4.0"
 __all__: list[str] = []
 
 CORE_MODULES = ["kafka_mcp.api_client"]
