@@ -135,9 +135,7 @@ def register_kafka_cdc_tools(mcp: FastMCP) -> None:
     @mcp.tool(tags={"cdc"})
     async def kafka_cdc_slot_health(
         params_json: str = Field(
-            description=(
-                'JSON of arguments: {"connector": "ca51pilot"} (required).'
-            )
+            description=('JSON of arguments: {"connector": "ca51pilot"} (required).')
         ),
     ) -> Any:
         """Report what Kafka Connect exposes about a source connector's slot.
@@ -165,8 +163,9 @@ def register_kafka_cdc_tools(mcp: FastMCP) -> None:
                 "tool": "sql-mcp:sql_query",
                 "hint": (
                     "SELECT * FROM pg_replication_slots WHERE slot_name = "
-                    f"'{slot_name}'" if slot_name else
-                    "SELECT * FROM pg_replication_slots"
+                    f"'{slot_name}'"
+                    if slot_name
+                    else "SELECT * FROM pg_replication_slots"
                 ),
                 "reason": (
                     "kafka-mcp never embeds a database client (DEC-CA-08); "
@@ -211,7 +210,9 @@ def register_kafka_cdc_tools(mcp: FastMCP) -> None:
             status = client.get_connector_status(name)
             config = client.get_connector_config(name)
             resolved = _debezium_topic_map(config)
-            connector_block = status.get("connector") if isinstance(status, dict) else {}
+            connector_block = (
+                status.get("connector") if isinstance(status, dict) else {}
+            )
             normalized.append(
                 {
                     "name": name,

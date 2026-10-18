@@ -36,7 +36,9 @@ class ConnectApi(ApiClientBase):
         Connect REST contract (e.g. ``"status"``); omit for a bare name list.
         """
         params = {"expand": expand} if expand else None
-        return self.request("GET", "connectors", params=params, accept="application/json")
+        return self.request(
+            "GET", "connectors", params=params, accept="application/json"
+        )
 
     def get_connector(self, name: str) -> Any:
         """Get one connector's top-level descriptor (name/config/tasks/type)."""
@@ -129,6 +131,4 @@ class ConnectApi(ApiClientBase):
     # ------------------------------------------------------------------ #
     def list_connector_plugins(self) -> Any:
         """List connector plugins available on the worker's classpath."""
-        return self.request(
-            "GET", "connector-plugins", accept="application/json"
-        )
+        return self.request("GET", "connector-plugins", accept="application/json")

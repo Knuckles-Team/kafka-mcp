@@ -29,9 +29,9 @@ def register_kafka_connect_tools(mcp: FastMCP) -> None:
         params_json: str = Field(
             default="{}",
             description=(
-                "JSON of arguments. list: {} or {\"expand\": \"status\"}. get/"
-                "delete/status/pause/resume/offsets: {\"name\": \"ca51pilot\"}. "
-                "create: {\"name\": \"ca51pilot\", \"config\": {\"connector.class\": "
+                'JSON of arguments. list: {} or {"expand": "status"}. get/'
+                'delete/status/pause/resume/offsets: {"name": "ca51pilot"}. '
+                'create: {"name": "ca51pilot", "config": {"connector.class": '
                 '"io.debezium.connector.postgresql.PostgresConnector", ...}}. '
                 'update: {"name": "ca51pilot", "config": {...}} (create-or-update '
                 "per the Connect REST contract — use 'create' when the caller "
