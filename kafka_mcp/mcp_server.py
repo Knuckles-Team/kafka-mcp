@@ -16,7 +16,7 @@ from kafka_mcp.mcp.mcp_kafka import register_kafka_tools
 from kafka_mcp.mcp.mcp_kafka_cdc import register_kafka_cdc_tools
 from kafka_mcp.mcp.mcp_kafka_connect import register_kafka_connect_tools
 
-__version__ = "2.3.0"
+__version__ = "2.3.1"
 logger = get_logger(name="kafka_mcp")
 
 # Re-exported so ``register_tool_surface``'s module auto-discovery (which scans
