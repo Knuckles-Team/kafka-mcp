@@ -336,10 +336,12 @@ def register_kafka_tools(mcp: FastMCP) -> None:
             )
         if p.get("brokers", True):
             brokers = client.list_brokers(cluster_id=cid)
-            result["ingested"]["brokers"] = await ingest_brokers(brokers, cluster_id=cid)
+            result["ingested"]["brokers"] = await ingest_brokers(
+                brokers, cluster_id=cid
+            )
         for topic in p.get("partitions_for", []) or []:
             parts = client.list_partitions(topic, cluster_id=cid)
-            result["ingested"].setdefault(
-                "partitions", {}
-            )[topic] = await ingest_partitions(parts, topic=topic, cluster_id=cid)
+            result["ingested"].setdefault("partitions", {})[
+                topic
+            ] = await ingest_partitions(parts, topic=topic, cluster_id=cid)
         return result

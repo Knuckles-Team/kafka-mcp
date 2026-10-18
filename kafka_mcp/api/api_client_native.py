@@ -39,8 +39,11 @@ class NativeKafkaClient:
             raise RuntimeError(_NATIVE_HINT) from exc
         admin = AdminClient(self._conf())
         new_topics = [
-            NewTopic(t, num_partitions=partitions_count,
-                     replication_factor=replication_factor)
+            NewTopic(
+                t,
+                num_partitions=partitions_count,
+                replication_factor=replication_factor,
+            )
             for t in topics
         ]
         futures = admin.create_topics(new_topics)
@@ -101,9 +104,7 @@ class NativeKafkaClient:
     # ------------------------------------------------------------------ #
     # Produce / Consume
     # ------------------------------------------------------------------ #
-    def produce(
-        self, topic: str, value: str, key: str | None = None
-    ) -> Any:
+    def produce(self, topic: str, value: str, key: str | None = None) -> Any:
         try:
             from confluent_kafka import Producer
         except ImportError as exc:

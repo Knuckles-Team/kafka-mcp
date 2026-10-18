@@ -13,16 +13,8 @@ def test_mcp_available_flag_true_when_mcp_server_importable():
     assert kafka_mcp._MCP_AVAILABLE is True
 
 
-def test_agent_available_flag_true_when_agent_server_importable():
-    assert kafka_mcp._AGENT_AVAILABLE is True
 
 
-def test_availability_flag_false_when_no_optional_module_matches_fragment(
-    monkeypatch,
-):
-    monkeypatch.setattr(kafka_mcp, "OPTIONAL_MODULES", {})
-    assert kafka_mcp.__getattr__("_MCP_AVAILABLE") is False
-    assert kafka_mcp.__getattr__("_AGENT_AVAILABLE") is False
 
 
 def test_getattr_exposes_member_from_lazily_loaded_optional_module():

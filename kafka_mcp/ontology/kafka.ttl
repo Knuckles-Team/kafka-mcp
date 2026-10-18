@@ -218,5 +218,5 @@
     rdfs:label "Apache Kafka Event-Streaming Ontology" ;
     rdfs:comment """Apache Kafka event-streaming model — clusters, topics, partitions, consumer
     groups, consumers, brokers and ACLs, with their containment, subscription and assignment
-    relationships — federated into the agent-utilities knowledge-graph hub.""" ;
+    relationships — federated into the agent-connector-sdk knowledge-graph hub.""" ;
     owl:imports <http://knuckles.team/kg> .

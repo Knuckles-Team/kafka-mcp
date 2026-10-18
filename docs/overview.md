@@ -1,7 +1,7 @@
 # Overview
 
 `kafka-mcp` is the **API + MCP server + A2A agent** for Apache Kafka in the
-agent-utilities ecosystem. It wraps the Confluent REST Proxy (and, optionally, the
+Arbora ecosystem. It wraps the Confluent REST Proxy (and, optionally, the
 native broker protocol) in typed, deterministic tools that an agent or policy router
 can call.
 

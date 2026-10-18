@@ -1,6 +1,6 @@
 # kafka-mcp
 
-Apache Kafka **API + MCP Server + A2A Agent** for the agent-utilities ecosystem —
+Apache Kafka **API + MCP Server + A2A Agent** for the Arbora ecosystem —
 topics, records, consumer groups, brokers, and ACLs over the Confluent REST Proxy,
 with an optional native (direct-to-broker) client.
 

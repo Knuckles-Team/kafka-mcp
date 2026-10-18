@@ -100,9 +100,7 @@ class KafkaApi(ApiClientBase):
             "replication_factor": replication_factor,
         }
         if configs:
-            body["configs"] = [
-                {"name": k, "value": v} for k, v in configs.items()
-            ]
+            body["configs"] = [{"name": k, "value": v} for k, v in configs.items()]
         return self.request(
             "POST",
             f"v3/clusters/{self._cid(cluster_id)}/topics",
@@ -148,9 +146,7 @@ class KafkaApi(ApiClientBase):
         cluster_id: str | None = None,
     ) -> Any:
         """Batch-alter multiple topic configuration entries."""
-        body = {
-            "data": [{"name": k, "value": v} for k, v in configs.items()]
-        }
+        body = {"data": [{"name": k, "value": v} for k, v in configs.items()]}
         return self.request(
             "POST",
             f"v3/clusters/{self._cid(cluster_id)}/topics/{topic}/configs:alter",
@@ -241,9 +237,7 @@ class KafkaApi(ApiClientBase):
             accept=V2_ACCEPT,
         )
 
-    def subscribe_consumer(
-        self, group: str, instance: str, topics: list[str]
-    ) -> Any:
+    def subscribe_consumer(self, group: str, instance: str, topics: list[str]) -> Any:
         """Subscribe a v2 consumer instance to a list of topics."""
         return self.request(
             "POST",
@@ -299,9 +293,7 @@ class KafkaApi(ApiClientBase):
             accept="application/json",
         )
 
-    def get_consumer_group(
-        self, group: str, cluster_id: str | None = None
-    ) -> Any:
+    def get_consumer_group(self, group: str, cluster_id: str | None = None) -> Any:
         """Describe a single consumer group."""
         return self.request(
             "GET",
@@ -317,14 +309,11 @@ class KafkaApi(ApiClientBase):
             accept="application/json",
         )
 
-    def get_group_lag_summary(
-        self, group: str, cluster_id: str | None = None
-    ) -> Any:
+    def get_group_lag_summary(self, group: str, cluster_id: str | None = None) -> Any:
         """Get the lag summary for a consumer group."""
         return self.request(
             "GET",
-            f"v3/clusters/{self._cid(cluster_id)}/consumer-groups/{group}"
-            "/lag-summary",
+            f"v3/clusters/{self._cid(cluster_id)}/consumer-groups/{group}/lag-summary",
             accept="application/json",
         )
 
@@ -355,9 +344,7 @@ class KafkaApi(ApiClientBase):
             accept="application/json",
         )
 
-    def list_broker_configs(
-        self, broker_id: int, cluster_id: str | None = None
-    ) -> Any:
+    def list_broker_configs(self, broker_id: int, cluster_id: str | None = None) -> Any:
         """List configuration entries for a broker."""
         return self.request(
             "GET",
