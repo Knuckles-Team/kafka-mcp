@@ -1,8 +1,8 @@
 {
-  "algorithm": "agent-connector-sdk:mcp-tool-schema-compat:v1",
+  "algorithm": "agent-connector-sdk:mcp-tool-contract-compat:v2",
   "connector": "kafka-mcp",
   "schema_version": "1",
   "tools": {
-    "kafka_topics": "a4344229f235c9f28257ba4b6fc92d9ca0ea025b36aef8448e15953c349fa7b9"
+    "kafka_list_topics": "49b5f8b1818f5a6a57bee3e257bb351caff51575b08b2b63e5fbcd7c7fc6d116"
   }
 }
