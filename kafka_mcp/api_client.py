@@ -2,7 +2,7 @@
 
 from kafka_mcp.api.api_client_kafka import KafkaApi
 
-__version__ = "2.4.0"
+__version__ = "2.4.1"
 
 
 class Api(KafkaApi):
