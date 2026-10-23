@@ -20,9 +20,8 @@
     rdfs:label "Kafka Cluster" ;
     rdfs:comment "A Kafka cluster addressed through the Confluent REST Proxy (kafka_cluster list_clusters/get_cluster)." .
 
-:Topic a owl:Class ;
-    rdfs:label "Topic" ;
-    rdfs:comment "A named, partitioned, replicated event log within a cluster (kafka_topics)." .
+:Topic a owl:Class .
+
 
 :Partition a owl:Class ;
     rdfs:label "Partition" ;
@@ -218,5 +217,7 @@
     rdfs:label "Apache Kafka Event-Streaming Ontology" ;
     rdfs:comment """Apache Kafka event-streaming model — clusters, topics, partitions, consumer
     groups, consumers, brokers and ACLs, with their containment, subscription and assignment
-    relationships — federated into the agent-connector-sdk knowledge-graph hub.""" ;
-    owl:imports <http://knuckles.team/kg> .
+    relationships — federated into the agent-connector-sdk knowledge-graph hub.""" .
+
+# ontology-codemod R3
+<http://knuckles.team/kg#ConsumerGroup> rdfs:subClassOf <http://knuckles.team/kg#ResourceGroup> .
