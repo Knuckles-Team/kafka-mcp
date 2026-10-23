@@ -65,11 +65,11 @@ def _records_by_id(request: Any) -> dict[str, Any]:
 
 
 def _mapping_reference(connector: str, node_type: str) -> str:
-    return f"manifest:{connector}#schema_mappings/{node_type}"
+    return f"connector:{connector}#mappings/{node_type}"
 
 
 def _relation_reference(connector: str, source_node_type: str, relationship: str) -> str:
-    return f"manifest:{connector}#resources/{source_node_type}/relations/{relationship}"
+    return f"connector:{connector}#relations/{source_node_type}/{relationship}"
 
 
 @pytest.mark.asyncio
