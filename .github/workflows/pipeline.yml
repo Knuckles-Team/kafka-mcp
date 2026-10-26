@@ -6,6 +6,7 @@ on:
       - 'main'
     paths-ignore:
       - docker/Dockerfile
+      - .github/workflows/container-release.yml
       - .bumpversion.cfg
       - specs/**/status.json
 
