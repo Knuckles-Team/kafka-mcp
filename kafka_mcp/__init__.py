@@ -4,7 +4,9 @@ import importlib
 import inspect
 from typing import Any
 
-__version__ = "2.4.3"
+from agent_connector_sdk.connector_identity import connector_version as _connector_version
+
+__version__ = _connector_version("kafka_mcp")
 __all__: list[str] = []
 
 CORE_MODULES = ["kafka_mcp.api_client"]
@@ -71,3 +73,23 @@ def __getattr__(name: str) -> Any:
 
 def __dir__() -> list[str]:
     return sorted(list(globals().keys()) + __all__)
+
+
+from agent_connector_sdk.connector import Connector
+from agent_connector_sdk.connector_hooks import RegistrationContext
+
+
+def _register_legacy_surface(context: RegistrationContext) -> None:
+    from kafka_mcp.mcp_server import register_server_surface
+
+    register_server_surface(context.server)
+
+
+connector = Connector(
+    instructions=(
+        "Apache Kafka MCP Server - topics, records (produce/consume), "
+        "consumer groups, brokers, ACLs via the Confluent REST Proxy, plus "
+        "an optional native (direct-to-broker) client."
+    ),
+    extra_registrations=(_register_legacy_surface,),
+)

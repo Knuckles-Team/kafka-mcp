@@ -4,7 +4,8 @@ import sys
 from typing import Any
 
 from agent_connector_sdk.config import load_config
-from agent_connector_sdk.mcp.server import create_mcp_server
+from agent_connector_sdk.connector import build_server
+from agent_connector_sdk.connector_identity import connector_version as _connector_version
 from agent_connector_sdk.mcp.tool_surface import register_tool_surface
 from fastmcp.utilities.logging import get_logger
 from starlette.requests import Request
@@ -16,7 +17,7 @@ from kafka_mcp.mcp.mcp_kafka import register_kafka_tools
 from kafka_mcp.mcp.mcp_kafka_cdc import register_kafka_cdc_tools
 from kafka_mcp.mcp.mcp_kafka_connect import register_kafka_connect_tools
 
-__version__ = "2.4.3"
+__version__ = _connector_version("kafka_mcp")
 logger = get_logger(name="kafka_mcp")
 
 # Re-exported so ``register_tool_surface``'s module auto-discovery (which scans
@@ -30,18 +31,14 @@ __all__ = [
 ]
 
 
-def get_mcp_instance() -> tuple[Any, ...]:
+def get_mcp_instance(*, command_args=None) -> tuple[Any, ...]:
     load_config()
-    args, mcp, middlewares = create_mcp_server(
-        name="Kafka MCP",
-        version=__version__,
-        instructions=(
-            "Apache Kafka MCP Server - topics, records (produce/consume), "
-            "consumer groups, brokers, ACLs via the Confluent REST Proxy, plus "
-            "an optional native (direct-to-broker) client."
-        ),
-    )
+    args, mcp = build_server("kafka_mcp", command_args=command_args)
+    return mcp, args, list(mcp.middleware)
 
+
+def register_server_surface(mcp: Any) -> None:
+    """Reuse the existing broker-aware health route and all tool registrars."""
     @mcp.custom_route("/health", methods=["GET"])
     async def health_check(request: Request) -> JSONResponse:
         """Liveness/readiness probe.
@@ -89,10 +86,6 @@ def get_mcp_instance() -> tuple[Any, ...]:
         tools_module=sys.modules[__name__],
     )
     logger.info("Registered condensed tool surfaces: count=%d", len(registered_tags))
-
-    for mw in middlewares:
-        mcp.add_middleware(mw)
-    return mcp, args, middlewares
 
 
 def mcp_server() -> None:
