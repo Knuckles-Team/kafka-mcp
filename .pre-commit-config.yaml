@@ -20,4 +20,10 @@ repos:
   - repo: https://github.com/Knuckles-Team/pipelines
     rev: main
     hooks:
+    - id: connector-standard
+    - id: secrets
+    - id: spec
+      stages: [pre-push]
+    - id: tests-fast
+      stages: [pre-push]
     - id: dependency-readiness
