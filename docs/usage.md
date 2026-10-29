@@ -42,13 +42,13 @@ from kafka_mcp.api_client import Api
 
 api = Api(
     base_url="http://your-rest-proxy:8082",
-    token=None,            # or a bearer token
-    tls_profile=None,      # optional named profile from the runtime catalog
+    token=None,  # or a bearer token
+    tls_profile=None,  # optional named profile from the runtime catalog
 )
 
 # Reads
 clusters = api.list_clusters()
-topics = api.list_topics()                     # uses the resolved cluster id
+topics = api.list_topics()  # uses the resolved cluster id
 detail = api.get_topic("events")
 groups = api.list_consumer_groups()
 lag = api.get_group_lag_summary("billing")
@@ -59,7 +59,8 @@ Build a client straight from the environment:
 
 ```python
 from kafka_mcp.auth import get_client
-api = get_client()         # reads KAFKA_REST_URL / KAFKA_TOKEN / ... from the environment
+
+api = get_client()  # reads KAFKA_REST_URL / KAFKA_TOKEN / ... from the environment
 ```
 
 ### Writes
@@ -88,7 +89,7 @@ With the `kafka-mcp[native]` extra, connect straight to brokers:
 ```python
 from kafka_mcp.auth import get_native_client
 
-native = get_native_client()                   # reads KAFKA_BOOTSTRAP_SERVERS
+native = get_native_client()  # reads KAFKA_BOOTSTRAP_SERVERS
 native.produce("events", "hello", key="k")
 records = native.consume("events", "my-group", max_messages=10, timeout=5.0)
 ```

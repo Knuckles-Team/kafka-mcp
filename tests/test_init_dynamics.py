@@ -13,10 +13,6 @@ def test_mcp_available_flag_true_when_mcp_server_importable():
     assert kafka_mcp._MCP_AVAILABLE is True
 
 
-
-
-
-
 def test_getattr_exposes_member_from_lazily_loaded_optional_module():
     # get_mcp_instance is defined in kafka_mcp.mcp_server and only reachable
     # through the optional-module lookup in __getattr__, not CORE_MODULES.
@@ -33,5 +29,5 @@ def test_getattr_raises_attribute_error_for_unknown_name():
 def test_dir_includes_lazily_exposed_members():
     # __dir__ merges globals() (populated by _expose_members after a lazy
     # import) with __all__.
-    kafka_mcp.get_mcp_instance  # force the lazy import/expose path
+    _ = kafka_mcp.get_mcp_instance  # force the lazy import/expose path
     assert "get_mcp_instance" in dir(kafka_mcp)

@@ -1,1 +1,2 @@
-def test_startup(): pass
+def test_startup():
+    pass

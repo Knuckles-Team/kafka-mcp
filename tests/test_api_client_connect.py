@@ -122,7 +122,9 @@ def test_restart_connector_with_tasks_and_only_failed():
         assert "onlyFailed=true" in str(request.url)
         return httpx.Response(204)
 
-    _client(handler).restart_connector("ca51pilot", include_tasks=True, only_failed=True)
+    _client(handler).restart_connector(
+        "ca51pilot", include_tasks=True, only_failed=True
+    )
 
 
 def test_pause_connector_is_put():

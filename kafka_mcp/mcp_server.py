@@ -5,7 +5,9 @@ from typing import Any
 
 from agent_connector_sdk.config import load_config
 from agent_connector_sdk.connector import build_server
-from agent_connector_sdk.connector_identity import connector_version as _connector_version
+from agent_connector_sdk.connector_identity import (
+    connector_version as _connector_version,
+)
 from agent_connector_sdk.mcp.tool_surface import register_tool_surface
 from fastmcp.utilities.logging import get_logger
 from starlette.requests import Request
@@ -39,6 +41,7 @@ def get_mcp_instance(*, command_args=None) -> tuple[Any, ...]:
 
 def register_server_surface(mcp: Any) -> None:
     """Reuse the existing broker-aware health route and all tool registrars."""
+
     @mcp.custom_route("/health", methods=["GET"])
     async def health_check(request: Request) -> JSONResponse:
         """Liveness/readiness probe.

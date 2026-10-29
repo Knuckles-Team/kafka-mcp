@@ -44,7 +44,10 @@ async def test_list_action(_patch_client):
     _patch_client["client"] = ConnectApi(BASE, transport=httpx.MockTransport(handler))
 
     result = await _call(
-        mcp, "kafka_connect", action="list", params_json=json.dumps({"expand": "status"})
+        mcp,
+        "kafka_connect",
+        action="list",
+        params_json=json.dumps({"expand": "status"}),
     )
     assert result.structured_content == {"ca51pilot": {"status": {}}}
 
@@ -101,7 +104,10 @@ async def test_delete_action(_patch_client):
     _patch_client["client"] = ConnectApi(BASE, transport=httpx.MockTransport(handler))
 
     result = await _call(
-        mcp, "kafka_connect", action="delete", params_json=json.dumps({"name": "ca51pilot"})
+        mcp,
+        "kafka_connect",
+        action="delete",
+        params_json=json.dumps({"name": "ca51pilot"}),
     )
     assert result.structured_content == {"status": "success"}
 

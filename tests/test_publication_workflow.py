@@ -35,14 +35,12 @@ def test_only_main_starts_package_publication(ref, expected):
 
 def test_each_package_publisher_uses_the_shared_pipelines():
     jobs = _workflow("pipeline.yml")["jobs"]
-    assert set(jobs) == {"publish-pypi"}
+    assert set(jobs) == {"publish-pypi", "publish-docker"}
     assert jobs["publish-pypi"]["uses"].endswith("/python_pipeline.yml@main")
-    assert _workflow("pipeline.yml")[True]["push"]["paths-ignore"] == [
-        "docker/Dockerfile",
-        ".github/workflows/container-release.yml",
-        ".bumpversion.cfg",
-        "specs/**/status.json",
-    ]
+    assert jobs["publish-pypi"]["with"] == {"connector": True}
+    assert jobs["publish-docker"]["needs"] == "publish-pypi"
+    assert jobs["publish-docker"]["uses"].endswith("/container_pipeline.yml@main")
+    assert jobs["publish-docker"]["with"] == {"render_connector": True}
     container = _workflow("container-release.yml")
     assert container[True]["push"] == {
         "branches": ["main"],
@@ -52,10 +50,6 @@ def test_each_package_publisher_uses_the_shared_pipelines():
     assert container["jobs"]["publish-docker"]["uses"].endswith(
         "/container_pipeline.yml@main"
     )
-    assert container["jobs"]["publish-docker"]["with"] == {
-        "legacy_profile": True,
-        "render_connector": False,
-    }
     for publisher in (jobs["publish-pypi"], container["jobs"]["publish-docker"]):
         assert "if" not in publisher
         assert not publisher.get("continue-on-error", False)
@@ -64,40 +58,4 @@ def test_each_package_publisher_uses_the_shared_pipelines():
         "mode": "published-wheel",
         "distribution": "kafka-mcp",
         "module": "kafka_mcp",
-        "legacy-profile": True,
     }
-
-
-@pytest.mark.parametrize(
-    "path, expected",
-    [
-        ("docker/Dockerfile", False),
-        (".github/workflows/container-release.yml", False),
-        (".bumpversion.cfg", False),
-        ("specs/sdk/status.json", False),
-        ("kafka_mcp/specs/openapi.json", True),
-        ("pyproject.toml", True),
-        ("uv.lock", True),
-        ("kafka_mcp/mcp_server.py", True),
-        ("README.md", True),
-        (".github/workflows/pipeline.yml", True),
-    ],
-)
-def test_package_publication_skips_only_container_pin_refresh(path, expected):
-    ignores = _workflow("pipeline.yml")[True]["push"]["paths-ignore"]
-    assert (not any(fnmatchcase(path, pattern) for pattern in ignores)) is expected
-
-
-@pytest.mark.parametrize(
-    "paths, expected",
-    [
-        (["docker/Dockerfile", ".github/workflows/container-release.yml"], False),
-        ([".github/workflows/container-release.yml", "kafka_mcp/mcp_server.py"], True),
-        ([".github/workflows/container-release.yml", "pyproject.toml"], True),
-    ],
-)
-def test_mixed_changes_keep_source_and_version_publication(paths, expected):
-    ignores = _workflow("pipeline.yml")[True]["push"]["paths-ignore"]
-    assert any(
-        not any(fnmatchcase(path, pattern) for pattern in ignores) for path in paths
-    ) is expected

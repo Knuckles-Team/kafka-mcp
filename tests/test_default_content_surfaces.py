@@ -35,9 +35,7 @@ async def _listings():
 
     async with Client(_server(), mode="legacy") as client:
         assert client.initialize_result is not None
-        assert client.initialize_result.server_info.version == version(
-            "kafka-mcp"
-        )
+        assert client.initialize_result.server_info.version == version("kafka-mcp")
         resources = {str(r.uri) for r in await client.list_resources()}
         prompts = {p.name for p in await client.list_prompts()}
         for uri in resources:
@@ -77,7 +75,6 @@ def _no_outbound_network(monkeypatch):
 
 def test_sdk_floor_supports_content_identity_and_current_pack_protocol() -> None:
     import tomllib
-
     from packaging.requirements import Requirement
 
     project = tomllib.loads((ROOT.parent / "pyproject.toml").read_text())["project"]
@@ -163,11 +160,16 @@ def test_legacy_cli_configuration_file_still_controls_host_and_port(
 
 def test_each_server_registers_each_existing_domain_once(monkeypatch):
     from functools import wraps
+
     from agent_connector_sdk.connector import build_server
 
     module = importlib.import_module("kafka_mcp.mcp_server")
     calls = {}
-    for name in ("register_kafka_tools", "register_kafka_cdc_tools", "register_kafka_connect_tools"):
+    for name in (
+        "register_kafka_tools",
+        "register_kafka_cdc_tools",
+        "register_kafka_connect_tools",
+    ):
         original = getattr(module, name)
         calls[name] = []
 
