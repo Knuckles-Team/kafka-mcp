@@ -68,7 +68,9 @@ def _mapping_reference(connector: str, node_type: str) -> str:
     return f"connector:{connector}#mappings/{node_type}"
 
 
-def _relation_reference(connector: str, source_node_type: str, relationship: str) -> str:
+def _relation_reference(
+    connector: str, source_node_type: str, relationship: str
+) -> str:
     return f"connector:{connector}#relations/{source_node_type}/{relationship}"
 
 
@@ -93,7 +95,9 @@ async def test_ingest_entities_writes_nodes_and_edges(ingest):
     rel = request.relationships[0]
     assert rel.source.record_id == "a"
     assert rel.target.record_id == "b"
-    assert rel.relation_reference == _relation_reference(_CONNECTOR, "Topic", "inCluster")
+    assert rel.relation_reference == _relation_reference(
+        _CONNECTOR, "Topic", "inCluster"
+    )
 
 
 @pytest.mark.asyncio
@@ -127,7 +131,9 @@ async def test_ingest_topics_maps_topic_and_cluster(ingest):
     rel = request.relationships[0]
     assert rel.source.record_id == "kafka:topic:clstr-1:events"
     assert rel.target.record_id == "kafka:cluster:clstr-1"
-    assert rel.relation_reference == _relation_reference(_CONNECTOR, "Topic", "inCluster")
+    assert rel.relation_reference == _relation_reference(
+        _CONNECTOR, "Topic", "inCluster"
+    )
 
 
 @pytest.mark.asyncio
@@ -149,8 +155,13 @@ async def test_ingest_partitions_maps_partition_of_topic(ingest):
     p0 = records["kafka:partition:clstr-1:events:0"]
     assert p0.mapping_reference == _mapping_reference(_CONNECTOR, "Partition")
     assert p0.payload["partitionId"] == 0
-    endpoints = {(r.source.record_id, r.target.record_id) for r in request.relationships}
-    assert ("kafka:partition:clstr-1:events:0", "kafka:topic:clstr-1:events") in endpoints
+    endpoints = {
+        (r.source.record_id, r.target.record_id) for r in request.relationships
+    }
+    assert (
+        "kafka:partition:clstr-1:events:0",
+        "kafka:topic:clstr-1:events",
+    ) in endpoints
 
 
 @pytest.mark.asyncio

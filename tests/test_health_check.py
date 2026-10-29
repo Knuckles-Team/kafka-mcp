@@ -66,7 +66,9 @@ async def test_health_check_backend_unreachable():
 
 @pytest.mark.asyncio
 async def test_health_check_native_extra_missing():
-    with patch.dict("sys.modules", {"confluent_kafka": None, "confluent_kafka.admin": None}):
+    with patch.dict(
+        "sys.modules", {"confluent_kafka": None, "confluent_kafka.admin": None}
+    ):
         health_fn = _capture_health_fn()
         response = await health_fn(MagicMock())
 

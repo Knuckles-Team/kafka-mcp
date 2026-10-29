@@ -4,7 +4,9 @@ import importlib
 import inspect
 from typing import Any
 
-from agent_connector_sdk.connector_identity import connector_version as _connector_version
+from agent_connector_sdk.connector_identity import (
+    connector_version as _connector_version,
+)
 
 __version__ = _connector_version("kafka_mcp")
 __all__: list[str] = []

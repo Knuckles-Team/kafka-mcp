@@ -58,7 +58,9 @@ def _patch_clients(monkeypatch):
 @pytest.mark.asyncio
 async def test_kafka_cdc_topic_map_tool(_patch_clients):
     def handler(request: httpx.Request) -> httpx.Response:
-        assert str(request.url) == "http://connect.test:8083/connectors/ca51pilot/config"
+        assert (
+            str(request.url) == "http://connect.test:8083/connectors/ca51pilot/config"
+        )
         return httpx.Response(
             200,
             json={
@@ -101,7 +103,9 @@ async def test_kafka_cdc_lag_tool_filters_topics(_patch_clients):
             },
         )
 
-    kafka_client = KafkaApi("http://rest.test:8082", transport=httpx.MockTransport(handler))
+    kafka_client = KafkaApi(
+        "http://rest.test:8082", transport=httpx.MockTransport(handler)
+    )
     kafka_client._cluster_id = "c1"  # skip lazy cluster resolution for this test
     _patch_clients["kafka_client"] = kafka_client
     mcp = FastMCP("test")

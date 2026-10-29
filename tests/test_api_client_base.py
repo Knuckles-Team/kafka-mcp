@@ -80,7 +80,9 @@ def test_http_error_raises_legacy_message():
 
 
 def test_etag_captured_per_request():
-    client = _client(lambda request: httpx.Response(200, json={}, headers={"ETag": "v7"}))
+    client = _client(
+        lambda request: httpx.Response(200, json={}, headers={"ETag": "v7"})
+    )
     client.request("GET", "v3/clusters")
     assert client.last_etag == "v7"
 
