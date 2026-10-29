@@ -1,6 +1,6 @@
 # CONN-KAFKA-MCP-CONNECTOR-CONTENT — The connector serves its packaged content
 
-Owner: kafka-mcp. Cross-repo IDs: `SDK-CONNECTOR-CONTROL-R071`, `SDK-CONNECTOR-CONTROL-R073`.
+Owner: kafka-mcp. Cross-repo IDs: `SCION-CONNECTOR-CONTROL-R071`, `SCION-CONNECTOR-CONTROL-R073`.
 
 ## Purpose and user stories
 
