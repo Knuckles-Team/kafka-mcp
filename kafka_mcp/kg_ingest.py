@@ -2,14 +2,14 @@
 
 CONCEPT:AU-KG.ingest.enterprise-source-extractor. Connector-specific mappers emit
 canonical node_type nodes and relationship edges through the generated
-``agent_connector_sdk.ingest`` SourceIngest client, not a local ingestion helper.
+``scion_sdk.ingest`` SourceIngest client, not a local ingestion helper.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from agent_connector_sdk.ingest import (
+from scion_sdk.ingest import (
     ChangeSet,
     Document,
     Entity,

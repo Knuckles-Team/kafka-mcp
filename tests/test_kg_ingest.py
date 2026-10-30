@@ -7,7 +7,7 @@ builder), asserting the Kafka REST-Proxy record ->
 :Topic/:Partition/:ConsumerGroup/:Broker/:KafkaCluster/:CdcConnector mapping.
 
 The transport receives the real generated ``SourceIngestionRequest`` built by
-``agent_connector_sdk.ingest.request.build_request``: entities surface as
+``scion_sdk.ingest.request.build_request``: entities surface as
 ``SourceRecord`` (``record_id`` + ``payload`` + a ``mapping_reference`` that
 encodes the node_type), and relationships as ``SourceRelationship``
 (``source``/``target`` are ``SourceEntityRef`` objects with ``record_id``;
@@ -22,7 +22,7 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
-from agent_connector_sdk.ingest import IngestError, KnowledgeIngest
+from scion_sdk.ingest import IngestError, KnowledgeIngest
 
 from kafka_mcp.kg_ingest import (
     ingest_brokers,

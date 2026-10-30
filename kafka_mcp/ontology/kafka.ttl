@@ -217,7 +217,7 @@
     rdfs:label "Apache Kafka Event-Streaming Ontology" ;
     rdfs:comment """Apache Kafka event-streaming model — clusters, topics, partitions, consumer
     groups, consumers, brokers and ACLs, with their containment, subscription and assignment
-    relationships — federated into the agent-connector-sdk knowledge-graph hub.""" .
+    relationships — federated into the scion-sdk knowledge-graph hub.""" .
 
 # ontology-codemod R3
 <http://knuckles.team/kg#ConsumerGroup> rdfs:subClassOf <http://knuckles.team/kg#ResourceGroup> .

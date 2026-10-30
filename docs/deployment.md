@@ -114,7 +114,7 @@ the Confluent REST Proxy surface:
 | `KAFKA_TOKEN` | _(empty)_ | Bearer token for the REST Proxy |
 | `KAFKA_USERNAME` | _(empty)_ | Basic-auth user (optional) |
 | `KAFKA_PASSWORD` | _(empty)_ | Basic-auth password (optional) |
-| `KAFKA_REST_TLS_PROFILE` | _(system trust)_ | Optional named profile from the agent-connector-sdk TLS catalog |
+| `KAFKA_REST_TLS_PROFILE` | _(system trust)_ | Optional named profile from the scion-sdk TLS catalog |
 | `KAFKA_REST_TLS_PROFILE_REF` | _(empty)_ | Runtime secret ref containing a TLS profile |
 | `KAFKATOOL` | `True` | Register the Kafka tool set |
 
@@ -127,7 +127,7 @@ The Kafka Connect + CDC surface (`kafka_connect`, `kafka_connect_plugins`,
 | `KAFKA_CONNECT_TOKEN` | _(empty)_ | Bearer token for Connect REST (no built-in auth upstream; optional) |
 | `KAFKA_CONNECT_USERNAME` | _(empty)_ | Basic-auth user (optional) |
 | `KAFKA_CONNECT_PASSWORD` | _(empty)_ | Basic-auth password (optional) |
-| `KAFKA_CONNECT_TLS_PROFILE` | _(system trust)_ | Optional named profile from the agent-connector-sdk TLS catalog |
+| `KAFKA_CONNECT_TLS_PROFILE` | _(system trust)_ | Optional named profile from the scion-sdk TLS catalog |
 | `KAFKA_CONNECT_TLS_PROFILE_REF` | _(empty)_ | Runtime secret ref containing a TLS profile |
 | `KAFKA_CONNECTTOOL` | `True` | Register the Kafka Connect tool set |
 | `KAFKA_CDCTOOL` | `True` | Register the CDC read/ingest tool set |

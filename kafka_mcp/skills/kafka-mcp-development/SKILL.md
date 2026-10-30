@@ -9,7 +9,7 @@ license: MIT
 tags: [kafka-mcp, development, connector, kafka, gates]
 tier: repository
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 
@@ -17,7 +17,7 @@ metadata:
 
 This repository owns Kafka and Kafka Connect calls, mappings, MCP tools, and
 agent entry points. Shared connector contracts and transports belong to
-`agent-connector-sdk`; serving and durable graph state belong to their owning
+`scion-sdk`; serving and durable graph state belong to their owning
 repositories. Read `AGENTS.md` before changing code, and keep cluster details,
 credentials, and customer data out of source and skill content.
 

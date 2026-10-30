@@ -13,7 +13,7 @@ description: >-
 license: MIT
 tags: [kafka, topics, partitions, admin, rest-api, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 # Kafka Topic Administration
