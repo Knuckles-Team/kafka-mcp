@@ -12,7 +12,7 @@ description: >-
 license: MIT
 tags: [kafka, records, produce, consume, streaming, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 # Kafka Streaming I/O

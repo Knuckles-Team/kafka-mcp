@@ -12,7 +12,7 @@ description: >-
 license: MIT
 tags: [kafka, consumer-groups, lag, monitoring, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 # Kafka Consumer-Group Lag

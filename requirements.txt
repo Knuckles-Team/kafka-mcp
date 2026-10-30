@@ -1,2 +1,2 @@
-scion-sdk[mcp]>=0.5.6,<1.0.0
+scion-sdk[mcp]>=0.6.0,<0.7.0
 requests>=2.31.0

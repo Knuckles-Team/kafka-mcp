@@ -7,7 +7,7 @@ from base64 import b64encode
 from typing import Any
 
 import httpx
-from agent_connector_sdk.tls.resolve import resolve_tls_profile
+from scion_sdk.tls.resolve import resolve_tls_profile
 
 
 class ApiClientBase:

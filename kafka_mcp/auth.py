@@ -2,7 +2,7 @@
 
 import logging
 
-from agent_connector_sdk.config import setting
+from scion_sdk.config import setting
 
 from kafka_mcp.api.api_client_connect import ConnectApi
 from kafka_mcp.api.api_client_native import NativeKafkaClient

@@ -22,7 +22,7 @@ The base install is intentionally minimal. Install the extra for what the operat
 
 | Extra | Install | Pulls in |
 |---|---|---|
-| `mcp` | `pip install "kafka-mcp[mcp]"` | FastMCP MCP-server runtime (`agent-connector-sdk[mcp]`) |
+| `mcp` | `pip install "kafka-mcp[mcp]"` | FastMCP MCP-server runtime (`scion-sdk[mcp]`) |
 | `agent` | `pip install "kafka-mcp[agent]"` | Pydantic-AI agent + Logfire tracing |
 | `native` | `pip install "kafka-mcp[native]"` | `confluent-kafka` direct-to-broker client |
 | `all` | `pip install "kafka-mcp[all]"` | MCP + agent + Logfire |

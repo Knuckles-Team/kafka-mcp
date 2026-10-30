@@ -3,7 +3,7 @@
 Generated: 2026-06-02T02:26:47.350532+00:00
 Skipped informational: 4
 
-- [ ] [P] **T001** [Dependency Audit] Minor update: agent-connector-sdk 0.2.40 (installed) -> 0.16.0
+- [ ] [P] **T001** [Dependency Audit] Minor update: scion-sdk 0.2.40 (installed) -> 0.16.0
   - Priority: P3-Low | Effort: Small
 - [ ] [P] **T002** [Codebase Optimization] Moderate avg cyclomatic complexity: 7.1
   - Priority: P2-Medium | Effort: Medium
@@ -47,5 +47,5 @@ Skipped informational: 4
   - Priority: P2-Medium | Effort: Medium
 - [ ] [P] **T022** [Environment Variables] 4 Python env vars not in .env.example: LLM_API_KEY, LLM_BASE_URL, MCP_URL, MODEL
   - Priority: P2-Medium | Effort: Medium
-- [ ] [P] **T023** [XDG Compliance (KG)] Check skipped: required agent-connector-sdk/networkx dependencies not found.
+- [ ] [P] **T023** [XDG Compliance (KG)] Check skipped: required scion-sdk/networkx dependencies not found.
   - Priority: P2-Medium | Effort: Medium

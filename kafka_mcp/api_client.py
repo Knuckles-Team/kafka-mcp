@@ -1,6 +1,6 @@
 """Public client facade for kafka_mcp."""
 
-from agent_connector_sdk.connector_identity import (
+from scion_sdk.connector_identity import (
     connector_version as _connector_version,
 )
 
