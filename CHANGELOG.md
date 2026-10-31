@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   dev tree on `PYTHONPATH` and expect `uv lock` against the public index to
   fail to resolve.
 
+## [2.4.6] - 2026-10-30
+
+### Changed
+- Require `scion-sdk>=0.6.4,<0.7.0`; `uv.lock` relocked.
+
 ## [0.1.0] - 2026-06-01
 ### Added
 - Initial project structure and standardization
