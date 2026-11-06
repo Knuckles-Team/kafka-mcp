@@ -17,7 +17,7 @@ fallback. Prefer these tools over raw HTTP — they carry the correct content-ty
 ## When NOT to use
 - Topic/partition provisioning or config → `kafka-topic-administration`.
 - Consumer-group lag / membership inspection → `kafka-consumer-group-lag`.
-- ACLs / broker / cluster metadata → the `kafka_cluster` tool directly.
+- ACLs / broker / cluster metadata → the `kafka_list_brokers`, `kafka_list_acls` and related cluster tools.
 
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`kafka-mcp`** MCP server.
@@ -29,15 +29,15 @@ Connect via the `mcp-client` skill against the **`kafka-mcp`** MCP server.
 | `KAFKA_TOKEN` / `KAFKA_USERNAME` / `KAFKA_PASSWORD` | optional | Bearer or basic auth |
 | `KAFKA_BOOTSTRAP_SERVERS` | optional | Native client only (default `localhost:9092`; needs `kafka-mcp[native]`) |
 
-`MCP_TOOL_MODE` selects condensed vs. verbose surfaces.
 
-## Tools & actions
+## Tools
 | Condensed tool | Actions |
 |----------------|---------|
-| `kafka_records` | `produce`, `create_consumer`, `subscribe`, `consume`, `commit`, `delete_consumer` |
-| `kafka_native` | `produce`, `consume` (direct-to-broker) |
+| `kafka_produce_record` | produce through the REST Proxy |
+| `kafka_create_consumer`, `kafka_subscribe_consumer`, `kafka_consume_records`, `kafka_commit_offsets`, `kafka_delete_consumer` | v2 consumer instance lifecycle |
+| `kafka_native_produce`, `kafka_native_consume` | direct-to-broker |
 
-## Recipes (`params_json`)
+## Recipes (tool arguments)
 Produce a JSON record with a key:
 ```json
 {"topic":"events","value":{"orderId":42,"status":"placed"},"key":"42","value_format":"JSON"}
@@ -61,7 +61,6 @@ Native bounded consume:
 ```
 
 ## Gotchas
-- `params_json` is a **string** of JSON, not an object.
 - The v2 consumer path is **stateful**: you must `create_consumer` first, then
   `subscribe`, and the **first** `consume` after subscribe often returns empty
   while the assignment settles — poll again.

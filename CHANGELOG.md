@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Surface backfill (scion-sdk 0.9.0)
+- Removed the action-routed `kafka_topics`, `kafka_partitions`, `kafka_records`, `kafka_groups`, `kafka_cluster`, `kafka_connect` and `kafka_native` tools: the REST Proxy operations are served once, as the typed `kafka_*` tools derived from the API client. Connect and native tools are now one typed tool per operation (`kafka_connect_*`, `kafka_native_*`); the native create/delete/list tools were previously lost to a name collision with the REST tools.
+- Declared tool-use contracts, links, data locations and business roles (`connector_contracts.py`); replaced the single prompt with an operator prompt and three business-role agent prompts; skills name the typed tools.
+- Raised `scion-sdk` to `>=0.9.0`.
+
 ### Changed
 - `ApiClientBase` internals replaced with the shared
   `agent_utilities.http.BaseApiClient` fleet base (httpx): same public

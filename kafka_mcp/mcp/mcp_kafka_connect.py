@@ -17,68 +17,94 @@ def register_kafka_connect_tools(mcp: FastMCP) -> None:
     """Register Kafka Connect connector-lifecycle and plugin-discovery tools."""
 
     @mcp.tool(tags={"connect"})
-    async def kafka_connect(
-        action: str = Field(
-            description=(
-                "Kafka Connect connector action. One of: 'list', 'get', 'create', "
-                "'update', 'delete', 'status', 'restart', 'pause', 'resume', "
-                "'offsets'."
-            )
-        ),
-        name: str | None = Field(
-            default=None,
-            description="Connector name (every action except 'list').",
-        ),
-        config: dict[str, Any] | None = Field(
-            default=None,
-            description="Connector config map (create, update).",
-        ),
+    async def kafka_connect_list(
         expand: str | None = Field(
-            default=None,
-            description="list only: 'status' or 'info' to expand each connector.",
-        ),
-        include_tasks: bool | None = Field(
-            default=None, description="restart only: also restart tasks."
-        ),
-        only_failed: bool | None = Field(
-            default=None, description="restart only: restart only failed instances."
+            default=None, description="'status' or 'info' to expand each connector."
         ),
     ) -> Any:
-        """Manage Kafka Connect connectors via the worker's REST API (:8083).
-
-        ``create`` is idempotent by connector name: a second ``create`` against
-        an existing name surfaces Connect's own ``409 Conflict`` rather than
-        being swallowed or silently turned into an update — use ``update`` to
-        change an existing connector's config. ``delete`` and ``restart`` are
-        **not** idempotent: a repeat ``delete`` 404s, and each ``restart`` is a
-        distinct operation, not a no-op if already running.
-        """
+        """List the connectors on the Kafka Connect worker."""
         client = get_connect_client()
-        if action == "list":
-            return client.list_connectors(expand=expand)
-        if action == "get":
-            return client.get_connector(name)
-        if action == "create":
-            return client.create_connector(name, config)
-        if action == "update":
-            return client.update_connector_config(name, config)
-        if action == "delete":
-            return client.delete_connector(name)
-        if action == "status":
-            return client.get_connector_status(name)
-        if action == "restart":
-            return client.restart_connector(
-                name,
-                include_tasks=bool(include_tasks),
-                only_failed=bool(only_failed),
-            )
-        if action == "pause":
-            return client.pause_connector(name)
-        if action == "resume":
-            return client.resume_connector(name)
-        if action == "offsets":
-            return client.get_connector_offsets(name)
-        raise ValueError(f"Unknown connect action: {action!r}.")
+        return client.list_connectors(expand=expand)
+
+    @mcp.tool(tags={"connect"})
+    async def kafka_connect_get(
+        name: str = Field(description="Connector name."),
+    ) -> Any:
+        """Get one connector's info (config and tasks)."""
+        client = get_connect_client()
+        return client.get_connector(name)
+
+    @mcp.tool(tags={"connect"})
+    async def kafka_connect_create(
+        name: str = Field(description="Connector name."),
+        config: dict[str, Any] = Field(description="Connector config map."),
+    ) -> Any:
+        """Create a connector. A second create on an existing name returns Connect's own 409; use kafka_connect_update to change config."""
+        client = get_connect_client()
+        return client.create_connector(name, config)
+
+    @mcp.tool(tags={"connect"})
+    async def kafka_connect_update(
+        name: str = Field(description="Connector name."),
+        config: dict[str, Any] = Field(description="Connector config map."),
+    ) -> Any:
+        """Replace an existing connector's config."""
+        client = get_connect_client()
+        return client.update_connector_config(name, config)
+
+    @mcp.tool(tags={"connect"})
+    async def kafka_connect_delete(
+        name: str = Field(description="Connector name."),
+    ) -> Any:
+        """Delete a connector. Not idempotent: a repeat delete returns 404. Destructive."""
+        client = get_connect_client()
+        return client.delete_connector(name)
+
+    @mcp.tool(tags={"connect"})
+    async def kafka_connect_status(
+        name: str = Field(description="Connector name."),
+    ) -> Any:
+        """Read a connector's and its tasks' runtime status."""
+        client = get_connect_client()
+        return client.get_connector_status(name)
+
+    @mcp.tool(tags={"connect"})
+    async def kafka_connect_restart(
+        name: str = Field(description="Connector name."),
+        include_tasks: bool = Field(default=False, description="Also restart tasks."),
+        only_failed: bool = Field(
+            default=False, description="Restart only failed instances."
+        ),
+    ) -> Any:
+        """Restart a connector. Each restart is a distinct operation, not a no-op when running."""
+        client = get_connect_client()
+        return client.restart_connector(
+            name, include_tasks=include_tasks, only_failed=only_failed
+        )
+
+    @mcp.tool(tags={"connect"})
+    async def kafka_connect_pause(
+        name: str = Field(description="Connector name."),
+    ) -> Any:
+        """Pause a connector and its tasks."""
+        client = get_connect_client()
+        return client.pause_connector(name)
+
+    @mcp.tool(tags={"connect"})
+    async def kafka_connect_resume(
+        name: str = Field(description="Connector name."),
+    ) -> Any:
+        """Resume a paused connector."""
+        client = get_connect_client()
+        return client.resume_connector(name)
+
+    @mcp.tool(tags={"connect"})
+    async def kafka_connect_offsets(
+        name: str = Field(description="Connector name."),
+    ) -> Any:
+        """Read a connector's committed offsets."""
+        client = get_connect_client()
+        return client.get_connector_offsets(name)
 
     @mcp.tool(tags={"connect"})
     async def kafka_connect_plugins() -> Any:

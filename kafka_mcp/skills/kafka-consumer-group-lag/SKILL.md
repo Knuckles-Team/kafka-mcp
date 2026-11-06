@@ -4,7 +4,7 @@ skill_type: skill
 description: >-
   Monitor Apache Kafka consumer groups and their lag via the kafka-mcp MCP server
   — list groups, describe a group, enumerate its member consumers, and read the
-  lag summary or per-partition lags with the domain-typed kafka_groups tool over
+  lag summary or per-partition lags with the domain-typed group tools over
   the Confluent REST Proxy. Use when the agent must find stalled/lagging groups,
   diagnose a rebalance, or report how far a group trails the log-end offset. Do
   NOT use for producing/consuming records (use kafka-streaming-io) or topic
@@ -18,7 +18,7 @@ metadata:
 # Kafka Consumer-Group Lag
 
 Domain-typed inspection of Apache Kafka **consumer groups** — membership, state,
-and **lag** — through the Confluent REST Proxy v3. Prefer the `kafka_groups` tool
+and **lag** — through the Confluent REST Proxy v3. Prefer the `kafka_list_consumer_groups` and related group tools
 over raw HTTP; it returns group/consumer/lag-shaped records.
 
 ## When to use
@@ -30,7 +30,7 @@ over raw HTTP; it returns group/consumer/lag-shaped records.
 ## When NOT to use
 - Producing / consuming records or driving a consumer instance → `kafka-streaming-io`.
 - Topic / partition provisioning or config → `kafka-topic-administration`.
-- Broker / cluster / ACL metadata → the `kafka_cluster` tool directly.
+- Broker / cluster / ACL metadata → the `kafka_list_brokers`, `kafka_list_acls` and related cluster tools.
 
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`kafka-mcp`** MCP server.
@@ -42,14 +42,14 @@ Connect via the `mcp-client` skill against the **`kafka-mcp`** MCP server.
 | `KAFKA_TOKEN` / `KAFKA_USERNAME` / `KAFKA_PASSWORD` | optional | Bearer or basic auth |
 | `KAFKA_SSL_VERIFY` | optional | TLS verification toggle |
 
-`MCP_TOOL_MODE` selects condensed vs. verbose surfaces.
 
-## Tools & actions
+## Tools
 | Condensed tool | Actions |
 |----------------|---------|
-| `kafka_groups` | `list`, `describe`, `consumers`, `lag_summary`, `lags` |
+| `kafka_list_consumer_groups`, `kafka_get_consumer_group`, `kafka_list_consumers` | group and member inspection |
+| `kafka_get_group_lag_summary`, `kafka_get_group_lags` | lag per group and per partition |
 
-## Recipes (`params_json`)
+## Recipes (tool arguments)
 List all consumer groups:
 ```json
 {}
@@ -68,7 +68,6 @@ Per-partition lags (find the hottest partition):
 ```
 
 ## Gotchas
-- `params_json` is a **string** of JSON, not an object.
 - `lag_summary` gives the max/total lag across the group; `lags` breaks it down
   per topic-partition — use `lags` to localize a stuck partition.
 - A group in `PreparingRebalance` or `Empty` state can report transient or zero

@@ -4,7 +4,7 @@ skill_type: skill
 description: >-
   Administer Apache Kafka topics via the kafka-mcp MCP server — list, create,
   describe, and delete topics, inspect/alter topic configs, and enumerate
-  partitions, using the domain-typed kafka_topics / kafka_partitions tools over
+  partitions, using the domain-typed kafka_list_topics / kafka_create_topic / kafka_list_partitions tools over
   the Confluent REST Proxy (or the native direct-to-broker client). Use when the
   agent must provision a topic with a partition/replication plan, tune retention
   or cleanup configs, or inspect a topic's partition layout. Do NOT use for
@@ -32,7 +32,7 @@ request shapes and return topic/partition-shaped records.
 ## When NOT to use
 - Producing or consuming records → `kafka-streaming-io`.
 - Consumer-group membership or lag → `kafka-consumer-group-lag`.
-- Cluster/broker/ACL governance → the `kafka_cluster` tool directly.
+- Cluster/broker/ACL governance → the `kafka_list_brokers`, `kafka_list_acls` and related cluster tools.
 
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`kafka-mcp`** MCP server.
@@ -46,19 +46,17 @@ Connect via the `mcp-client` skill against the **`kafka-mcp`** MCP server.
 | `KAFKA_SSL_VERIFY` | optional | TLS verification toggle |
 | `KAFKA_BOOTSTRAP_SERVERS` | optional | For the native client only (default `localhost:9092`; needs `kafka-mcp[native]`) |
 
-`MCP_TOOL_MODE` (`condensed`|`verbose`|`both`) selects the condensed surface
-(used below) vs. the one-to-one verbose tools.
-
-## Tools & actions
-Prefer the **condensed** tools; each takes `action` + a `params_json` **JSON string**.
+## Tools
+One typed tool per operation; pass the arguments by name.
 
 | Condensed tool | Actions |
 |----------------|---------|
-| `kafka_topics` | `list`, `create`, `describe`, `delete`, `configs`, `update_config` |
-| `kafka_partitions` | `list`, `get` |
-| `kafka_native` | `create_topic`, `delete_topic`, `list_topics` (direct-to-broker) |
+| `kafka_list_topics`, `kafka_create_topic`, `kafka_get_topic`, `kafka_delete_topic` | list, create, describe, delete |
+| `kafka_list_topic_configs`, `kafka_update_topic_configs`, `kafka_update_topic_config` | read and alter configs |
+| `kafka_list_partitions`, `kafka_get_partition` | partition layout |
+| `kafka_native_create_topic`, `kafka_native_delete_topic`, `kafka_native_list_topics`, `kafka_native_list_groups` | direct-to-broker |
 
-## Recipes (`params_json`)
+## Recipes (tool arguments)
 Create a 3-partition topic with retention override:
 ```json
 {"topic":"events","partitions_count":3,"replication_factor":1,"configs":{"retention.ms":"604800000","cleanup.policy":"delete"}}
@@ -77,12 +75,12 @@ Get a single partition:
 ```
 
 ## Gotchas
-- `params_json` is a **string** of JSON, not an object — serialize it.
-- `kafka_topics list` best-effort mirrors the topic catalog into the knowledge
+- Arguments are typed; pass objects as objects.
+- `kafka_list_topics` best-effort mirrors the topic catalog into the knowledge
   graph on every call; this never blocks or fails the read.
 - `replication_factor` must be ≤ the number of brokers, or `create` fails.
 - Topic `delete` is irreversible and drops all data; confirm the name first.
-- The native `kafka_native` actions require the optional `kafka-mcp[native]`
+- The native `kafka_native_*` tools require the optional `kafka-mcp[native]`
   extra (librdkafka); without it they raise a clear RuntimeError.
 
 ## Related
