@@ -51,19 +51,19 @@ Connect via the `mcp-client` skill against the **`kafka-mcp`** MCP server.
 | `KAFKA_REST_URL` | for `kafka_cdc_lag` only | Confluent REST Proxy base URL — lag is read through the REST Proxy, not Connect REST |
 | `KAFKA_CONNECTTOOL` / `KAFKA_CDCTOOL` | optional | Per-domain toggles; default `True` |
 
-`MCP_TOOL_MODE` selects condensed vs. verbose surfaces.
 
-## Tools & actions
+## Tools
 | Condensed tool | Actions / params |
 |----------------|-------------------|
-| `kafka_connect` | `list`, `get`, `create`, `update`, `delete`, `status`, `restart`, `pause`, `resume`, `offsets` |
-| `kafka_connect_plugins` | (no `action` — lists plugins) |
+| `kafka_connect_list`, `kafka_connect_get`, `kafka_connect_create`, `kafka_connect_update`, `kafka_connect_delete` | connector lifecycle |
+| `kafka_connect_status`, `kafka_connect_restart`, `kafka_connect_pause`, `kafka_connect_resume`, `kafka_connect_offsets` | runtime control |
+| `kafka_connect_plugins` | lists the worker plugins |
 | `kafka_cdc_topic_map` | `{"connector": "<name>"}` |
 | `kafka_cdc_lag` | `{"group": "<name>", "topics": [...]}` (`topics` optional) |
 | `kafka_cdc_slot_health` | `{"connector": "<name>"}` |
 | `kafka_ingest_cdc_topology` | `{"connectors": [...], "cluster_id": "..."}` (both optional) |
 
-## Recipes (`params_json`)
+## Recipes (tool arguments)
 List connectors with live status:
 ```json
 {"expand": "status"}
@@ -86,8 +86,7 @@ Lag for the group reading the CDC topics:
 ```
 
 ## Gotchas
-- `params_json` is a **string** of JSON, not an object (`kafka_connect`,
-  `kafka_cdc_topic_map`, `kafka_cdc_lag`, `kafka_cdc_slot_health`,
+- `params_json` is a **string** of JSON, not an object (`kafka_cdc_topic_map`, `kafka_cdc_lag`, `kafka_cdc_slot_health`,
   `kafka_ingest_cdc_topology`); `kafka_connect_plugins` takes no params.
 - `create` is idempotent by connector **name** — a second `create` against an
   existing name surfaces Connect's own `409 Conflict`, never silently upserts.

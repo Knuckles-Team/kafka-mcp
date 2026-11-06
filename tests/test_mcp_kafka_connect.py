@@ -1,4 +1,4 @@
-"""Tests for the ``kafka_connect``/``kafka_connect_plugins`` MCP tool dispatch."""
+"""Tests for the ``kafka_connect_*`` MCP tools."""
 
 import json
 
@@ -45,8 +45,7 @@ async def test_list_action(_patch_client):
 
     result = await _call(
         mcp,
-        "kafka_connect",
-        action="list",
+        "kafka_connect_list",
         expand="status",
     )
     assert result.structured_content == {"ca51pilot": {"status": {}}}
@@ -66,8 +65,7 @@ async def test_create_action_sends_name_and_config(_patch_client):
 
     await _call(
         mcp,
-        "kafka_connect",
-        action="create",
+        "kafka_connect_create",
         name="ca51pilot",
         config={"connector.class": "x"},
     )
@@ -86,8 +84,7 @@ async def test_create_action_duplicate_name_surfaces_error(_patch_client):
     with pytest.raises(Exception, match="409"):
         await _call(
             mcp,
-            "kafka_connect",
-            action="create",
+            "kafka_connect_create",
             name="ca51pilot",
             config={},
         )
@@ -105,23 +102,10 @@ async def test_delete_action(_patch_client):
 
     result = await _call(
         mcp,
-        "kafka_connect",
-        action="delete",
+        "kafka_connect_delete",
         name="ca51pilot",
     )
     assert result.structured_content == {"status": "success"}
-
-
-@pytest.mark.asyncio
-async def test_unknown_action_raises(_patch_client):
-    mcp = FastMCP("test")
-    register_kafka_connect_tools(mcp)
-    _patch_client["client"] = ConnectApi(
-        BASE, transport=httpx.MockTransport(lambda r: httpx.Response(200, json={}))
-    )
-
-    with pytest.raises(Exception, match="Unknown connect action"):
-        await _call(mcp, "kafka_connect", action="bogus")
 
 
 @pytest.mark.asyncio
@@ -142,7 +126,8 @@ async def test_connect_plugins(_patch_client):
 async def test_connector_name_is_a_declared_argument():
     mcp = FastMCP("test")
     register_kafka_connect_tools(mcp)
-    tool = await mcp.get_tool("kafka_connect")
+    tool = await mcp.get_tool("kafka_connect_create")
     props = tool.parameters["properties"]
-    assert {"name", "config", "expand"} <= set(props)
+    assert {"name", "config"} <= set(props)
+    assert "action" not in props
     assert "params_json" not in props

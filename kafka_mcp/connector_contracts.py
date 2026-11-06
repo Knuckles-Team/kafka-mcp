@@ -1,0 +1,496 @@
+"""Surface contracts: tool use, links, data locations and business roles."""
+
+from scion_sdk.surface_contracts import (
+    BusinessRole,
+    DataLocation,
+    Refusal,
+    SurfaceLink,
+    ToolStep,
+    ToolUseContract,
+)
+
+CONTRACTS = (
+    ToolUseContract(
+        task="inspect-cluster",
+        description="Resolve the cluster and read its brokers.",
+        steps=(
+            ToolStep(
+                tool="kafka_cluster_id",
+                params=(),
+                result=("cluster_id", ),
+            ),
+            ToolStep(
+                tool="kafka_list_clusters",
+                params=(),
+                result=("cluster_id", ),
+            ),
+            ToolStep(
+                tool="kafka_get_cluster",
+                params=("cluster_id", ),
+                result=("cluster_id", "controller", ),
+            ),
+            ToolStep(
+                tool="kafka_list_brokers",
+                params=("cluster_id", ),
+                result=("broker_id", "host", ),
+            ),
+            ToolStep(
+                tool="kafka_get_broker",
+                params=("broker_id", "cluster_id", ),
+                result=("broker_id", "host", "port", ),
+            ),
+            ToolStep(
+                tool="kafka_list_broker_configs",
+                params=("broker_id", "cluster_id", ),
+                result=("name", "value", ),
+                refusals=(
+                    Refusal(code="NOT_FOUND", when="the topic, group, connector or broker does not exist"),
+                ),
+            ),
+        ),
+    ),
+    ToolUseContract(
+        task="provision-topic",
+        description="Create a topic with a partition and replication plan.",
+        steps=(
+            ToolStep(
+                tool="kafka_list_brokers",
+                params=("cluster_id", ),
+                result=("broker_id", ),
+            ),
+            ToolStep(
+                tool="kafka_create_topic",
+                params=("topic", "partitions_count", "replication_factor", "configs", "cluster_id", ),
+                result=("topic_name", "partitions_count", ),
+                refusals=(
+                    Refusal(code="INVALID_ARGUMENT", when="replication_factor exceeds the broker count"),
+                ),
+            ),
+            ToolStep(
+                tool="kafka_get_topic",
+                params=("topic", "cluster_id", ),
+                result=("topic_name", "partitions_count", "replication_factor", ),
+                refusals=(
+                    Refusal(code="ACCESS_DENIED", when="the credential lacks access to the operation"),
+                    Refusal(code="INVALID_ARGUMENT", when="the upstream system rejects the input"),
+                ),
+            ),
+        ),
+    ),
+    ToolUseContract(
+        task="inspect-topic",
+        description="Read a topic, its configs and its partitions.",
+        steps=(
+            ToolStep(
+                tool="kafka_list_topics",
+                params=("cluster_id", ),
+                result=("topic_name", ),
+            ),
+            ToolStep(
+                tool="kafka_get_topic",
+                params=("topic", "cluster_id", ),
+                result=("topic_name", "partitions_count", ),
+                refusals=(
+                    Refusal(code="NOT_FOUND", when="the topic, group, connector or broker does not exist"),
+                ),
+            ),
+            ToolStep(
+                tool="kafka_list_topic_configs",
+                params=("topic", "cluster_id", ),
+                result=("name", "value", ),
+            ),
+            ToolStep(
+                tool="kafka_list_partitions",
+                params=("topic", "cluster_id", ),
+                result=("partition_id", "leader", ),
+            ),
+            ToolStep(
+                tool="kafka_get_partition",
+                params=("topic", "partition_id", "cluster_id", ),
+                result=("partition_id", "leader", "replicas", ),
+                refusals=(
+                    Refusal(code="ACCESS_DENIED", when="the credential lacks access to the operation"),
+                    Refusal(code="INVALID_ARGUMENT", when="the upstream system rejects the input"),
+                ),
+            ),
+        ),
+    ),
+    ToolUseContract(
+        task="tune-topic-config",
+        description="Alter topic configs such as retention.",
+        steps=(
+            ToolStep(
+                tool="kafka_list_topic_configs",
+                params=("topic", "cluster_id", ),
+                result=("name", "value", ),
+            ),
+            ToolStep(
+                tool="kafka_update_topic_configs",
+                params=("topic", "configs", "cluster_id", ),
+                result=("topic", "configs", ),
+                refusals=(
+                    Refusal(code="INVALID_ARGUMENT", when="a config key or value is invalid"),
+                ),
+            ),
+            ToolStep(
+                tool="kafka_update_topic_config",
+                params=("topic", "name", "value", "cluster_id", ),
+                result=("name", "value", ),
+                refusals=(
+                    Refusal(code="ACCESS_DENIED", when="the credential lacks access to the operation"),
+                    Refusal(code="INVALID_ARGUMENT", when="the upstream system rejects the input"),
+                ),
+            ),
+        ),
+    ),
+    ToolUseContract(
+        task="retire-topic",
+        description="Delete a topic after confirming its name.",
+        steps=(
+            ToolStep(
+                tool="kafka_get_topic",
+                params=("topic", "cluster_id", ),
+                result=("topic_name", ),
+                refusals=(
+                    Refusal(code="NOT_FOUND", when="the topic, group, connector or broker does not exist"),
+                ),
+            ),
+            ToolStep(
+                tool="kafka_delete_topic",
+                params=("topic", "cluster_id", "confirm", ),
+                result=("topic", ),
+                refusals=(
+                    Refusal(code="CONFIRMATION_REQUIRED", when="confirm was not set"),
+                ),
+            ),
+        ),
+    ),
+    ToolUseContract(
+        task="produce-record",
+        description="Produce one record through the REST Proxy.",
+        steps=(
+            ToolStep(
+                tool="kafka_produce_record",
+                params=("topic", "value", "key", "value_format", "key_format", "partition_id", "headers", "cluster_id", ),
+                result=("topic_name", "partition_id", "offset", ),
+                refusals=(
+                    Refusal(code="NOT_FOUND", when="the topic does not exist"),
+                ),
+            ),
+        ),
+    ),
+    ToolUseContract(
+        task="consume-records",
+        description="Read records through a v2 consumer instance and clean it up.",
+        steps=(
+            ToolStep(
+                tool="kafka_create_consumer",
+                params=("group", "name", "fmt", "auto_offset_reset", ),
+                result=("instance_id", "base_uri", ),
+            ),
+            ToolStep(
+                tool="kafka_subscribe_consumer",
+                params=("group", "instance", "topics", ),
+                result=("topics", ),
+            ),
+            ToolStep(
+                tool="kafka_consume_records",
+                params=("group", "instance", "timeout", "max_bytes", "fmt", ),
+                result=("topic", "partition", "offset", "value", ),
+            ),
+            ToolStep(
+                tool="kafka_commit_offsets",
+                params=("group", "instance", ),
+                result=("offsets", ),
+            ),
+            ToolStep(
+                tool="kafka_delete_consumer",
+                params=("group", "instance", "confirm", ),
+                result=("instance", ),
+                refusals=(
+                    Refusal(code="CONFIRMATION_REQUIRED", when="confirm was not set"),
+                ),
+            ),
+        ),
+    ),
+    ToolUseContract(
+        task="native-stream-io",
+        description="Produce and consume directly against the brokers.",
+        steps=(
+            ToolStep(
+                tool="kafka_native_list_topics",
+                params=("timeout", ),
+                result=("topics", ),
+            ),
+            ToolStep(
+                tool="kafka_native_produce",
+                params=("topic", "value", "key", ),
+                result=("topic", "partition", "offset", ),
+                refusals=(
+                    Refusal(code="NOT_FOUND", when="the topic does not exist"),
+                ),
+            ),
+            ToolStep(
+                tool="kafka_native_consume",
+                params=("topic", "group", "max_messages", "timeout", ),
+                result=("messages", ),
+                refusals=(
+                    Refusal(code="ACCESS_DENIED", when="the credential lacks access to the operation"),
+                    Refusal(code="INVALID_ARGUMENT", when="the upstream system rejects the input"),
+                ),
+            ),
+        ),
+    ),
+    ToolUseContract(
+        task="native-topic-admin",
+        description="Create or remove topics and list groups straight on the brokers.",
+        steps=(
+            ToolStep(
+                tool="kafka_native_list_groups",
+                params=("timeout", ),
+                result=("groups", ),
+            ),
+            ToolStep(
+                tool="kafka_native_create_topic",
+                params=("topic", "partitions_count", "replication_factor", ),
+                result=("topic", ),
+                refusals=(
+                    Refusal(code="INVALID_ARGUMENT", when="the replication factor exceeds the broker count"),
+                ),
+            ),
+            ToolStep(
+                tool="kafka_native_delete_topic",
+                params=("topic", ),
+                result=("topic", ),
+                refusals=(
+                    Refusal(code="NOT_FOUND", when="the topic, group, connector or broker does not exist"),
+                ),
+            ),
+        ),
+    ),
+    ToolUseContract(
+        task="diagnose-consumer-lag",
+        description="Find which consumer groups trail and by how much.",
+        steps=(
+            ToolStep(
+                tool="kafka_list_consumer_groups",
+                params=("cluster_id", ),
+                result=("consumer_group_id", ),
+            ),
+            ToolStep(
+                tool="kafka_get_consumer_group",
+                params=("group", "cluster_id", ),
+                result=("state", "coordinator", ),
+                refusals=(
+                    Refusal(code="NOT_FOUND", when="the topic, group, connector or broker does not exist"),
+                ),
+            ),
+            ToolStep(
+                tool="kafka_list_consumers",
+                params=("group", "cluster_id", ),
+                result=("consumer_id", "client_id", ),
+            ),
+            ToolStep(
+                tool="kafka_get_group_lag_summary",
+                params=("group", "cluster_id", ),
+                result=("max_lag", "total_lag", ),
+            ),
+            ToolStep(
+                tool="kafka_get_group_lags",
+                params=("group", "cluster_id", ),
+                result=("topic_name", "partition_id", "lag", ),
+                refusals=(
+                    Refusal(code="ACCESS_DENIED", when="the credential lacks access to the operation"),
+                    Refusal(code="INVALID_ARGUMENT", when="the upstream system rejects the input"),
+                ),
+            ),
+        ),
+    ),
+    ToolUseContract(
+        task="manage-acls",
+        description="Read, grant and revoke ACLs.",
+        steps=(
+            ToolStep(
+                tool="kafka_list_acls",
+                params=("resource_type", "resource_name", "pattern_type", "principal", "operation", "permission", "cluster_id", ),
+                result=("resource_type", "resource_name", "principal", "operation", "permission", ),
+            ),
+            ToolStep(
+                tool="kafka_create_acl",
+                params=("resource_type", "resource_name", "pattern_type", "principal", "host", "operation", "permission", "cluster_id", ),
+                result=("resource_name", "principal", ),
+                refusals=(
+                    Refusal(code="INVALID_ARGUMENT", when="the ACL fields are not valid"),
+                ),
+            ),
+            ToolStep(
+                tool="kafka_delete_acls",
+                params=("resource_type", "resource_name", "pattern_type", "principal", "host", "operation", "permission", "cluster_id", "confirm", ),
+                result=("matched", ),
+                refusals=(
+                    Refusal(code="CONFIRMATION_REQUIRED", when="confirm was not set"),
+                ),
+            ),
+        ),
+    ),
+    ToolUseContract(
+        task="deploy-connector",
+        description="Create or update a Kafka Connect connector and confirm it runs.",
+        steps=(
+            ToolStep(
+                tool="kafka_connect_plugins",
+                params=(),
+                result=("class", ),
+            ),
+            ToolStep(
+                tool="kafka_connect_list",
+                params=("expand", ),
+                result=("name", ),
+            ),
+            ToolStep(
+                tool="kafka_connect_get",
+                params=("name", ),
+                result=("name", "config", "tasks", ),
+                refusals=(
+                    Refusal(code="NOT_FOUND", when="the topic, group, connector or broker does not exist"),
+                ),
+            ),
+            ToolStep(
+                tool="kafka_connect_create",
+                params=("name", "config", ),
+                result=("name", "config", ),
+                refusals=(
+                    Refusal(code="CONFLICT", when="a connector with the name already exists"),
+                ),
+            ),
+            ToolStep(
+                tool="kafka_connect_update",
+                params=("name", "config", ),
+                result=("name", "config", ),
+            ),
+            ToolStep(
+                tool="kafka_connect_status",
+                params=("name", ),
+                result=("name", "state", "tasks", ),
+                refusals=(
+                    Refusal(code="ACCESS_DENIED", when="the credential lacks access to the operation"),
+                    Refusal(code="INVALID_ARGUMENT", when="the upstream system rejects the input"),
+                ),
+            ),
+        ),
+    ),
+    ToolUseContract(
+        task="operate-connector",
+        description="Pause, resume, restart, read offsets of or delete a connector.",
+        steps=(
+            ToolStep(
+                tool="kafka_connect_status",
+                params=("name", ),
+                result=("state", ),
+                refusals=(
+                    Refusal(code="NOT_FOUND", when="the topic, group, connector or broker does not exist"),
+                ),
+            ),
+            ToolStep(
+                tool="kafka_connect_pause",
+                params=("name", ),
+                result=("state", ),
+            ),
+            ToolStep(
+                tool="kafka_connect_resume",
+                params=("name", ),
+                result=("state", ),
+            ),
+            ToolStep(
+                tool="kafka_connect_restart",
+                params=("name", "include_tasks", "only_failed", ),
+                result=("state", ),
+            ),
+            ToolStep(
+                tool="kafka_connect_offsets",
+                params=("name", ),
+                result=("offsets", ),
+            ),
+            ToolStep(
+                tool="kafka_connect_delete",
+                params=("name", ),
+                result=("deleted", ),
+                refusals=(
+                    Refusal(code="NOT_FOUND", when="the topic, group, connector or broker does not exist"),
+                ),
+            ),
+        ),
+    ),
+    ToolUseContract(
+        task="map-cdc",
+        description="Map Debezium connectors to topics, lag and replication slots.",
+        steps=(
+            ToolStep(
+                tool="kafka_cdc_topic_map",
+                params=("params_json", ),
+                result=("connector", "topics", ),
+            ),
+            ToolStep(
+                tool="kafka_cdc_lag",
+                params=("params_json", ),
+                result=("connector", "lag", ),
+            ),
+            ToolStep(
+                tool="kafka_cdc_slot_health",
+                params=("params_json", ),
+                result=("slot", "hint", ),
+                refusals=(
+                    Refusal(code="NOT_FOUND", when="the connector has no CDC config"),
+                ),
+            ),
+        ),
+    ),
+    ToolUseContract(
+        task="snapshot-topology",
+        description="Mirror topics, groups, brokers and CDC topology into the knowledge graph.",
+        steps=(
+            ToolStep(
+                tool="kafka_ingest_catalog",
+                params=("params_json", ),
+                result=("ingested", ),
+            ),
+            ToolStep(
+                tool="kafka_ingest_cdc_topology",
+                params=("params_json", ),
+                result=("ingested", ),
+                refusals=(
+                    Refusal(code="UNAVAILABLE", when="the knowledge graph rejects the write"),
+                ),
+            ),
+        ),
+    ),
+)
+
+LINKS = (
+    SurfaceLink(task="inspect-cluster", tools=("kafka_cluster_id", "kafka_list_clusters", "kafka_get_cluster", "kafka_list_brokers", "kafka_get_broker", "kafka_list_broker_configs", ), prompts=("kafka-mcp-operator", "kafka-mcp-streaming-administrator", ), skills=("kafka-mcp-operations", )),
+    SurfaceLink(task="provision-topic", tools=("kafka_list_brokers", "kafka_create_topic", "kafka_get_topic", ), prompts=("kafka-mcp-operator", "kafka-mcp-streaming-administrator", ), skills=("kafka-topic-administration", )),
+    SurfaceLink(task="inspect-topic", tools=("kafka_list_topics", "kafka_get_topic", "kafka_list_topic_configs", "kafka_list_partitions", "kafka_get_partition", ), prompts=("kafka-mcp-operator", "kafka-mcp-streaming-administrator", ), skills=("kafka-topic-administration", )),
+    SurfaceLink(task="tune-topic-config", tools=("kafka_list_topic_configs", "kafka_update_topic_configs", "kafka_update_topic_config", ), prompts=("kafka-mcp-operator", "kafka-mcp-streaming-administrator", ), skills=("kafka-topic-administration", )),
+    SurfaceLink(task="retire-topic", tools=("kafka_get_topic", "kafka_delete_topic", ), prompts=("kafka-mcp-operator", "kafka-mcp-streaming-administrator", ), skills=("kafka-topic-administration", )),
+    SurfaceLink(task="produce-record", tools=("kafka_produce_record", ), prompts=("kafka-mcp-operator", "kafka-mcp-stream-engineer", ), skills=("kafka-streaming-io", )),
+    SurfaceLink(task="consume-records", tools=("kafka_create_consumer", "kafka_subscribe_consumer", "kafka_consume_records", "kafka_commit_offsets", "kafka_delete_consumer", ), prompts=("kafka-mcp-operator", "kafka-mcp-stream-engineer", ), skills=("kafka-streaming-io", )),
+    SurfaceLink(task="native-stream-io", tools=("kafka_native_list_topics", "kafka_native_produce", "kafka_native_consume", ), prompts=("kafka-mcp-operator", "kafka-mcp-stream-engineer", ), skills=("kafka-streaming-io", )),
+    SurfaceLink(task="native-topic-admin", tools=("kafka_native_list_groups", "kafka_native_create_topic", "kafka_native_delete_topic", ), prompts=("kafka-mcp-operator", "kafka-mcp-streaming-administrator", ), skills=("kafka-topic-administration", )),
+    SurfaceLink(task="diagnose-consumer-lag", tools=("kafka_list_consumer_groups", "kafka_get_consumer_group", "kafka_list_consumers", "kafka_get_group_lag_summary", "kafka_get_group_lags", ), prompts=("kafka-mcp-operator", "kafka-mcp-streaming-administrator", ), skills=("kafka-consumer-group-lag", )),
+    SurfaceLink(task="manage-acls", tools=("kafka_list_acls", "kafka_create_acl", "kafka_delete_acls", ), prompts=("kafka-mcp-operator", "kafka-mcp-streaming-administrator", ), skills=("kafka-mcp-operations", )),
+    SurfaceLink(task="deploy-connector", tools=("kafka_connect_plugins", "kafka_connect_list", "kafka_connect_get", "kafka_connect_create", "kafka_connect_update", "kafka_connect_status", ), prompts=("kafka-mcp-operator", "kafka-mcp-integration-engineer", ), skills=("kafka-connect-cdc-operations", )),
+    SurfaceLink(task="operate-connector", tools=("kafka_connect_status", "kafka_connect_pause", "kafka_connect_resume", "kafka_connect_restart", "kafka_connect_offsets", "kafka_connect_delete", ), prompts=("kafka-mcp-operator", "kafka-mcp-integration-engineer", ), skills=("kafka-connect-cdc-operations", )),
+    SurfaceLink(task="map-cdc", tools=("kafka_cdc_topic_map", "kafka_cdc_lag", "kafka_cdc_slot_health", ), prompts=("kafka-mcp-operator", "kafka-mcp-integration-engineer", ), skills=("kafka-connect-cdc-operations", )),
+    SurfaceLink(task="snapshot-topology", tools=("kafka_ingest_catalog", "kafka_ingest_cdc_topology", ), prompts=("kafka-mcp-operator", "kafka-mcp-streaming-administrator", "kafka-mcp-integration-engineer", ), skills=("kafka-mcp-operations", "kafka-connect-cdc-operations", )),
+)
+
+LOCATIONS = (
+    DataLocation("kafka-cluster", ("KafkaCluster", "Broker", "Topic", "Partition", "ConsumerGroup", "KafkaAcl", ), "KAFKA_REST_URL", "kafka_list_topics", federation_key="topic_name", route_param="cluster_id"),
+    DataLocation("kafka-connect", ("CdcConnector", "ReplicationSlot", ), "KAFKA_CONNECT_URL", "kafka_connect_list", federation_key="name"),
+)
+
+ROLES = (
+    BusinessRole("streaming administrator", tasks=("inspect-cluster", "provision-topic", "inspect-topic", "tune-topic-config", "retire-topic", "native-topic-admin", "diagnose-consumer-lag", "manage-acls", "snapshot-topology", )),
+    BusinessRole("stream engineer", tasks=("produce-record", "consume-records", "native-stream-io", )),
+    BusinessRole("integration engineer", tasks=("deploy-connector", "operate-connector", "map-cdc", "snapshot-topology", )),
+)
