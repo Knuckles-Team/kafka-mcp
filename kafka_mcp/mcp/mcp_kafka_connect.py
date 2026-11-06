@@ -18,7 +18,9 @@ def register_kafka_connect_tools(mcp: FastMCP) -> None:
 
     @mcp.tool(tags={"connect"})
     async def kafka_connect_list(
-        expand: str | None = Field(default=None, description="'status' or 'info' to expand each connector."),
+        expand: str | None = Field(
+            default=None, description="'status' or 'info' to expand each connector."
+        ),
     ) -> Any:
         """List the connectors on the Kafka Connect worker."""
         client = get_connect_client()
@@ -70,11 +72,15 @@ def register_kafka_connect_tools(mcp: FastMCP) -> None:
     async def kafka_connect_restart(
         name: str = Field(description="Connector name."),
         include_tasks: bool = Field(default=False, description="Also restart tasks."),
-        only_failed: bool = Field(default=False, description="Restart only failed instances."),
+        only_failed: bool = Field(
+            default=False, description="Restart only failed instances."
+        ),
     ) -> Any:
         """Restart a connector. Each restart is a distinct operation, not a no-op when running."""
         client = get_connect_client()
-        return client.restart_connector(name, include_tasks=include_tasks, only_failed=only_failed)
+        return client.restart_connector(
+            name, include_tasks=include_tasks, only_failed=only_failed
+        )
 
     @mcp.tool(tags={"connect"})
     async def kafka_connect_pause(

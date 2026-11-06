@@ -30,7 +30,9 @@ def register_kafka_tools(mcp: FastMCP) -> None:
     async def kafka_native_consume(
         topic: str = Field(description="Topic to read from."),
         group: str = Field(description="Consumer group id."),
-        max_messages: int = Field(default=10, description="Maximum messages to return."),
+        max_messages: int = Field(
+            default=10, description="Maximum messages to return."
+        ),
         timeout: float = Field(default=5.0, description="Seconds to wait."),
     ) -> Any:
         """Consume messages directly from a broker (native client)."""
