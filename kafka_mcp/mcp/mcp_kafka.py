@@ -257,42 +257,53 @@ def register_kafka_tools(mcp: FastMCP) -> None:
                 "'list_groups'. Requires the kafka-mcp[native] extra."
             )
         ),
-        params_json: str = Field(
-            default="{}",
-            description=(
-                "JSON of arguments. produce: "
-                '{"topic": "events", "value": "hello", "key": "k"}. '
-                'consume: {"topic": "events", "group": "g", '
-                '"max_messages": 10, "timeout": 5}. create_topic: '
-                '{"topic": "events", "partitions_count": 1, '
-                '"replication_factor": 1}. delete_topic: {"topic": "events"}.'
-            ),
+        topic: str | None = Field(
+            default=None,
+            description="Topic (produce, consume, create_topic, delete_topic).",
+        ),
+        value: str | None = Field(default=None, description="produce: message value."),
+        key: str | None = Field(default=None, description="produce: message key."),
+        group: str | None = Field(default=None, description="consume: consumer group."),
+        max_messages: int | None = Field(
+            default=None, description="consume: max messages (default 10)."
+        ),
+        timeout: float | None = Field(
+            default=None, description="consume/list_topics/list_groups: seconds."
+        ),
+        partitions_count: int | None = Field(
+            default=None, description="create_topic: partitions (default 1)."
+        ),
+        replication_factor: int | None = Field(
+            default=None, description="create_topic: replication factor (default 1)."
         ),
     ) -> Any:
         """Produce/consume/admin directly against brokers (native client)."""
         client = get_native_client()
-        p = json.loads(params_json) if params_json else {}
         if action == "produce":
-            return client.produce(p["topic"], p["value"], key=p.get("key"))
+            return client.produce(topic, value, key=key)
         if action == "consume":
             return client.consume(
-                p["topic"],
-                p["group"],
-                max_messages=p.get("max_messages", 10),
-                timeout=p.get("timeout", 5.0),
+                topic,
+                group,
+                max_messages=10 if max_messages is None else max_messages,
+                timeout=5.0 if timeout is None else timeout,
             )
         if action == "create_topic":
             return client.create_topics(
-                [p["topic"]],
-                partitions_count=p.get("partitions_count", 1),
-                replication_factor=p.get("replication_factor", 1),
+                [topic],
+                partitions_count=1 if partitions_count is None else partitions_count,
+                replication_factor=1
+                if replication_factor is None
+                else replication_factor,
             )
         if action == "delete_topic":
-            return client.delete_topics([p["topic"]])
+            return client.delete_topics([topic])
         if action == "list_topics":
-            return client.list_topics(timeout=p.get("timeout", 10.0))
+            return client.list_topics(timeout=10.0 if timeout is None else timeout)
         if action == "list_groups":
-            return client.list_consumer_groups(timeout=p.get("timeout", 10.0))
+            return client.list_consumer_groups(
+                timeout=10.0 if timeout is None else timeout
+            )
         raise ValueError(f"Unknown native action: {action!r}.")
 
     @mcp.tool(tags={"kg"})

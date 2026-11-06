@@ -47,7 +47,7 @@ async def test_list_action(_patch_client):
         mcp,
         "kafka_connect",
         action="list",
-        params_json=json.dumps({"expand": "status"}),
+        expand="status",
     )
     assert result.structured_content == {"ca51pilot": {"status": {}}}
 
@@ -68,9 +68,8 @@ async def test_create_action_sends_name_and_config(_patch_client):
         mcp,
         "kafka_connect",
         action="create",
-        params_json=json.dumps(
-            {"name": "ca51pilot", "config": {"connector.class": "x"}}
-        ),
+        name="ca51pilot",
+        config={"connector.class": "x"},
     )
     assert seen["body"] == {"name": "ca51pilot", "config": {"connector.class": "x"}}
 
@@ -89,7 +88,8 @@ async def test_create_action_duplicate_name_surfaces_error(_patch_client):
             mcp,
             "kafka_connect",
             action="create",
-            params_json=json.dumps({"name": "ca51pilot", "config": {}}),
+            name="ca51pilot",
+            config={},
         )
 
 
@@ -107,7 +107,7 @@ async def test_delete_action(_patch_client):
         mcp,
         "kafka_connect",
         action="delete",
-        params_json=json.dumps({"name": "ca51pilot"}),
+        name="ca51pilot",
     )
     assert result.structured_content == {"status": "success"}
 
@@ -121,7 +121,7 @@ async def test_unknown_action_raises(_patch_client):
     )
 
     with pytest.raises(Exception, match="Unknown connect action"):
-        await _call(mcp, "kafka_connect", action="bogus", params_json="{}")
+        await _call(mcp, "kafka_connect", action="bogus")
 
 
 @pytest.mark.asyncio
@@ -136,3 +136,13 @@ async def test_connect_plugins(_patch_client):
 
     result = await mcp.call_tool("kafka_connect_plugins", {})
     assert json.loads(result.content[0].text) == [{"class": "x"}]
+
+
+@pytest.mark.asyncio
+async def test_connector_name_is_a_declared_argument():
+    mcp = FastMCP("test")
+    register_kafka_connect_tools(mcp)
+    tool = await mcp.get_tool("kafka_connect")
+    props = tool.parameters["properties"]
+    assert {"name", "config", "expand"} <= set(props)
+    assert "params_json" not in props

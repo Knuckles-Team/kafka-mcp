@@ -5,7 +5,6 @@ Each tool is a thin shim: it parses params, calls the corresponding
 ``kafka_mcp.api.api_client_connect`` — these tools add no business logic.
 """
 
-import json
 from typing import Any
 
 from fastmcp import FastMCP
@@ -26,19 +25,23 @@ def register_kafka_connect_tools(mcp: FastMCP) -> None:
                 "'offsets'."
             )
         ),
-        params_json: str = Field(
-            default="{}",
-            description=(
-                'JSON of arguments. list: {} or {"expand": "status"}. get/'
-                'delete/status/pause/resume/offsets: {"name": "ca51pilot"}. '
-                'create: {"name": "ca51pilot", "config": {"connector.class": '
-                '"io.debezium.connector.postgresql.PostgresConnector", ...}}. '
-                'update: {"name": "ca51pilot", "config": {...}} (create-or-update '
-                "per the Connect REST contract — use 'create' when the caller "
-                "intends to fail loud on an existing name instead). restart: "
-                '{"name": "ca51pilot", "include_tasks": false, '
-                '"only_failed": false}.'
-            ),
+        name: str | None = Field(
+            default=None,
+            description="Connector name (every action except 'list').",
+        ),
+        config: dict[str, Any] | None = Field(
+            default=None,
+            description="Connector config map (create, update).",
+        ),
+        expand: str | None = Field(
+            default=None,
+            description="list only: 'status' or 'info' to expand each connector.",
+        ),
+        include_tasks: bool | None = Field(
+            default=None, description="restart only: also restart tasks."
+        ),
+        only_failed: bool | None = Field(
+            default=None, description="restart only: restart only failed instances."
         ),
     ) -> Any:
         """Manage Kafka Connect connectors via the worker's REST API (:8083).
@@ -51,31 +54,30 @@ def register_kafka_connect_tools(mcp: FastMCP) -> None:
         distinct operation, not a no-op if already running.
         """
         client = get_connect_client()
-        p = json.loads(params_json) if params_json else {}
         if action == "list":
-            return client.list_connectors(expand=p.get("expand"))
+            return client.list_connectors(expand=expand)
         if action == "get":
-            return client.get_connector(p["name"])
+            return client.get_connector(name)
         if action == "create":
-            return client.create_connector(p["name"], p["config"])
+            return client.create_connector(name, config)
         if action == "update":
-            return client.update_connector_config(p["name"], p["config"])
+            return client.update_connector_config(name, config)
         if action == "delete":
-            return client.delete_connector(p["name"])
+            return client.delete_connector(name)
         if action == "status":
-            return client.get_connector_status(p["name"])
+            return client.get_connector_status(name)
         if action == "restart":
             return client.restart_connector(
-                p["name"],
-                include_tasks=p.get("include_tasks", False),
-                only_failed=p.get("only_failed", False),
+                name,
+                include_tasks=bool(include_tasks),
+                only_failed=bool(only_failed),
             )
         if action == "pause":
-            return client.pause_connector(p["name"])
+            return client.pause_connector(name)
         if action == "resume":
-            return client.resume_connector(p["name"])
+            return client.resume_connector(name)
         if action == "offsets":
-            return client.get_connector_offsets(p["name"])
+            return client.get_connector_offsets(name)
         raise ValueError(f"Unknown connect action: {action!r}.")
 
     @mcp.tool(tags={"connect"})
