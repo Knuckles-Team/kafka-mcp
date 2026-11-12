@@ -141,8 +141,8 @@ Pick the extra that matches what the operator want to run:
 
 | Extra | Installs | Use when |
 |-------|----------|----------|
-| `kafka-mcp[mcp]` | Connector-focused MCP server (`scion-sdk[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
-| `kafka-mcp[agent]` | Agent runtime (`scion-sdk[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | The operator run the **integrated agent** |
+| `kafka-mcp[mcp]` | Connector-focused MCP server (`scion-sdk[mcp]` — FastMCP/FastAPI + `medulla[full]`) | The operator only run the **MCP server** (smallest install / image) |
+| `kafka-mcp[agent]` | Agent runtime (`scion-sdk[agent-runtime,logfire]` — model orchestration + `medulla[full]`) | The operator run the **integrated agent** |
 | `kafka-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
@@ -173,32 +173,32 @@ One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `
 
 | Image tag | Build target | Contents | Entrypoint |
 |-----------|--------------|----------|------------|
-| `example/kafka-mcp:mcp` | `--target mcp` | `kafka-mcp[mcp]` — **connector-focused**, includes `epistemic-graph[full]`; no model-orchestration stack | `kafka-mcp` |
-| `example/kafka-mcp@sha256:<digest>` | `--target agent` (default) | `kafka-mcp[agent]` — **agent runtime**, model orchestration + `epistemic-graph[full]` | `kafka-agent` |
+| `example/kafka-mcp:mcp` | `--target mcp` | `kafka-mcp[mcp]` — **connector-focused**, includes `medulla[full]`; no model-orchestration stack | `kafka-mcp` |
+| `example/kafka-mcp@sha256:<digest>` | `--target agent` (default) | `kafka-mcp[agent]` — **agent runtime**, model orchestration + `medulla[full]` | `kafka-agent` |
 
 ```bash
 docker build --target mcp   -t example/kafka-mcp:mcp    docker/   # connector-focused MCP server
 docker build --target agent -t example/kafka-mcp:agent-local docker/   # agent runtime
 ```
 
-### Knowledge-graph database (`epistemic-graph`)
+### Knowledge-graph database (`medulla`)
 
-Both `[mcp]` and `[agent]` carry the **epistemic-graph** engine through the required
-Agent Utilities core dependency (`epistemic-graph[full]`). The `[mcp]` extra keeps
+Both `[mcp]` and `[agent]` carry the **medulla** engine through the required
+Meristem core dependency (`medulla[full]`). The `[mcp]` extra keeps
 the server connector-focused; `[agent]` also enables model orchestration. Local
 deployments can use the bundled engine. For production or shared state, run
-**epistemic-graph as a dedicated database service** and configure the runtime to use it.
+**medulla as a dedicated database service** and configure the runtime to use it.
 Deployment recipes (single-node + Raft HA), connection configuration, and architecture
 diagrams are documented in the
-[epistemic-graph deployment guide](https://knuckles-team.github.io/epistemic-graph/deployment/).
+[medulla deployment guide](https://knuckles-team.github.io/medulla/deployment/).
 
 ### MCP Configuration Examples
 
 <!-- MCP-CONFIG-EXAMPLES:START -->
 
 > **Install the connector-focused `[mcp]` extra.** Examples use `kafka-mcp[mcp]` to add
-> FastMCP / FastAPI through `scion-sdk[mcp]`; the required Agent Utilities core
-> still carries `epistemic-graph[full]`. The `[agent-runtime]` extra additionally
+> FastMCP / FastAPI through `scion-sdk[mcp]`; the required Meristem core
+> still carries `medulla[full]`. The `[agent-runtime]` extra additionally
 > enables model orchestration.
 
 #### stdio Transport (local IDEs — Cursor, Claude Desktop, VS Code)
