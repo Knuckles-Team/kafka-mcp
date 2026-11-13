@@ -1,7 +1,8 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix core: <https://knuckles-team.github.io/ontology/core#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix dc: <http://purl.org/dc/terms/> .
-@prefix : <http://knuckles.team/kg#> .
+@prefix : <https://knuckles-team.github.io/ontology/connector/kafka#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -17,13 +18,16 @@
 # --- classes (owl:Class) ---
 
 :KafkaCluster a owl:Class ;
+    rdfs:subClassOf core:Server ;
     rdfs:label "Kafka Cluster" ;
     rdfs:comment "A Kafka cluster addressed through the Confluent REST Proxy (kafka_cluster list_clusters/get_cluster)." .
 
-:Topic a owl:Class .
+:Topic a owl:Class ;
+    rdfs:subClassOf core:Topic .
 
 
 :Partition a owl:Class ;
+    rdfs:subClassOf core:Partition ;
     rdfs:label "Partition" ;
     rdfs:comment "One ordered shard of a Topic; the unit of parallelism and offset ordering (kafka_partitions)." .
 
@@ -32,22 +36,27 @@
     rdfs:comment "A set of consumers cooperatively reading a topic's partitions and tracking committed offsets (kafka_groups)." .
 
 :Consumer a owl:Class ;
+    rdfs:subClassOf core:Subscriber ;
     rdfs:label "Consumer" ;
     rdfs:comment "A single member (consumer instance) of a ConsumerGroup, assigned partitions (kafka_groups consumers)." .
 
 :Broker a owl:Class ;
+    rdfs:subClassOf core:Server ;
     rdfs:label "Broker" ;
     rdfs:comment "A Kafka broker node that hosts partition replicas and serves clients (kafka_cluster list_brokers)." .
 
 :KafkaAcl a owl:Class ;
+    rdfs:subClassOf core:Policy ;
     rdfs:label "Kafka ACL" ;
     rdfs:comment "An access-control binding granting/denying an operation on a resource to a principal (kafka_cluster list_acls)." .
 
 :CdcConnector a owl:Class ;
+    rdfs:subClassOf core:ChangeDataCapture ;
     rdfs:label "CDC Connector" ;
     rdfs:comment "A Kafka Connect connector performing change-data-capture (e.g. a Debezium source connector), declared and controlled via kafka_connect (CA-44)." .
 
 :ReplicationSlot a owl:Class ;
+    rdfs:subClassOf core:ChangeDataCapture ;
     rdfs:label "Replication Slot" ;
     rdfs:comment "A source-database replication slot (e.g. a PostgreSQL logical replication slot) a CdcConnector consumes from. Its live health is read through sql-mcp's pg_replication_slots — this package never embeds a database client (kafka_cdc_slot_health)." .
 
@@ -110,7 +119,7 @@
     rdfs:label "tracks table" ;
     rdfs:comment "Links a CdcConnector to the source DatabaseTable it captures changes from (sql-mcp's ontology). Cross-connector relation target only — declared here, never resolved via a direct database call from this package (DEC-CA-08)." ;
     rdfs:domain :CdcConnector ;
-    rdfs:range :DatabaseTable .
+    rdfs:range core:Table .
 
 # --- fields (owl:DatatypeProperty) ---
 
@@ -213,11 +222,11 @@
     rdfs:domain :ReplicationSlot ;
     rdfs:range xsd:boolean .
 
-<http://knuckles.team/kg/kafka> a owl:Ontology ;
+<https://knuckles-team.github.io/ontology/connector/kafka> a owl:Ontology ;
     rdfs:label "Apache Kafka Event-Streaming Ontology" ;
     rdfs:comment """Apache Kafka event-streaming model — clusters, topics, partitions, consumer
     groups, consumers, brokers and ACLs, with their containment, subscription and assignment
     relationships — federated into the scion-sdk knowledge-graph hub.""" .
 
 # ontology-codemod R3
-<http://knuckles.team/kg#ConsumerGroup> rdfs:subClassOf <http://knuckles.team/kg#ResourceGroup> .
+<https://knuckles-team.github.io/ontology/connector/kafka#ConsumerGroup> rdfs:subClassOf <https://knuckles-team.github.io/ontology/core#ResourceGroup> .

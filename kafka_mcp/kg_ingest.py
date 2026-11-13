@@ -1,4 +1,4 @@
-"""Native epistemic-graph ingestion for Kafka records.
+"""Native medulla ingestion for Kafka records.
 
 CONCEPT:AU-KG.ingest.enterprise-source-extractor. Connector-specific mappers emit
 canonical node_type nodes and relationship edges through the generated
