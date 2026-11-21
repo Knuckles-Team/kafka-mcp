@@ -52,7 +52,7 @@ def register_kafka_connect_tools(mcp: FastMCP) -> None:
         client = get_connect_client()
         return client.update_connector_config(name, config)
 
-    @mcp.tool(tags={"connect"})
+    @mcp.tool(tags={"connect"}, annotations={"destructiveHint": True})
     async def kafka_connect_delete(
         name: str = Field(description="Connector name."),
     ) -> Any:

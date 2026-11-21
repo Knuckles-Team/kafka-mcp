@@ -53,7 +53,7 @@ def register_kafka_tools(mcp: FastMCP) -> None:
             replication_factor=replication_factor,
         )
 
-    @mcp.tool(tags={"native"})
+    @mcp.tool(tags={"native"}, annotations={"destructiveHint": True})
     async def kafka_native_delete_topic(
         topic: str = Field(description="Topic name to delete."),
     ) -> Any:
