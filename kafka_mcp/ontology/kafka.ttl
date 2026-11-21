@@ -22,19 +22,6 @@
     rdfs:label "Kafka Cluster" ;
     rdfs:comment "A Kafka cluster addressed through the Confluent REST Proxy (kafka_cluster list_clusters/get_cluster)." .
 
-:Topic a owl:Class ;
-    rdfs:subClassOf core:Topic .
-
-
-:Partition a owl:Class ;
-    rdfs:subClassOf core:Partition ;
-    rdfs:label "Partition" ;
-    rdfs:comment "One ordered shard of a Topic; the unit of parallelism and offset ordering (kafka_partitions)." .
-
-:ConsumerGroup a owl:Class ;
-    rdfs:label "Consumer Group" ;
-    rdfs:comment "A set of consumers cooperatively reading a topic's partitions and tracking committed offsets (kafka_groups)." .
-
 :Consumer a owl:Class ;
     rdfs:subClassOf core:Subscriber ;
     rdfs:label "Consumer" ;
@@ -67,47 +54,29 @@
     rdfs:comment "Links a Topic, ConsumerGroup, Broker, or ACL to the KafkaCluster it belongs to." ;
     rdfs:range :KafkaCluster .
 
-:partitionOf a owl:ObjectProperty ;
-    rdfs:label "partition of" ;
-    rdfs:comment "Links a Partition to the Topic it shards." ;
-    rdfs:domain :Partition ;
-    rdfs:range :Topic .
-
-:subscribesTo a owl:ObjectProperty ;
-    rdfs:label "subscribes to" ;
-    rdfs:comment "Links a ConsumerGroup to a Topic it is actively consuming." ;
-    rdfs:domain :ConsumerGroup ;
-    rdfs:range :Topic .
-
-:memberOfGroup a owl:ObjectProperty ;
-    rdfs:label "member of group" ;
-    rdfs:comment "Links a Consumer to the ConsumerGroup it belongs to." ;
-    rdfs:domain :Consumer ;
-    rdfs:range :ConsumerGroup .
-
 :assignedPartition a owl:ObjectProperty ;
     rdfs:label "assigned partition" ;
     rdfs:comment "Links a Consumer to a Partition currently assigned to it." ;
     rdfs:domain :Consumer ;
-    rdfs:range :Partition .
+    rdfs:range core:Partition .
 
 :leaderBroker a owl:ObjectProperty ;
     rdfs:label "leader broker" ;
     rdfs:comment "Links a Partition to the Broker currently acting as its leader replica." ;
-    rdfs:domain :Partition ;
+    rdfs:domain core:Partition ;
     rdfs:range :Broker .
 
 :appliesToTopic a owl:ObjectProperty ;
     rdfs:label "applies to topic" ;
     rdfs:comment "Links a KafkaAcl to the Topic resource it governs." ;
     rdfs:domain :KafkaAcl ;
-    rdfs:range :Topic .
+    rdfs:range core:Topic .
 
 :cdcTracksTopic a owl:ObjectProperty ;
     rdfs:label "cdc tracks topic" ;
     rdfs:comment "Links a CdcConnector to a Topic it publishes change-event envelopes onto (kafka_cdc_topic_map)." ;
     rdfs:domain :CdcConnector ;
-    rdfs:range :Topic .
+    rdfs:range core:Topic .
 
 :usesReplicationSlot a owl:ObjectProperty ;
     rdfs:label "uses replication slot" ;
@@ -126,13 +95,13 @@
 :partitionsCount a owl:DatatypeProperty ;
     rdfs:label "partitions count" ;
     rdfs:comment "Number of partitions configured for a Topic." ;
-    rdfs:domain :Topic ;
+    rdfs:domain core:Topic ;
     rdfs:range xsd:integer .
 
 :replicationFactor a owl:DatatypeProperty ;
     rdfs:label "replication factor" ;
     rdfs:comment "Number of replicas kept for each partition of a Topic." ;
-    rdfs:domain :Topic ;
+    rdfs:domain core:Topic ;
     rdfs:range xsd:integer .
 
 :isInternal a owl:DatatypeProperty ;
@@ -143,7 +112,7 @@
 :partitionId a owl:DatatypeProperty ;
     rdfs:label "partition id" ;
     rdfs:comment "Zero-based index of a Partition within its Topic." ;
-    rdfs:domain :Partition ;
+    rdfs:domain core:Partition ;
     rdfs:range xsd:integer .
 
 :consumerLag a owl:DatatypeProperty ;
@@ -156,12 +125,6 @@
     rdfs:comment "Last committed offset for a ConsumerGroup on a partition." ;
     rdfs:range xsd:integer .
 
-:groupState a owl:DatatypeProperty ;
-    rdfs:label "group state" ;
-    rdfs:comment "Lifecycle state of a ConsumerGroup (Stable, PreparingRebalance, Empty, Dead)." ;
-    rdfs:domain :ConsumerGroup ;
-    rdfs:range xsd:string .
-
 :brokerHost a owl:DatatypeProperty ;
     rdfs:label "broker host" ;
     rdfs:comment "Advertised host of a Broker." ;
@@ -173,12 +136,6 @@
     rdfs:comment "Advertised port of a Broker." ;
     rdfs:domain :Broker ;
     rdfs:range xsd:integer .
-
-:principal a owl:DatatypeProperty ;
-    rdfs:label "principal" ;
-    rdfs:comment "The security principal an ACL applies to (e.g. User:alice)." ;
-    rdfs:domain :KafkaAcl ;
-    rdfs:range xsd:string .
 
 :permission a owl:DatatypeProperty ;
     rdfs:label "permission" ;
@@ -229,4 +186,3 @@
     relationships — federated into the scion-sdk knowledge-graph hub.""" .
 
 # ontology-codemod R3
-<https://knuckles-team.github.io/ontology/connector/kafka#ConsumerGroup> rdfs:subClassOf <https://knuckles-team.github.io/ontology/core#ResourceGroup> .
