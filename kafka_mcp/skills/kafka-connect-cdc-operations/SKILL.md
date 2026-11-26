@@ -1,18 +1,11 @@
 ---
 name: kafka-connect-cdc-operations
 description: >-
-  Drive Kafka Connect connector lifecycle (list/get/create/update/delete/status/
-  restart/pause/resume/offsets) and CDC-specific reads (topic mapping, consumer-
-  group lag for a CDC-reading group, replication-slot identity) via the kafka-mcp
-  MCP server. Use when the agent must create or check a Debezium/CDC connector,
-  find which Kafka topic a source table publishes to, see how far a CDC-reading
-  consumer group trails, or ingest the live Connect topology into the knowledge
-  graph. Do NOT use for producing/consuming records (use kafka-streaming-io),
-  topic/partition provisioning (use kafka-topic-administration), or reading live
-  PostgreSQL replication-slot health directly (use sql-mcp's sql_query — this
-  package never embeds a database client).
+  Drive Kafka Connect connector lifecycle and read CDC topic maps, lag and declared replication-slot names via the kafka-mcp server. Use to create or check a Debezium connector or find a source table's topic. Do NOT use for producing or consuming (kafka-streaming-io) or topic provisioning (kafka-topic-administration).
 ---
 # Kafka Connect + CDC Operations
+
+Scope: Drive Kafka Connect connector lifecycle (list/get/create/update/delete/status/ restart/pause/resume/offsets) and CDC-specific reads (topic mapping, consumer- group lag for a CDC-reading group, replication-slot identity) via the kafka-mcp MCP server. Use when the agent must create or check a Debezium/CDC connector, find which Kafka topic a source table publishes to, see how far a CDC-reading consumer group trails, or ingest the live Connect topology into the knowledge graph. Do NOT use for producing/consuming records (use kafka-streaming-io), topic/partition provisioning (use kafka-topic-administration), or reading live PostgreSQL replication-slot health directly (use sql-mcp's sql_query — this package never embeds a database client).
 
 Domain-typed control of the **Kafka Connect** worker REST API (connector
 lifecycle) and read-only **CDC** helpers (topic mapping, lag, declared slot
@@ -40,6 +33,24 @@ connector itself does not declare.
   `confirmed_flush_lsn`) → sql-mcp's `sql_query` against `pg_replication_slots`.
   This package's `kafka_cdc_slot_health` only reports what Connect REST exposes
   plus the connector's *declared* slot name — never a live database read.
+
+## Steps
+
+1. List connectors with `kafka_connect_list` (`expand` set to `status`). Verify the connector you need appears with a state.
+2. Create or change one with `kafka_connect_create` (`name`, `config`) or `kafka_connect_update`. Verify `kafka_connect_get` returns the config you sent.
+3. Check runtime health with `kafka_connect_status` (`name`). Verify the connector and every task report `RUNNING`.
+4. Control a failed connector with `kafka_connect_restart`, `kafka_connect_pause` or `kafka_connect_resume`. Verify `kafka_connect_status` shows the expected state afterwards.
+5. Resolve CDC reads with `kafka_cdc_topic_map` (`connector`) and `kafka_cdc_lag` (`group`, `topics`). Verify the topics match the declared `table.include.list` and the lag figures are present.
+6. Mirror the topology on request with `kafka_ingest_cdc_topology`. Verify the result reports connector nodes written.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---------|-------|----------|
+| 409 Conflict on create | A connector with that name exists | Use `kafka_connect_update` with the full config instead |
+| 404 on delete or status | Wrong name or already deleted | List names with `kafka_connect_list` and pass the exact name |
+| `kafka_cdc_lag` fails | `KAFKA_REST_URL` not set | Set `KAFKA_REST_URL` to the REST Proxy base URL in the deployment and call it again |
+| Empty topic map | Connector config declares no matching tables | Read the declared `table.include.list` with `kafka_connect_get` and report it as undeclared |
 
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`kafka-mcp`** MCP server.
