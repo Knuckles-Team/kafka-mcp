@@ -2,13 +2,7 @@
 name: kafka-streaming-io
 skill_type: skill
 description: >-
-  Produce and consume Apache Kafka records via the kafka-mcp MCP server — publish
-  a record to a topic (v3 /records endpoint) and drive the v2 consumer-instance
-  lifecycle (create → subscribe → poll → commit → delete), or produce/consume
-  directly against brokers with the native client. Use when the agent must emit
-  an event, replay/poll a topic, or run a short consume loop. Do NOT use for
-  creating/altering topics (use kafka-topic-administration) or reading
-  consumer-group lag (use kafka-consumer-group-lag).
+  Produce and consume Apache Kafka records via the kafka-mcp MCP server — publish a record to a topic (v3 /records endpoint) and drive the v2 consumer-instance lifecycle (create → subscribe → poll → commit → delete), or produce/consume directly against brokers with the native client. Use when the agent must emit an event, replay/poll a topic, or run a short consume loop.
 license: MIT
 tags: [kafka, records, produce, consume, streaming, mcp]
 metadata:
@@ -16,6 +10,8 @@ metadata:
   version: '0.1.0'
 ---
 # Kafka Streaming I/O
+
+Scope: Produce and consume Apache Kafka records via the kafka-mcp MCP server — publish a record to a topic (v3 /records endpoint) and drive the v2 consumer-instance lifecycle (create → subscribe → poll → commit → delete), or produce/consume directly against brokers with the native client. Use when the agent must emit an event, replay/poll a topic, or run a short consume loop. Do NOT use for creating/altering topics (use kafka-topic-administration) or reading consumer-group lag (use kafka-consumer-group-lag).
 
 Domain-typed **produce** and **consume** over Apache Kafka through the Confluent
 REST Proxy (v3 produce + v2 consumer instances), with a native direct-to-broker
@@ -42,6 +38,24 @@ Connect via the `mcp-client` skill against the **`kafka-mcp`** MCP server.
 | `KAFKA_TOKEN` / `KAFKA_USERNAME` / `KAFKA_PASSWORD` | optional | Bearer or basic auth |
 | `KAFKA_BOOTSTRAP_SERVERS` | optional | Native client only (default `localhost:9092`; needs `kafka-mcp[native]`) |
 
+
+## Steps
+
+1. Confirm the topic exists with `kafka_list_topics`. Verify the topic name appears before producing.
+2. Produce with `kafka_produce_record` (`topic`, `value`, `key`, `value_format`). Verify the response carries a partition and offset.
+3. Open a consumer with `kafka_create_consumer` (`group`, `name`, `format`) and `kafka_subscribe_consumer` (`topics`). Verify both calls succeed without error.
+4. Poll with `kafka_consume_records` (`group`, `instance`, `timeout`) and call it again if the first poll is empty. Verify records arrive or report that the topic is empty.
+5. Save progress with `kafka_commit_offsets` (`group`, `instance`). Verify the call succeeds.
+6. Close the consumer with `kafka_delete_consumer` (`group`, `instance`). Verify the instance no longer responds to `kafka_consume_records`.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---------|-------|----------|
+| First poll returns empty | Assignment still settling after subscribe | Call `kafka_consume_records` again with a longer `timeout` |
+| Produce rejected for BINARY | Value not base64 | Encode the value as base64 or use `value_format` `JSON` |
+| Native tools raise RuntimeError | `kafka-mcp[native]` extra missing | Use the REST tools such as `kafka_produce_record` or install the extra in the deployment |
+| Consumer instance leaks | `kafka_delete_consumer` skipped | Call `kafka_delete_consumer` with the same `group` and `instance` |
 
 ## Tools
 | Condensed tool | Actions |
