@@ -1,5 +1,5 @@
 # Kafka Mcp
-## API | MCP Server | A2A Agent
+## API | MCP | Agent
 
 ![PyPI - Version](https://img.shields.io/pypi/v/kafka-mcp)
 ![MCP Server](https://badge.mcpx.dev?type=server 'MCP Server')
@@ -16,23 +16,28 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/Knuckles-Team/kafka-mcp)
 ![GitHub language count](https://img.shields.io/github/languages/count/Knuckles-Team/kafka-mcp)
 ![GitHub repo size](https://img.shields.io/github/repo-size/Knuckles-Team/kafka-mcp)
+![GitHub repo file count (file type)](https://img.shields.io/github/directory-file-count/Knuckles-Team/kafka-mcp)
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/kafka-mcp)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/kafka-mcp)
 
+> **Documentation** — Installation, deployment, and usage across the API, CLI, MCP,
+> and A2A agent interfaces are maintained in the
+> [official documentation](https://knuckles-team.github.io/kafka-mcp/).
+
+---
+
+## Overview
+
 Apache Kafka **API + MCP Server + A2A Agent** for the Arbora ecosystem.
-
-*Version: 0.5.0*
-
-> **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
-> interfaces, and guidance for provisioning the Apache Kafka platform are maintained
-> in the [official documentation](https://knuckles-team.github.io/kafka-mcp/).
 
 `kafka-mcp` wraps the Apache Kafka administration and data-plane surface with typed,
 deterministic tools an agent or policy router calls. It speaks to the Confluent REST
 Proxy by default and ships an optional native (direct-to-broker) client and a
 Pydantic-AI agent server.
 
-## What it provides
+---
+
+## Key Features
 
 - **`KafkaApi`** (`kafka_mcp.api.api_client_kafka`) — a `requests`-based REST facade
   over the Confluent REST Proxy v3 (with v2 consumer helpers), organized by Kafka
@@ -44,6 +49,39 @@ Pydantic-AI agent server.
   [`docs/overview.md`](docs/overview.md) for the full action surface.
 - **An A2A agent server** (`kafka-agent` console script) — a Pydantic-AI graph agent
   wired to the MCP server via `MCP_URL`.
+
+---
+
+## MCP
+
+### Available MCP Tools
+
+Auto-generated — do not edit between the markers below.
+
+<!-- MCP-TOOLS-TABLE:START -->
+
+#### Intent tools
+
+| MCP Tool | Kind | Description |
+|----------|------|-------------|
+| `kafka_cdc_lag` | intent | Report consumer-group lag for a CDC-reading group. |
+| `kafka_cdc_slot_health` | intent | Report what Kafka Connect exposes about a source connector's slot. |
+| `kafka_cdc_topic_map` | intent | Resolve a Debezium connector's declared source tables to CDC topics. |
+| `kafka_cluster` | intent | Inspect clusters/brokers and manage ACLs via the REST Proxy. |
+| `kafka_connect` | intent | Manage Kafka Connect connectors via the worker's REST API (:8083). |
+| `kafka_connect_plugins` | intent | List connector plugins available on the Kafka Connect worker's classpath. |
+| `kafka_groups` | intent | Inspect Kafka consumer groups and their lag. |
+| `kafka_ingest_catalog` | intent | Ingest the live Kafka topology into the knowledge graph (Wire-First). |
+| `kafka_ingest_cdc_topology` | intent | Ingest the live Kafka Connect CDC topology into the knowledge graph. |
+| `kafka_native` | intent | Produce/consume/admin directly against brokers (native client). |
+| `kafka_partitions` | intent | List partitions for a topic or get a single partition. |
+| `kafka_records` | intent | Produce or consume records via the Confluent REST Proxy. |
+| `kafka_topics` | intent | Manage Kafka topics via the Confluent REST Proxy. |
+
+_13 intent tool(s) · 0 operation(s). Call an operation as `act(action='<operation>', params={...})` (`ask` for reads); `find(action='describe', params={'action': '<operation>'})` returns its arguments. An operation is enabled unless its `<DOMAIN>TOOL` toggle is set false. Auto-generated — do not edit._
+<!-- MCP-TOOLS-TABLE:END -->
+
+---
 
 ## Environment Variables
 
@@ -134,6 +172,8 @@ _17 package + 23 inherited variable(s). Auto-generated from `.env.example` + the
 
 Copy [`.env.example`](.env.example) to `.env` and populate only what the operator use; blank
 connector credentials leave the corresponding surface inactive.
+
+---
 
 ## Installation
 
@@ -317,32 +357,7 @@ the detailed transport contract.
   `MCP_ALLOWED_HOSTS` in `AgentConfig`.
 <!-- END GENERATED: additional-deployment-options -->
 
-## Available MCP Tools
-
-Auto-generated — do not edit between the markers below.
-
-<!-- MCP-TOOLS-TABLE:START -->
-
-#### Intent tools
-
-| MCP Tool | Kind | Description |
-|----------|------|-------------|
-| `kafka_cdc_lag` | intent | Report consumer-group lag for a CDC-reading group. |
-| `kafka_cdc_slot_health` | intent | Report what Kafka Connect exposes about a source connector's slot. |
-| `kafka_cdc_topic_map` | intent | Resolve a Debezium connector's declared source tables to CDC topics. |
-| `kafka_cluster` | intent | Inspect clusters/brokers and manage ACLs via the REST Proxy. |
-| `kafka_connect` | intent | Manage Kafka Connect connectors via the worker's REST API (:8083). |
-| `kafka_connect_plugins` | intent | List connector plugins available on the Kafka Connect worker's classpath. |
-| `kafka_groups` | intent | Inspect Kafka consumer groups and their lag. |
-| `kafka_ingest_catalog` | intent | Ingest the live Kafka topology into the knowledge graph (Wire-First). |
-| `kafka_ingest_cdc_topology` | intent | Ingest the live Kafka Connect CDC topology into the knowledge graph. |
-| `kafka_native` | intent | Produce/consume/admin directly against brokers (native client). |
-| `kafka_partitions` | intent | List partitions for a topic or get a single partition. |
-| `kafka_records` | intent | Produce or consume records via the Confluent REST Proxy. |
-| `kafka_topics` | intent | Manage Kafka topics via the Confluent REST Proxy. |
-
-_13 intent tool(s) · 0 operation(s). Call an operation as `act(action='<operation>', params={...})` (`ask` for reads); `find(action='describe', params={'action': '<operation>'})` returns its arguments. An operation is enabled unless its `<DOMAIN>TOOL` toggle is set false. Auto-generated — do not edit._
-<!-- MCP-TOOLS-TABLE:END -->
+---
 
 ## Documentation
 
@@ -362,6 +377,24 @@ recommended reference for installation, deployment, and day-to-day operation.
 
 `AGENTS.md` is the canonical contributor/agent guidance.
 
+---
+
+## Repository Owners
+
+<img width="100%" height="180em" src="https://github-readme-stats.vercel.app/api?username=example&show_icons=true&hide_border=true&&count_private=true&include_all_commits=true" />
+
+![GitHub followers](https://img.shields.io/github/followers/example)
+![GitHub User's stars](https://img.shields.io/github/stars/example)
+
+---
+
+## Contribute
+
+Contributions are welcome! Please ensure code quality by running local checks before submitting pull requests:
+- Format code using `ruff format .`
+- Lint code using `ruff check .`
+- Validate type-safety with `mypy .`
+- Run test suites using `pytest`
 
 <!-- BEGIN scion-sdk-deployment (generated; do not edit between markers) -->
 
